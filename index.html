@@ -55,6 +55,9 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .menuFoot{display:flex;gap:8px}
 .bankRow{display:flex;align-items:center;gap:7px;font-size:clamp(15px,3.6vh,19px);font-weight:700;color:#c5d2dc}
 .bankRow b{color:var(--hazard);font-size:1.15em;font-variant-numeric:tabular-nums}
+.bankRow small{font-size:.8em;color:var(--dim);font-weight:600}
+.tile .tc{display:flex;align-items:center;gap:3px}.tile .tc .coin{width:10px;height:10px}
+.tile.poor .tc{color:var(--danger)}.tile.poor canvas{opacity:.55}
 .icoBtn.quit{margin-left:auto;color:#ff9c90}
 .lvBank{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--hazard);font-variant-numeric:tabular-nums}
 .totStars{margin-left:auto}
@@ -234,9 +237,9 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <div class="modes">
         <button class="mbtn main" id="btnCampaign">Campagne <small id="campStars">0 / 24 ★</small></button>
         <button class="mbtn" id="btnEndless">Route infinie <small id="bestInf">record —</small></button>
-        <button class="mbtn" id="btnSandbox">Bac à sable <small>sans budget</small></button>
+        <button class="mbtn" id="btnSandbox">Bac à sable <small>tout est gratuit</small></button>
       </div>
-      <div class="bankRow"><span class="coin"></span><b id="mBank">0</b>pièces au trésor</div>
+      <div class="bankRow"><span class="coin"></span><b id="mBank">0</b>pièces au trésor <small id="mInv"></small></div>
       <div class="menuFoot" style="width:min(300px,44vw)">
         <button class="icoBtn" id="btnSound" aria-label="Son"></button>
         <button class="icoBtn" id="btnFs" aria-label="Plein écran"></button>
@@ -335,7 +338,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p><b>Conduire</b> — GAZ et FREIN. En l'air, GAZ bascule l'engin vers l'arrière, FREIN vers l'avant : rattrape tes sauts. BOOST, VOL et ACTION pilotent fusées, hélices, parachutes et ressorts.</p>
       <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, ramasser 70 % des pièces, ne rien casser.</p>
       <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
-      <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Il sert à débloquer les pièces marquées d'un cadenas : touche-les deux fois pour les acheter. Dans le bac à sable, tout est disponible pour essayer.</p>
+      <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Chaque pièce posée sur ton engin se paie en or ; retirée, elle est remboursée. Ton engin te suit d'un niveau à l'autre. Dans le bac à sable, tout est gratuit, avec un engin à part.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
   </div></div>
@@ -420,45 +423,45 @@ const CATS = ['Pilote', 'Structure', 'Roues', 'Suspension', 'Mécanique', 'Moteu
 
 const PARTS = {
   cockpit: { n: 'Habitacle', cat: 'Pilote', cost: 0, dens: 7, str: 2600, unique: 1, d: 'Le pilote. Obligatoire : s\'il se cogne la tête, la course s\'arrête.' },
-  cockpit_a: { n: 'Cabine blindée', cat: 'Pilote', cost: 20, dens: 11, str: 4200, unique: 1, armor: 1, price: 200, d: 'Pilote casqué dans une cabine renforcée : il encaisse bien mieux les chocs.' },
+  cockpit_a: { n: 'Cabine blindée', cat: 'Pilote', cost: 50, dens: 11, str: 4200, unique: 1, armor: 1, d: 'Pilote casqué dans une cabine renforcée : il encaisse bien mieux les chocs.' },
   wood:    { n: 'Bois', cat: 'Structure', cost: 4, dens: 4.5, str: 950, d: 'Léger et bon marché, mais il casse vite.' },
-  alu:     { n: 'Alu', cat: 'Structure', cost: 7, dens: 6.5, str: 1800, price: 40, d: 'Entre le bois et l\'acier : léger et assez solide.' },
+  alu:     { n: 'Alu', cat: 'Structure', cost: 7, dens: 6.5, str: 1800, d: 'Entre le bois et l\'acier : léger et assez solide.' },
   steel:   { n: 'Acier', cat: 'Structure', cost: 12, dens: 13, str: 3400, d: 'Lourd et très solide.' },
   carbon:  { n: 'Carbone', cat: 'Structure', cost: 24, dens: 4, str: 2600, d: 'Léger ET solide. Cher.' },
   ballast: { n: 'Lest', cat: 'Structure', cost: 8, dens: 18, str: 3600, d: 'Très lourd : abaisse le centre de gravité.' },
   bumper:  { n: 'Pare-chocs', cat: 'Structure', cost: 10, dens: 3, str: 2200, rest: 0.6, fric: 0.5, d: 'Caoutchouc : rebondit et protège des chocs.' },
-  wedge:   { n: 'Biseau', cat: 'Structure', cost: 6, dens: 6, str: 1700, dir: 1, wedge: 1, fric: .45, price: 30, d: 'Pièce en pente : un nez qui glisse sur les obstacles au lieu de buter.' },
-  rollbar: { n: 'Arceau', cat: 'Structure', cost: 9, dens: 2.5, str: 3000, fric: .12, price: 60, d: 'Tube léger qui glisse sur le sol. Posé au-dessus du pilote, il lui protège la tête.' },
+  wedge:   { n: 'Biseau', cat: 'Structure', cost: 6, dens: 6, str: 1700, dir: 1, wedge: 1, fric: .45, d: 'Pièce en pente : un nez qui glisse sur les obstacles au lieu de buter.' },
+  rollbar: { n: 'Arceau', cat: 'Structure', cost: 10, dens: 2.5, str: 3000, fric: .12, d: 'Tube léger qui glisse sur le sol. Posé au-dessus du pilote, il lui protège la tête.' },
   wheel_w: { n: 'Roue bois', cat: 'Roues', cost: 4, wheel: 1, r: 0.27, dens: 3.2, fric: 0.7, wood: 1, d: 'Presque gratuite, mais elle accroche mal.' },
   wheel_s: { n: 'Roue sport', cat: 'Roues', cost: 8, wheel: 1, r: 0.22, dens: 2.6, fric: 0.95, d: 'Petite et légère. Rapide sur le plat.' },
   wheel_m: { n: 'Tout-terrain', cat: 'Roues', cost: 12, wheel: 1, r: 0.31, dens: 2.2, fric: 1.15, d: 'Le bon compromis. Bonne accroche.' },
-  wheel_x: { n: 'Pneu clouté', cat: 'Roues', cost: 18, wheel: 1, r: 0.31, dens: 2.6, fric: 1.9, spikes: 1, price: 120, d: 'Clous d\'acier : adhérence maximale, même sur la neige.' },
+  wheel_x: { n: 'Pneu clouté', cat: 'Roues', cost: 25, wheel: 1, r: 0.31, dens: 2.6, fric: 1.9, spikes: 1, d: 'Clous d\'acier : adhérence maximale, même sur la neige.' },
   wheel_l: { n: 'Monster', cat: 'Roues', cost: 28, wheel: 1, size: 2, r: 0.52, dens: 1.5, fric: 1.3, d: 'Énorme (2×2). Franchit presque tout.' },
   susp_h:  { n: 'Amorti dur', cat: 'Suspension', cost: 8, dens: 6, str: 2600, sag: 0.04, zeta: 1.0, travel: 0.13, col: '#e0503a', d: 'À coller contre une roue. Précis, peu de débattement.' },
   susp_s:  { n: 'Amorti souple', cat: 'Suspension', cost: 10, dens: 6, str: 2600, sag: 0.085, zeta: 0.8, travel: 0.26, col: '#2fb8c9', d: 'À coller contre une roue. Encaisse les gros chocs.' },
-  hinge:   { n: 'Charnière', cat: 'Mécanique', cost: 8, dens: 5, str: 2400, dir: 1, joint: 'hinge', price: 50, d: 'Articulation libre avec la pièce du côté de la flèche : remorques, châssis articulés.' },
-  piston:  { n: 'Vérin', cat: 'Mécanique', cost: 16, dens: 9, str: 2800, dir: 0, joint: 'piston', price: 140, d: 'VÉRIN : pousse la pièce du côté de la flèche jusqu\'à 90 cm. Pour soulever l\'engin, se cabrer ou basculer une benne.' },
-  decoupler: { n: 'Découpleur', cat: 'Mécanique', cost: 6, dens: 5, str: 2200, dir: 3, price: 70, d: 'LARGUER : détache tout ce qui est du côté de la flèche. Un largage par appui.' },
-  hook:    { n: 'Grappin', cat: 'Mécanique', cost: 20, dens: 6, str: 2600, dir: 1, price: 180, d: 'GRAPPIN : lance un câble vers un anneau d\'ancrage ou le sol, puis l\'enroule. Touche encore pour lâcher.' },
+  hinge:   { n: 'Charnière', cat: 'Mécanique', cost: 12, dens: 5, str: 2400, dir: 1, joint: 'hinge', d: 'Articulation libre avec la pièce du côté de la flèche : remorques, châssis articulés.' },
+  piston:  { n: 'Vérin', cat: 'Mécanique', cost: 30, dens: 9, str: 2800, dir: 0, joint: 'piston', d: 'VÉRIN : pousse la pièce du côté de la flèche jusqu\'à 90 cm. Pour soulever l\'engin, se cabrer ou basculer une benne.' },
+  decoupler: { n: 'Découpleur', cat: 'Mécanique', cost: 10, dens: 5, str: 2200, dir: 3, d: 'LARGUER : détache tout ce qui est du côté de la flèche. Un largage par appui.' },
+  hook:    { n: 'Grappin', cat: 'Mécanique', cost: 50, dens: 6, str: 2600, dir: 1, d: 'GRAPPIN : lance un câble vers un anneau d\'ancrage ou le sol, puis l\'enroule. Touche encore pour lâcher.' },
   motor_s: { n: 'Mini-moteur', cat: 'Moteurs', cost: 7, dens: 6, str: 1800, force: 45, vmax: 8, drain: 0.45, d: 'Petit et économe. Pour les engins légers.' },
   motor_e: { n: 'Électrique', cat: 'Moteurs', cost: 15, dens: 10, str: 2200, force: 95, vmax: 10, drain: 1.0, d: 'Sobre et régulier.' },
-  motor_h: { n: 'Hybride', cat: 'Moteurs', cost: 26, dens: 12, str: 2300, force: 140, vmax: 13, drain: 1.3, regen: 1, price: 250, d: 'Recharge la batterie quand tu freines ou en roue libre.' },
+  motor_h: { n: 'Hybride', cat: 'Moteurs', cost: 45, dens: 12, str: 2300, force: 140, vmax: 13, drain: 1.3, regen: 1, d: 'Recharge la batterie quand tu freines ou en roue libre.' },
   motor_t: { n: 'V8 turbo', cat: 'Moteurs', cost: 35, dens: 15, str: 2600, force: 230, vmax: 17, drain: 2.6, d: 'Énorme couple, gros appétit d\'énergie.' },
   batt_s:  { n: 'Batterie', cat: 'Énergie', cost: 8, dens: 9, str: 1600, cap: 60, d: '60 unités d\'énergie.' },
   batt_l:  { n: 'Grosse batt.', cat: 'Énergie', cost: 18, dens: 15, str: 1900, cap: 150, d: '150 unités d\'énergie. Lourde.' },
   solar:   { n: 'Solaire', cat: 'Énergie', cost: 14, dens: 3, str: 800, solar: 1.1, d: 'Recharge en continu. Fragile.' },
-  gen:     { n: 'Générateur', cat: 'Énergie', cost: 20, dens: 16, str: 2400, gen: 1.3, price: 180, d: 'Produit de l\'énergie en continu, même sans soleil. Lourd et fumant.' },
+  gen:     { n: 'Générateur', cat: 'Énergie', cost: 35, dens: 16, str: 2400, gen: 1.3, d: 'Produit de l\'énergie en continu, même sans soleil. Lourd et fumant.' },
   rocket:  { n: 'Fusée', cat: 'Propulsion', cost: 22, dens: 5, str: 1900, dir: 1, thrust: 160, drain: 7, d: 'BOOST : poussée puissante dans la direction de la pointe.' },
-  jet:     { n: 'Réacteur', cat: 'Propulsion', cost: 30, dens: 6, str: 2100, dir: 1, thrust: 120, drain: 3.2, price: 300, d: 'BOOST : poussée continue et économe. Met une seconde à monter en régime.' },
-  nitro:   { n: 'Nitro', cat: 'Propulsion', cost: 15, dens: 4, str: 1300, nitro: 3, price: 150, d: 'BOOST : double la puissance des moteurs pendant 3 s par bouteille.' },
+  jet:     { n: 'Réacteur', cat: 'Propulsion', cost: 60, dens: 6, str: 2100, dir: 1, thrust: 120, drain: 3.2, d: 'BOOST : poussée continue et économe. Met une seconde à monter en régime.' },
+  nitro:   { n: 'Nitro', cat: 'Propulsion', cost: 30, dens: 4, str: 1300, nitro: 3, d: 'BOOST : double la puissance des moteurs pendant 3 s par bouteille.' },
   prop:    { n: 'Hélice', cat: 'Propulsion', cost: 18, dens: 4, str: 1500, dir: 0, thrust: 80, drain: 3.2, d: 'VOL : poussée douce vers le moyeu. Orientable.' },
   wing:    { n: 'Aile', cat: 'Aéro', cost: 12, dens: 2.5, str: 1200, dir: 0, d: 'Portance selon la vitesse et l\'angle. Bord d\'attaque vers l\'avant.' },
-  spoiler: { n: 'Aileron', cat: 'Aéro', cost: 8, dens: 2, str: 1300, down: 1, price: 80, d: 'Plaque l\'engin au sol à grande vitesse : plus d\'adhérence.' },
+  spoiler: { n: 'Aileron', cat: 'Aéro', cost: 15, dens: 2, str: 1300, down: 1, d: 'Plaque l\'engin au sol à grande vitesse : plus d\'adhérence.' },
   balloon: { n: 'Ballon', cat: 'Aéro', cost: 10, dens: 0.4, str: 700, lift: 26, d: 'Allège le véhicule. Éclate au contact du sol.' },
   chute:   { n: 'Parachute', cat: 'Aéro', cost: 9, dens: 2, str: 1800, dir: 0, d: 'S\'ouvre avec ACTION. Freine et stabilise.' },
   spring:  { n: 'Ressort', cat: 'Spécial', cost: 16, dens: 6, str: 2400, dir: 2, d: 'ACTION : propulse le véhicule à l\'opposé du plateau.' },
-  gyro:    { n: 'Gyroscope', cat: 'Spécial', cost: 24, dens: 8, str: 2200, gyro: 1, price: 220, d: 'Stabilise l\'engin : freine les rotations et le remet à plat en l\'air.' },
-  horn:    { n: 'Klaxon', cat: 'Spécial', cost: 2, dens: 3, str: 1200, price: 20, d: 'ACTION : tut tut ! Indispensable.' },
+  gyro:    { n: 'Gyroscope', cat: 'Spécial', cost: 45, dens: 8, str: 2200, gyro: 1, d: 'Stabilise l\'engin : freine les rotations et le remet à plat en l\'air.' },
+  horn:    { n: 'Klaxon', cat: 'Spécial', cost: 2, dens: 3, str: 1200, d: 'ACTION : tut tut ! Indispensable.' },
 };
 
 const PART_IDS = Object.keys(PARTS);
@@ -473,17 +476,17 @@ const THEMES = {
 };
 
 const LEVELS = [
-  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, budget: 120, seed: 11, feat: { bump: 3, ramp: 1 }, featGap: [45, 75], tip: 'Un buggy simple suffit. Garde le doigt sur le gaz.' },
-  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, budget: 150, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, featGap: [40, 65], tip: 'Les tremplins envoient haut : rattrape-toi avec GAZ / FREIN en l\'air.' },
-  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, budget: 180, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, featGap: [45, 70], tip: 'Les ponts plient sous les engins lourds. Reste léger.' },
-  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, budget: 200, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, featGap: [40, 70], cells: 150, tip: 'Les recharges sont rares : le solaire aide beaucoup ici.' },
-  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, budget: 220, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, featGap: [40, 70], tip: 'La neige glisse. Des roues larges et un centre de gravité bas sont tes amis.' },
-  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, budget: 280, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, featGap: [50, 80], tip: 'Des ravins à franchir : vitesse, ailes ou fusées.' },
-  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, budget: 260, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
-  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, budget: 320, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
+  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, featGap: [45, 75], tip: 'Un buggy simple suffit. Garde le doigt sur le gaz.' },
+  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, featGap: [40, 65], tip: 'Les tremplins envoient haut : rattrape-toi avec GAZ / FREIN en l\'air.' },
+  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, featGap: [45, 70], tip: 'Les ponts plient sous les engins lourds. Reste léger.' },
+  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, featGap: [40, 70], cells: 150, tip: 'Les recharges sont rares : le solaire aide beaucoup ici.' },
+  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, featGap: [40, 70], tip: 'La neige glisse. Des roues larges et un centre de gravité bas sont tes amis.' },
+  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, featGap: [50, 80], tip: 'Des ravins à franchir : vitesse, ailes ou fusées.' },
+  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
+  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
 ];
-const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, budget: Infinity, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1 }, featGap: [40, 70], endless: 1 };
-const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, budget: Infinity, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1 }, featGap: [35, 55], sandbox: 1 };
+const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1 }, featGap: [40, 70], endless: 1 };
+const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1 }, featGap: [35, 55], sandbox: 1 };
 const INF_THEMES = ['prairie', 'desert', 'canyon', 'snow', 'volcano', 'moon'];
 
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
@@ -571,9 +574,6 @@ function analyze(design) {
 function validate(design, budget) {
   const A = analyze(design), S = A.S, err = [], warn = [];
   if (A.ci < 0) err.push('Ajoute l\'habitacle du pilote.');
-  const lockedP = design.find(p => !isOwned(p.id));
-  if (lockedP) err.push('À débloquer d\'abord : ' + PARTS[lockedP.id].n + ' (' + PARTS[lockedP.id].price + ' pièces au trésor).');
-  if (S.cost > budget) err.push('Budget dépassé de ' + (S.cost - budget) + ' : retire des pièces.');
   const loose = design.length - A.conn.size;
   if (A.ci >= 0) {
     const canDrive = S.linked >= 1 && S.motors > 0, canPush = S.rockets + S.props + S.jets > 0;
@@ -1133,8 +1133,28 @@ class Terrain {
 }
 
 /* =============================== ÉCRANS =============================== */
-const App = { screen: 'menu', lvl: LEVELS[0], lvlIndex: 0, design: [], tool: null, toolDir: {}, undo: [], prog: store.get('prog', {}), plans: store.get('plans', []), bank: store.get('bank', 150), owned: new Set(store.get('owned', [])), buyArm: null };
-function isOwned(id) { const d = PARTS[id]; return !d || !d.price || App.owned.has(id) || !!(App.lvl && App.lvl.sandbox); }
+const App = { screen: 'menu', lvl: LEVELS[0], lvlIndex: 0, design: [], tool: null, toolDir: {}, undo: [], prog: store.get('prog', {}), plans: store.get('plans', []), bank: 0, invested: 0 };
+/* Économie : le trésor (pièces d'or libres) paie chaque pièce posée sur l'engin du garage ;
+   une pièce retirée est remboursée. Le bac à sable est gratuit et garde son propre engin. */
+function designCost(d) { let c = 0; for (const p of d || []) c += (PARTS[p.id] || {}).cost || 0; return c; }
+function cleanDesign(d) { return (d || []).filter(p => PARTS[p.id]); }
+function isOwned() { return true; }
+function paying() { return !(App.lvl && App.lvl.sandbox); }
+function canAfford(d) { return !paying() || designCost(d) - App.invested <= App.bank; }
+function initEconomy() {
+  if (!store.get('eco2', 0)) {
+    const OLD = { cockpit_a: 200, alu: 40, wedge: 30, rollbar: 60, wheel_x: 120, motor_h: 250, gen: 180, jet: 300, nitro: 150, spoiler: 80, gyro: 220, horn: 20, hinge: 50, piston: 140, decoupler: 70, hook: 180 };
+    let bank = store.get('bank', null);
+    bank = bank == null ? 200 : bank + store.get('owned', []).reduce((t, id) => t + (OLD[id] || 0), 0);
+    let garage = cleanDesign(store.get('lastDesign', null));
+    if (!garage.length || designCost(garage) > bank) garage = presetDesign(PRESETS[0]);
+    const c = designCost(garage); if (c > bank) bank = c;
+    store.set('bank', bank - c); store.set('invested', c); store.set('garage', garage); store.set('eco2', 1);
+  }
+  App.bank = store.get('bank', 0);
+  App.invested = designCost(cleanDesign(store.get('garage', []))); store.set('invested', App.invested);
+}
+initEconomy();
 function show(id) {
   ['scrMenu', 'scrLevels', 'scrBuild', 'scrPlay'].forEach(s => $('#' + s).classList.toggle('on', s === id));
   App.screen = id;
@@ -1144,7 +1164,7 @@ function show(id) {
 function totalStars() { return LEVELS.reduce((s, l) => s + ((App.prog[l.id] || {}).stars || 0), 0); }
 function refreshMenu() {
   $('#campStars').textContent = totalStars() + ' / ' + LEVELS.length * 3 + ' ★';
-  $('#mBank').textContent = fmtN(App.bank);
+  $('#mBank').textContent = fmtN(App.bank); $('#mInv').textContent = App.invested ? '+ ' + fmtN(App.invested) + ' dans ton engin' : '';
   const b = store.get('bestInf', 0); $('#bestInf').textContent = b ? 'record ' + Math.round(b) + ' m' : 'sans fin';
   $('#btnSound').innerHTML = Snd.on ? '<svg class="i" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>' : '<svg class="i" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM17 9l5 6M22 9l-5 6"/></svg>';
   $('#btnSound').classList.toggle('off', !Snd.on);
@@ -1158,7 +1178,7 @@ function buildCards() {
     const b = document.createElement('button'); b.className = 'card' + (unlocked ? '' : ' locked');
     const cv = document.createElement('canvas'); b.appendChild(cv);
     const cb = document.createElement('div'); cb.className = 'cb';
-    cb.innerHTML = '<span class="num">NIVEAU ' + (i + 1) + '</span><span class="nm">' + L.name + '</span><span class="meta">' + L.len + ' m · budget ' + L.budget + (L.g ? ' · gravité ' + L.g : '') + '</span><span class="st">' + [0, 1, 2].map(k => starSvg((p.stars || 0) > k)).join('') + '</span>';
+    cb.innerHTML = '<span class="num">NIVEAU ' + (i + 1) + '</span><span class="nm">' + L.name + '</span><span class="meta">' + L.len + ' m' + (L.g ? ' · gravité ' + L.g : '') + '</span><span class="st">' + [0, 1, 2].map(k => starSvg((p.stars || 0) > k)).join('') + '</span>';
     b.appendChild(cb); if (!unlocked) b.insertAdjacentHTML('beforeend', '<span class="lock">Verrouillé</span>');
     b.onclick = () => { if (!unlocked) { flashMsgMenu(b); return; } Snd.init(); Snd.click(); openLevel(L, i); };
     box.appendChild(b);
@@ -1184,8 +1204,8 @@ function drawLevelThumb(cv, L) {
 const BC = { cv: null, c: null, cs: 30, ox: 0, oy: 0, w: 0, h: 0, dpr: 1, hover: null, drag: null, popIdx: -1, moving: false, clearArm: 0 };
 function openLevel(L, idx) {
   App.lvl = L; App.lvlIndex = idx;
-  const saved = store.get('design.' + L.id, null) || store.get('lastDesign', null);
-  App.design = saved ? saved.filter(p => PARTS[p.id]) : presetDesign(PRESETS[0]);
+  const sb = cleanDesign(store.get('design.sandbox', null));
+  App.design = L.sandbox ? (sb.length ? sb : presetDesign(PRESETS[0])) : cleanDesign(store.get('garage', []));
   App.undo = []; App.tool = null; closePop();
   $('#bLvl').textContent = (L.endless || L.sandbox) ? L.name : 'Niv. ' + (idx + 1) + ' · ' + L.name;
   buildTray(); updateBuildInfo(); show('scrBuild');
@@ -1197,7 +1217,7 @@ function buildTray() {
     if (d.cat !== last) { last = d.cat; const l = document.createElement('div'); l.className = 'tcat'; l.textContent = d.cat; t.appendChild(l); }
     const b = document.createElement('button'); b.className = 'tile'; b.dataset.id = id;
     b.appendChild(partIcon(id, App.toolDir[id] ?? d.dir ?? 0, 36));
-    b.insertAdjacentHTML('beforeend', '<span class="tn">' + d.n + '</span><span class="tc">' + (d.cost ? d.cost : 'gratuit') + '</span><span class="tp"><span class="coin"></span>' + (d.price || '') + '</span>' + (d.dir !== undefined ? '<span class="rot">↻</span>' : ''));
+    b.insertAdjacentHTML('beforeend', '<span class="tn">' + d.n + '</span><span class="tc"><span class="coin"></span>' + (d.cost ? d.cost : 'gratuit') + '</span>' + (d.dir !== undefined ? '<span class="rot">↻</span>' : ''));
     b.onclick = () => selectTool(id);
     t.appendChild(b);
   });
@@ -1205,7 +1225,7 @@ function buildTray() {
 }
 function refreshTray() {
   document.querySelectorAll('.tile').forEach(el => {
-    const id = el.dataset.id; el.classList.toggle('sel', App.tool === id); el.classList.toggle('lock', !isOwned(id)); el.classList.toggle('arm', App.buyArm === id);
+    const id = el.dataset.id; el.classList.toggle('sel', App.tool === id); el.classList.toggle('poor', paying() && PARTS[id].cost > App.bank);
     const cv = el.querySelector('canvas'), want = partIcon(id, App.toolDir[id] ?? PARTS[id].dir ?? 0, 36); if (cv !== want) el.replaceChild(want, cv);
   });
   $('#tErase').classList.toggle('on', App.tool === 'erase');
@@ -1213,28 +1233,21 @@ function refreshTray() {
 function selectTool(id) {
   Snd.init();
   const d = PARTS[id];
-  if (!isOwned(id)) {
-    if (App.bank < d.price) { App.buyArm = null; setMsg(d.n + ' coûte ' + d.price + ' pièces au trésor. Il t\'en manque ' + (d.price - App.bank) + ' : ramasse-les sur les parcours.', 'err'); Snd.tone(150, .15, 'square', .05); refreshTray(); return; }
-    if (App.buyArm !== id) { App.buyArm = id; setMsg('Débloquer ' + d.n + ' pour ' + d.price + ' pièces ? Touche encore pour acheter. ' + d.d, 'info', true); Snd.click(); refreshTray(); return; }
-    App.bank -= d.price; App.owned.add(id); App.buyArm = null; store.set('bank', App.bank); store.set('owned', [...App.owned]);
-    Snd.buy(); App.tool = id; closePop(); refreshTray(); updateBuildInfo(); drawBuild(); setMsg('Nouvelle pièce : ' + d.n + ' ! Il reste ' + fmtN(App.bank) + ' pièces au trésor.', 'ok'); return;
-  }
-  App.buyArm = null;
   if (App.tool === id && d.dir !== undefined) { App.toolDir[id] = ((App.toolDir[id] ?? d.dir) + 1) % 4; setMsg(d.n + ' orientée vers le ' + DIRN[App.toolDir[id]] + '.', 'info'); }
-  else { App.tool = id; setMsg(d.n + ' — ' + d.d, 'info', true); }
+  else { App.tool = id; setMsg(d.n + (paying() && d.cost ? ' (' + d.cost + ' pièces d\'or)' : '') + ' — ' + d.d, 'info', true); }
   Snd.click(); closePop(); refreshTray(); drawBuild();
 }
 let msgT = 0;
 function setMsg(t, kind, sticky) { const m = $('#bMsg'); m.textContent = t; m.className = 'msg ' + (kind || ''); clearTimeout(msgT); if (!sticky) msgT = setTimeout(updateBuildInfo, 2600); }
-function budgetOf() { return App.lvl.budget; }
+function budgetOf() { return Infinity; }
 function updateBuildInfo() {
   const v = validate(App.design, budgetOf()), S = v.A.S, B = budgetOf();
   const bb = $('#bBudget');
-  bb.textContent = B === Infinity ? 'Coût ' + S.cost + ' · sans limite' : 'Budget ' + S.cost + ' / ' + B;
-  bb.classList.toggle('over', S.cost > B);
+  bb.textContent = paying() ? 'Engin : ' + fmtN(S.cost) + ' pièces d\'or' : 'Bac à sable : tout est gratuit';
+  bb.classList.remove('over');
   const g = App.lvl.g || 10, pw = S.mass ? (S.force / (S.mass * g)) : 0;
   const auto = S.drain > 0 ? Math.round((S.cap) / (S.drain)) : 0;
-  $('#bChips').innerHTML = '<div class="chip bankC"><i>Trésor</i><b><span class="coin"></span>' + fmtN(App.bank) + '</b></div>' + [['Masse', S.mass.toFixed(1) + ' kg'], ['Traction', S.force ? pw.toFixed(2) + ' g' : '—'], ['Vitesse', S.vmax ? Math.round(S.vmax * 3.6) + ' km/h' : '—'], ['Énergie', S.cap + (S.solar ? ' +☀' : '') + (S.gen ? ' +⚙' : '')], ['Autonomie', auto ? auto + ' s' : '—']]
+  $('#bChips').innerHTML = '<div class="chip bankC"><i>Trésor</i><b><span class="coin"></span>' + (paying() ? fmtN(App.bank) : '∞') + '</b></div>' + [['Masse', S.mass.toFixed(1) + ' kg'], ['Traction', S.force ? pw.toFixed(2) + ' g' : '—'], ['Vitesse', S.vmax ? Math.round(S.vmax * 3.6) + ' km/h' : '—'], ['Énergie', S.cap + (S.solar ? ' +☀' : '') + (S.gen ? ' +⚙' : '')], ['Autonomie', auto ? auto + ' s' : '—']]
     .map(([k, v]) => '<div class="chip"><i>' + k + '</i><b>' + v + '</b></div>').join('');
   const m = $('#bMsg');
   if (v.err.length) { m.textContent = v.err[0]; m.className = 'msg err'; }
@@ -1326,13 +1339,18 @@ function canPlace(id, gx, gy) {
   return true;
 }
 function snapshot() { App.undo.push(JSON.stringify(App.design)); if (App.undo.length > 60) App.undo.shift(); }
-function changed() { store.set('design.' + App.lvl.id, App.design); store.set('lastDesign', App.design); updateBuildInfo(); drawBuild(); }
+function changed() {
+  if (paying()) { const c = designCost(App.design); App.bank -= c - App.invested; App.invested = c; store.set('bank', App.bank); store.set('invested', c); store.set('garage', App.design); }
+  else store.set('design.sandbox', App.design);
+  updateBuildInfo(); drawBuild(); refreshTray();
+}
 function placeAt(gx, gy) {
   const id = App.tool, d = PARTS[id];
   if (!canPlace(id, gx, gy)) return false;
-  if (d.unique) { const k = App.design.findIndex(p => PARTS[p.id].unique); if (k >= 0) App.design.splice(k, 1); }
-  const B = budgetOf(), cost = analyze(App.design).S.cost;
-  if (cost + d.cost > B) { setMsg('Budget insuffisant pour ' + d.n.toLowerCase() + ' (' + d.cost + ').', 'err'); return false; }
+  const k = d.unique ? App.design.findIndex(p => PARTS[p.id].unique) : -1;
+  const need = d.cost - (k >= 0 ? PARTS[App.design[k].id].cost : 0);
+  if (paying() && need > App.bank) { setMsg('Il te manque ' + (need - App.bank) + ' pièces d\'or pour poser : ' + d.n + '. Ramasse-en sur les parcours ou retire une pièce.', 'err'); Snd.tone(150, .15, 'square', .05); return false; }
+  if (k >= 0) App.design.splice(k, 1);
   App.design.push({ id, gx, gy, dir: App.toolDir[id] ?? d.dir ?? 0 });
   Snd.tone(420 + Math.random() * 80, .05, 'square', .04);
   return true;
@@ -1352,7 +1370,7 @@ function onBuildDown(e) {
   if (!ok) App.undo.pop();
   BC.drag = { mode: 'paint', any: ok };
   try { BC.cv.setPointerCapture(e.pointerId); } catch (err) {}
-  changed();
+  if (ok) changed(); else drawBuild();
 }
 function onBuildMove(e) {
   if (!BC.cv) return; const [gx, gy] = cellAt(e);
@@ -1391,7 +1409,7 @@ function bindBuild() {
   cv.addEventListener('contextmenu', e => { e.preventDefault(); const [gx, gy] = cellAt(e); snapshot(); if (eraseAt(gx, gy)) changed(); else App.undo.pop(); closePop(); });
   $('#popDel').onclick = () => { if (BC.popIdx >= 0) { snapshot(); App.design.splice(BC.popIdx, 1); closePop(); changed(); } };
   $('#popRot').onclick = () => { const p = App.design[BC.popIdx]; if (!p) return; snapshot(); p.dir = (p.dir + 1) % 4; $('#popName').textContent = PARTS[p.id].n + ' · ' + DIRN[p.dir]; changed(); };
-  $('#tUndo').onclick = () => { const s = App.undo.pop(); if (s) { App.design = JSON.parse(s); closePop(); changed(); } else setMsg('Rien à annuler.', 'info'); };
+  $('#tUndo').onclick = () => { const s = App.undo.pop(); if (!s) { setMsg('Rien à annuler.', 'info'); return; } const d = JSON.parse(s); if (!canAfford(d)) { App.undo.push(s); setMsg('Pas assez de pièces d\'or pour annuler.', 'err'); return; } App.design = d; closePop(); changed(); };
   $('#tErase').onclick = () => { App.tool = App.tool === 'erase' ? null : 'erase'; closePop(); refreshTray(); setMsg(App.tool ? 'Gomme : touche ou glisse sur les pièces à retirer.' : 'Gomme désactivée.', 'info'); };
   $('#tMove').onclick = () => setMoving(!BC.moving);
   $('#mvU').onclick = () => moveAll(0, -1); $('#mvD').onclick = () => moveAll(0, 1); $('#mvL').onclick = () => moveAll(-1, 0); $('#mvR').onclick = () => moveAll(1, 0);
@@ -1417,10 +1435,10 @@ function openPlans() {
   for (const it of items) {
     const b = document.createElement('div'); b.className = 'pitem'; b.setAttribute('role', 'button'); b.tabIndex = 0;
     const cv = document.createElement('canvas'); b.appendChild(cv);
-    const cost = analyze(it.design).S.cost, B = budgetOf();
-    b.insertAdjacentHTML('beforeend', '<b>' + escapeHtml(it.name) + '</b><span>' + it.d + ' · coût ' + cost + (cost > B ? ' (hors budget)' : '') + '</span>');
+    const cost = designCost(it.design), miss = paying() ? cost - App.invested - App.bank : 0;
+    b.insertAdjacentHTML('beforeend', '<b>' + escapeHtml(it.name) + '</b><span>' + it.d + ' · ' + (paying() ? cost + ' pièces d\'or' + (miss > 0 ? ' · il en manque ' + miss : '') : 'gratuit ici') + '</span>');
     if (!it.preset) { const x = document.createElement('button'); x.className = 'x'; x.textContent = 'Supprimer'; x.onclick = ev => { ev.stopPropagation(); App.plans.splice(it.idx, 1); store.set('plans', App.plans); openPlans(); }; b.appendChild(x); }
-    b.onclick = () => { snapshot(); App.design = JSON.parse(JSON.stringify(it.design)); $('#ovPlans').classList.remove('on'); changed(); setMsg('Plan « ' + it.name + ' » chargé.', 'info'); };
+    b.onclick = () => { $('#ovPlans').classList.remove('on'); if (!canAfford(it.design)) { setMsg('Il te manque ' + (designCost(it.design) - App.invested - App.bank) + ' pièces d\'or pour ce plan.', 'err'); return; } snapshot(); App.design = cleanDesign(JSON.parse(JSON.stringify(it.design))); changed(); setMsg('Plan « ' + it.name + ' » chargé' + (paying() ? ' : il reste ' + fmtN(App.bank) + ' pièces d\'or.' : '.'), 'info'); };
     list.appendChild(b);
     requestAnimationFrame(() => drawPlanThumb(cv, it.design));
   }
