@@ -159,12 +159,13 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
   display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-family:var(--f-display);font-weight:400;font-size:14px;letter-spacing:1px}
 .pedal.brake{left:12px;color:#ff9c90} .pedal.gas{right:12px;color:#8ff0b6}
 .pedal.down{transform:translateY(4px) scale(.97);box-shadow:0 2px 0 #000,inset 0 2px 0 #4a5967;filter:brightness(1.25)}
-.acts{position:absolute;right:calc(clamp(78px,13vw,110px) + 24px);bottom:14px;display:flex;gap:8px;pointer-events:auto}
+.acts{position:absolute;right:calc(clamp(78px,13vw,110px) + 24px);bottom:14px;display:flex;flex-wrap:wrap-reverse;justify-content:flex-end;max-width:min(330px,48vw);gap:8px;pointer-events:auto}
 .act{width:58px;height:58px;border-radius:50%;border:3px solid #000;box-shadow:0 4px 0 #000;display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;letter-spacing:.5px;touch-action:none}
 .act svg.i{width:24px;height:24px}
 .act{position:relative}
 .act.boost{background:#e2532f}
+.act.pistonB{background:#6a4fc0}.act.dropB{background:#9c7a12}.act.hookB{background:#7a5a33}
 .act.boost::after{content:"";position:absolute;left:12px;right:12px;bottom:7px;height:4px;border-radius:2px;background:linear-gradient(90deg,#bfe4ff calc(var(--n,0)*100%),rgba(0,0,0,.35) 0);display:var(--nb,none)}
 .act.boost[style*="--n"]{--nb:block} .act.fly{background:#3f8fe0} .act.action{background:#6b8e3a}
 .act.down{transform:translateY(3px);box-shadow:0 1px 0 #000;filter:brightness(1.3)}
@@ -291,6 +292,9 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
     <div class="ctrl">
       <div class="pedal brake" id="kBrake">FREIN</div>
       <div class="acts">
+        <div class="act hookB" id="kHook" hidden><svg class="i" viewBox="0 0 24 24"><path d="M12 3v11M12 8c-5 0-6 4-5 8M12 8c5 0 6 4 5 8M4 21l4-4"/></svg>GRAPPIN</div>
+        <div class="act dropB" id="kDrop" hidden><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M8 7V4h8v3M12 11v9M8 16l4 4 4-4"/></svg>LARGUER</div>
+        <div class="act pistonB" id="kPiston" hidden><svg class="i" viewBox="0 0 24 24"><path d="M7 21h10M9 21V11h6v10M12 11V3M8 3h8"/></svg>VÉRIN</div>
         <div class="act action" id="kAct" hidden><svg class="i" viewBox="0 0 24 24"><path d="M3 11a9 9 0 0 1 18 0M3 11l9 10 9-10M12 21V11"/></svg>ACTION</div>
         <div class="act fly" id="kFly" hidden><svg class="i" viewBox="0 0 24 24"><path d="M12 12c-5-1-8-3-8-5s4 0 8 5zm0 0c5 1 8 3 8 5s-4 0-8-5zm0 0v9"/></svg>VOL</div>
         <div class="act boost" id="kBoost" hidden><svg class="i" viewBox="0 0 24 24"><path d="M5 19c1-4 3-6 5-7M14 4c4 0 6 2 6 6l-7 7-6-6zM9 15l-4 4"/></svg><span id="kBoostL">BOOST</span></div>
@@ -330,6 +334,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p><b>Montage</b> — les pièces voisines sont soudées. Une roue s'accroche à sa voisine ; contre un <b>amortisseur</b>, elle est suspendue. Le rond jaune et noir est le centre de gravité : plus il est bas, plus c'est stable.</p>
       <p><b>Conduire</b> — GAZ et FREIN. En l'air, GAZ bascule l'engin vers l'arrière, FREIN vers l'avant : rattrape tes sauts. BOOST, VOL et ACTION pilotent fusées, hélices, parachutes et ressorts.</p>
       <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, ramasser 70 % des pièces, ne rien casser.</p>
+      <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
       <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Il sert à débloquer les pièces marquées d'un cadenas : touche-les deux fois pour les acheter. Dans le bac à sable, tout est disponible pour essayer.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
@@ -411,7 +416,7 @@ const CELL = 0.5;            // 1 case = 0,5 m
 const GW = 14, GH = 8;       // grille de l'atelier
 const DIRV = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // haut, droite, bas, gauche (repère « y vers le haut »)
 const DIRN = ['haut', 'droite', 'bas', 'gauche'];
-const CATS = ['Pilote', 'Structure', 'Roues', 'Suspension', 'Moteurs', 'Énergie', 'Propulsion', 'Aéro', 'Spécial'];
+const CATS = ['Pilote', 'Structure', 'Roues', 'Suspension', 'Mécanique', 'Moteurs', 'Énergie', 'Propulsion', 'Aéro', 'Spécial'];
 
 const PARTS = {
   cockpit: { n: 'Habitacle', cat: 'Pilote', cost: 0, dens: 7, str: 2600, unique: 1, d: 'Le pilote. Obligatoire : s\'il se cogne la tête, la course s\'arrête.' },
@@ -431,6 +436,10 @@ const PARTS = {
   wheel_l: { n: 'Monster', cat: 'Roues', cost: 28, wheel: 1, size: 2, r: 0.52, dens: 1.5, fric: 1.3, d: 'Énorme (2×2). Franchit presque tout.' },
   susp_h:  { n: 'Amorti dur', cat: 'Suspension', cost: 8, dens: 6, str: 2600, sag: 0.04, zeta: 1.0, travel: 0.13, col: '#e0503a', d: 'À coller contre une roue. Précis, peu de débattement.' },
   susp_s:  { n: 'Amorti souple', cat: 'Suspension', cost: 10, dens: 6, str: 2600, sag: 0.085, zeta: 0.8, travel: 0.26, col: '#2fb8c9', d: 'À coller contre une roue. Encaisse les gros chocs.' },
+  hinge:   { n: 'Charnière', cat: 'Mécanique', cost: 8, dens: 5, str: 2400, dir: 1, joint: 'hinge', price: 50, d: 'Articulation libre avec la pièce du côté de la flèche : remorques, châssis articulés.' },
+  piston:  { n: 'Vérin', cat: 'Mécanique', cost: 16, dens: 9, str: 2800, dir: 0, joint: 'piston', price: 140, d: 'VÉRIN : pousse la pièce du côté de la flèche jusqu\'à 90 cm. Pour soulever l\'engin, se cabrer ou basculer une benne.' },
+  decoupler: { n: 'Découpleur', cat: 'Mécanique', cost: 6, dens: 5, str: 2200, dir: 3, price: 70, d: 'LARGUER : détache tout ce qui est du côté de la flèche. Un largage par appui.' },
+  hook:    { n: 'Grappin', cat: 'Mécanique', cost: 20, dens: 6, str: 2600, dir: 1, price: 180, d: 'GRAPPIN : lance un câble vers un anneau d\'ancrage ou le sol, puis l\'enroule. Touche encore pour lâcher.' },
   motor_s: { n: 'Mini-moteur', cat: 'Moteurs', cost: 7, dens: 6, str: 1800, force: 45, vmax: 8, drain: 0.45, d: 'Petit et économe. Pour les engins légers.' },
   motor_e: { n: 'Électrique', cat: 'Moteurs', cost: 15, dens: 10, str: 2200, force: 95, vmax: 10, drain: 1.0, d: 'Sobre et régulier.' },
   motor_h: { n: 'Hybride', cat: 'Moteurs', cost: 26, dens: 12, str: 2300, force: 140, vmax: 13, drain: 1.3, regen: 1, price: 250, d: 'Recharge la batterie quand tu freines ou en roue libre.' },
@@ -504,12 +513,23 @@ function analyze(design) {
   design.forEach((p, i) => footprint(p).forEach(([x, y]) => occ.set(x + ',' + y, i)));
   const at = (x, y) => { const v = occ.get(x + ',' + y); return v === undefined ? -1 : v; };
   const isW = i => !!PARTS[design[i].id].wheel;
-  const welds = [], adj = design.map(() => []);
+  const welds = [], adj = design.map(() => []), joints = [], jkey = new Set();
+  design.forEach((p, i) => {
+    const d = PARTS[p.id]; if (!d.joint) return;
+    const [dx, dy] = DIRV[p.dir || 0], j = at(p.gx + dx, p.gy - dy);
+    if (j < 0 || j === i || isW(j)) return;
+    joints.push({ type: d.joint, a: i, b: j, ax: p.gx + .5 + dx * .5, ay: p.gy + .5 - dy * .5, dir: p.dir || 0 });
+    jkey.add(i + ':' + j); jkey.add(j + ':' + i); adj[i].push(j); adj[j].push(i);
+  });
   design.forEach((p, i) => {
     if (isW(i)) return;
-    const r = at(p.gx + 1, p.gy); if (r >= 0 && r !== i && !isW(r)) { welds.push({ a: i, b: r, ax: p.gx + 1, ay: p.gy + 0.5 }); adj[i].push(r); adj[r].push(i); }
-    const d = at(p.gx, p.gy + 1); if (d >= 0 && d !== i && !isW(d)) { welds.push({ a: i, b: d, ax: p.gx + 0.5, ay: p.gy + 1 }); adj[i].push(d); adj[d].push(i); }
+    const r = at(p.gx + 1, p.gy); if (r >= 0 && r !== i && !isW(r) && !jkey.has(i + ':' + r)) { welds.push({ a: i, b: r, ax: p.gx + 1, ay: p.gy + 0.5 }); adj[i].push(r); adj[r].push(i); }
+    const d = at(p.gx, p.gy + 1); if (d >= 0 && d !== i && !isW(d) && !jkey.has(i + ':' + d)) { welds.push({ a: i, b: d, ax: p.gx + 0.5, ay: p.gy + 1 }); adj[i].push(d); adj[d].push(i); }
   });
+  // une liaison mobile est « bloquée » si ses deux côtés restent soudés par ailleurs
+  const uf = design.map((_, i) => i), fd = i => uf[i] === i ? i : (uf[i] = fd(uf[i]));
+  for (const w of welds) uf[fd(w.a)] = fd(w.b);
+  for (const J of joints) J.rigid = fd(J.a) === fd(J.b);
   const links = [];
   design.forEach((p, i) => {
     if (!isW(i)) return;
@@ -546,7 +566,7 @@ function analyze(design) {
   });
   S.linked = links.filter(l => conn.has(l.w)).length;
   S.vmax = S.force ? S.vw / S.force : 0;
-  return { occ, at, welds, links, conn, ci, S, cog: S.mass ? [mx / S.mass, my / S.mass] : null };
+  return { occ, at, welds, joints, links, conn, ci, S, cog: S.mass ? [mx / S.mass, my / S.mass] : null };
 }
 function validate(design, budget) {
   const A = analyze(design), S = A.S, err = [], warn = [];
@@ -561,6 +581,7 @@ function validate(design, budget) {
     else if ((S.motors || canPush) && S.cap <= 0 && S.solar <= 0 && S.gen <= 0) err.push('Ajoute une batterie pour alimenter tout ça.');
     if (loose > 0) warn.push(loose + (loose > 1 ? ' pièces ne sont pas reliées' : ' pièce n\'est pas reliée') + ' au pilote : elles tomberont.');
     if (S.motors && S.linked === 0) warn.push('Le moteur n\'entraîne aucune roue.');
+    const stuckJ = A.joints.find(J => J.rigid); if (stuckJ) warn.push((stuckJ.type === 'hinge' ? 'Une charnière' : 'Un vérin') + ' est bloqué : les deux côtés sont aussi soudés ailleurs.');
     if (S.nitro && !S.motors) warn.push('La nitro n\'a aucun moteur à booster.');
   }
   return { A, err, warn, ok: err.length === 0 };
@@ -614,6 +635,41 @@ const ART = {
     c.strokeStyle = '#e8433a'; c.lineWidth = 4.5; c.stroke();
     c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-13, 12); c.lineTo(-13, -6); c.quadraticCurveTo(-13, -13, -6, -13); c.lineTo(5, -13); c.stroke();
     c.fillStyle = '#3a4550'; c.fillRect(-15, 12, 7, 4); c.fillRect(8, 12, 7, 4);
+  },
+  hinge(c) {
+    c.fillStyle = lg(c, -6, 16, '#f0a23a', '#b0661a'); rr(c, -14, -6, 28, 21.5, 3); c.fill(); c.strokeStyle = '#5a3008'; c.lineWidth = 1.3; c.stroke();
+    c.fillStyle = '#5a3008'; dot(c, -8, 8, 1.6); dot(c, 8, 8, 1.6); dot(c, 0, 2, 1.6);
+    c.fillStyle = lg(c, -16, -8, '#e6ebf0', '#7d8b98'); rr(c, -15, -16, 30, 9, 4.5); c.fill(); c.strokeStyle = '#26313b'; c.lineWidth = 1.2; c.stroke();
+    c.strokeStyle = '#26313b'; c.lineWidth = 1; for (const x of [-5, 5]) { c.beginPath(); c.moveTo(x, -16); c.lineTo(x, -7); c.stroke(); }
+    c.fillStyle = '#26313b'; dot(c, 0, -11.5, 2);
+  },
+  piston(c) {
+    c.fillStyle = lg(c, -6, 16, '#7f63c9', '#3f2a7a'); rr(c, -11, -6, 22, 22, 3); c.fill(); c.strokeStyle = '#1d1238'; c.lineWidth = 1.3; c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(-9, -4, 4, 18);
+    c.fillStyle = '#2a2f36'; c.fillRect(-13, 11, 26, 5); c.fillRect(-13, -8, 26, 4);
+    const g = c.createLinearGradient(-4, 0, 4, 0); g.addColorStop(0, '#9aa5b0'); g.addColorStop(.5, '#ffffff'); g.addColorStop(1, '#8c97a2'); c.fillStyle = g; c.fillRect(-3.5, -15, 7, 8);
+    c.fillStyle = '#3a4550'; rr(c, -9, -17, 18, 4, 1.5); c.fill();
+    c.fillStyle = '#ffc21a'; c.fillRect(-11, 4, 22, 2.5);
+  },
+  decoupler(c) {
+    plate(c, '#5d6874', '#353e47', '#151a1f');
+    c.save(); rr(c, -15.5, -15.5, 31, 10, 3); c.clip();
+    for (let i = -24; i < 24; i += 6) { c.fillStyle = '#ffc21a'; c.beginPath(); c.moveTo(i, -5.5); c.lineTo(i + 3, -5.5); c.lineTo(i + 8, -15.5); c.lineTo(i + 5, -15.5); c.fill(); }
+    c.restore();
+    c.fillStyle = '#d7302a'; for (const x of [-9, 9]) { dot(c, x, -10.5, 2.6); }
+    c.fillStyle = '#ffd6d0'; for (const x of [-9, 9]) dot(c, x - .8, -11.3, .8);
+    c.strokeStyle = '#151a1f'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-15, -5.5); c.lineTo(15, -5.5); c.stroke();
+    c.fillStyle = '#c9d2da'; c.font = '800 7px Barlow Condensed, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('LARGUER', 0, 6);
+  },
+  hook(c, o) {
+    c.fillStyle = '#4a5865'; rr(c, -14, 8, 28, 8, 2); c.fill();
+    c.fillStyle = lg(c, -8, 10, '#8a6a3c', '#5a4224'); rr(c, -7, -4, 14, 14, 3); c.fill();
+    c.fillStyle = '#2b2f36'; c.fillRect(-3, -10, 6, 8);
+    if (!(o && o.fired)) {
+      c.strokeStyle = '#c9d2da'; c.lineWidth = 2.2; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(0, -10); c.lineTo(0, -15); c.moveTo(0, -12); c.quadraticCurveTo(-7, -14, -6, -8); c.moveTo(0, -12); c.quadraticCurveTo(7, -14, 6, -8); c.stroke();
+    }
+    c.strokeStyle = '#d9c38a'; c.lineWidth = 1.2; c.beginPath(); c.arc(0, 3, 4, 0, TAU); c.stroke(); c.beginPath(); c.arc(0, 3, 2, 0, TAU); c.stroke();
   },
   motor_s(c) {
     plate(c, '#8fa6b3', '#4f6371', '#1f2b33');
@@ -929,7 +985,7 @@ class Terrain {
     this.rng = mulberry(lvl.seed * 9973 + 17);
     this.nA = makeNoise(lvl.seed * 3 + 1); this.nB = makeNoise(lvl.seed * 7 + 2); this.nC = makeNoise(lvl.seed * 13 + 5);
     this.pts = []; this.coins = []; this.cells = []; this.decor = []; this.pits = []; this.signs = [];
-    this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = [];
+    this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = []; this.anchors = [];
     this.body = world.createBody(); this.body.setUserData({ kind: 'ground' });
     for (let x = -60; x <= 18; x += 2) this.pts.push({ x, y: 0 });
     this.x = 18; this.y = 0; this.slope = 0; this.nfeat = 0; this.chainFrom = 0; this.finishX = null;
@@ -1035,6 +1091,7 @@ class Terrain {
       this.push(x0 + gw, landY - .4, 1);
       this.push(x0 + gw + .8, landY, 1);
       this.pits.push({ x0, x1: x0 + gw, top: Math.min(edgeY, landY) });
+      this.anchors.push({ x: x0 + gw * .5, y: Math.max(edgeY, landY) + 5.2, px: x0 - 1.4, py: edgeY });
       if (bridge) this.spawnQ.push(() => this.makeBridge(x0, x0 + gw, edgeY));
       else this.coinArc(x0 + 1, x0 + gw - 1, edgeY + 1.8, 1.4 + gw * .12);
       const back = Math.max(0, (y0 - landY));
@@ -1228,6 +1285,13 @@ function drawBuild() {
     if (!A.conn.has(i) && A.ci >= 0) { c.strokeStyle = '#ff5a47'; c.lineWidth = 2; c.setLineDash([4, 3]); c.strokeRect(ox + p.gx * cs + 2, oy + p.gy * cs + 2, s * cs - 4, s * cs - 4); c.setLineDash([]); }
     if (d.dir !== undefined && p.id !== 'wing' && !d.wedge) arrow(c, ox + (p.gx + .5) * cs, oy + (p.gy + .5) * cs, p.dir, cs);
   });
+  // liaisons mobiles : charnières (axe) et vérins (tige)
+  for (const J of A.joints) {
+    const x = ox + J.ax * cs, y = oy + J.ay * cs, r = Math.max(4, cs * .16);
+    c.fillStyle = J.rigid ? '#ff5a47' : J.type === 'hinge' ? '#f0a23a' : '#a58cff'; c.strokeStyle = '#111'; c.lineWidth = 1.5;
+    c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); c.stroke();
+    c.fillStyle = '#111'; c.beginPath(); c.arc(x, y, r * .35, 0, TAU); c.fill();
+  }
   // soudures
   c.fillStyle = 'rgba(255,194,26,.9)';
   for (const W of A.welds) { c.beginPath(); c.arc(ox + W.ax * cs, oy + W.ay * cs, Math.max(1.6, cs * .06), 0, TAU); c.fill(); }
@@ -1404,7 +1468,7 @@ function buildVehicle(world, design, spawnX, ter, lvl) {
   const sy = gmax - low + .1, origin = V(spawnX, sy);
   const parts = design.map((p, i) => {
     const d = PARTS[p.id], s = d.size || 1, [lx, ly] = loc(p.gx + s / 2, p.gy + s / 2);
-    return { i, id: p.id, d, dir: p.dir || 0, lx, ly, alive: true, conn: A.conn.has(i), contacts: 0, hitI: 0, dmg: 0, fire: false, spin: false, ext: 0, welds: [] };
+    return { i, id: p.id, d, dir: p.dir || 0, gx: p.gx, gy: p.gy, lx, ly, alive: true, conn: A.conn.has(i), contacts: 0, hitI: 0, dmg: 0, fire: false, spin: false, ext: 0, welds: [] };
   });
   const welds = A.welds.map(W => { const w = { a: parts[W.a], b: parts[W.b], alive: true }; w.a.welds.push(w); w.b.welds.push(w); return w; });
   // blocs rigides = composantes connexes des soudures
@@ -1430,14 +1494,23 @@ function buildVehicle(world, design, spawnX, ter, lvl) {
     w.wheel = W; wheels.push(W);
   }
   parts.forEach(P => { if (P.d.wheel && !P.body) { const body = world.createBody({ type: 'dynamic', position: V(spawnX + P.lx, sy + P.ly) }); P.fix = body.createFixture({ shape: pl.Circle(P.d.r), density: P.d.dens, friction: P.d.fric, filterGroupIndex: -1 }); P.fix.setUserData({ P }); body.setUserData({ kind: 'veh' }); P.body = body; } });
-  const v = { parts, welds, chunks, wheels, cockpit: parts[A.ci], groundContacts: 0, wheelContacts: 0, live: null, lost: 0, world, grav };
+  const cjoints = A.joints.filter(J => !J.rigid).map(J => { const [ax, ay] = loc(J.ax, J.ay); const a = parts[J.a], b = parts[J.b];
+    return { type: J.type, a, b, la: V(ax, ay), axis: V(DIRV[J.dir][0], DIRV[J.dir][1]), alive: true, stress: 0, str: Math.min(a.d.str, b.d.str) * (J.type === 'hinge' ? 1.5 : 1.8), j: null }; });
+  const v = { parts, welds, chunks, wheels, cjoints, cockpit: parts[A.ci], groundContacts: 0, wheelContacts: 0, live: null, lost: 0, world, grav };
   for (const W of wheels) attachWheel(v, W);
-  v.mass = 0; for (const ch of chunks) if (ch.parts.has(v.cockpit)) v.mass += ch.body.getMass();
-  for (const W of wheels) if (W.att.chunk.parts.has(v.cockpit)) v.mass += W.P.body.getMass();
+  for (const J of cjoints) makeCJoint(v, J);
+  v.mass = 0; for (const ch of chunks) if ([...ch.parts].some(P => A.conn.has(P.i))) v.mass += ch.body.getMass();
+  for (const W of wheels) if (A.conn.has(W.att.i)) v.mass += W.P.body.getMass();
   tuneSuspension(v);
   v.motorType = parts.some(P => P.id === 'motor_t' && P.conn) ? 't' : 'e';
   recomputeConn(v);
   return v;
+}
+function makeCJoint(v, J) {
+  const bA = J.a.chunk.body, bB = J.b.chunk.body;
+  if (bA === bB) { J.j = null; return; }
+  if (J.type === 'hinge') J.j = v.world.createJoint(pl.RevoluteJoint({ bodyA: bA, bodyB: bB, localAnchorA: J.la, localAnchorB: J.la, referenceAngle: 0, enableLimit: true, lowerAngle: -1.25, upperAngle: 1.25 }));
+  else J.j = v.world.createJoint(pl.PrismaticJoint({ bodyA: bA, bodyB: bB, localAnchorA: J.la, localAnchorB: J.la, localAxisA: J.axis, referenceAngle: 0, enableLimit: true, lowerTranslation: 0, upperTranslation: CELL * 1.8, enableMotor: true, maxMotorForce: 900, motorSpeed: -2 }));
 }
 function attachWheel(v, W) {
   const cb = W.att.chunk.body, wp = W.P.body.getPosition();
@@ -1462,14 +1535,15 @@ function refreshLive(v) {
   L.vmax = L.force ? L.vw / L.force : 0; v.live = L;
 }
 function recomputeConn(v) {
-  const home = v.cockpit.chunk;
+  const reach = new Set([v.cockpit.chunk]), st = [v.cockpit.chunk];
+  while (st.length) { const ch = st.pop(); for (const J of v.cjoints || []) { if (!J.alive || !J.j || !J.a.alive || !J.b.alive) continue; const o = J.a.chunk === ch ? J.b.chunk : J.b.chunk === ch ? J.a.chunk : null; if (o && !reach.has(o)) { reach.add(o); st.push(o); } } }
   for (const P of v.parts) P.conn = false;
-  for (const P of home.parts) if (P.alive) P.conn = true;
+  for (const ch of reach) for (const P of ch.parts) if (P.alive) P.conn = true;
   for (const W of v.wheels) W.P.conn = !!(W.J && W.J.alive && W.att.conn && W.att.alive);
   const oldCap = v.live ? v.live.cap : 0; refreshLive(v);
   if (G && G.veh === v && oldCap > 0 && v.live.cap < oldCap) G.energy *= v.live.cap / oldCap;
   if (G && G.veh === v) G.cap = v.live.cap || (v.live.solar || v.live.gen ? 30 : 0);
-  v.lost = v.parts.filter(P => !P.conn).length;
+  v.lost = v.parts.filter(P => !P.conn && !P.dropped).length;
 }
 /* scinde un bloc dont des soudures ont cédé */
 function splitChunk(v, ch) {
@@ -1490,6 +1564,8 @@ function splitChunk(v, ch) {
     body.setLinearVelocity(ob.getLinearVelocityFromWorldPoint(body.getWorldCenter())); body.setAngularVelocity(w0);
     v.chunks.push(nc);
     for (const W of v.wheels) if (W.J.alive && nc.parts.has(W.att)) { v.world.destroyJoint(W.J.j); attachWheel(v, W); if (W.susp) { W.J.j.setSpringFrequencyHz(W.hz); W.J.j.setSpringDampingRatio(W.dr); } }
+    for (const J of v.cjoints) if (J.alive && (nc.parts.has(J.a) || nc.parts.has(J.b))) { if (J.j) v.world.destroyJoint(J.j); makeCJoint(v, J); }
+    if (G && G.veh === v && G.rope && nc.parts.has(G.rope.P)) releaseRope(G);
   }
 }
 function detachPart(g, P, quiet) {
@@ -1501,6 +1577,59 @@ function detachPart(g, P, quiet) {
   recomputeConn(v);
   if (g.mode === 'run' && !quiet) { Snd.clank(); buzz(35); if (g.t - g.lastBreak > 1.2) { toast('Ça casse !', PARTS[P.id].n + ' arraché'); g.lastBreak = g.t; } }
 }
+function breakCJoint(g, J) {
+  if (!J.alive) return; J.alive = false; if (J.j) g.world.destroyJoint(J.j);
+  const p = J.a.chunk.body.getWorldPoint(J.la); sparks(g, p.x, p.y, 16, '#ffd34a'); g.shake = Math.min(.6, g.shake + .25);
+  recomputeConn(g.veh);
+  if (g.mode === 'run') { Snd.clank(); buzz(35); if (g.t - g.lastBreak > 1.2) { toast(J.type === 'hinge' ? 'Charnière arrachée !' : 'Vérin arraché !'); g.lastBreak = g.t; } }
+}
+/* LARGUER : le découpleur le plus éloigné du pilote lâche ce qui est du côté de sa flèche */
+function fireDecoupler(g) {
+  const v = g.veh, ck = v.cockpit;
+  const cands = v.parts.filter(P => P.id === 'decoupler' && P.alive && P.conn && !P.used).sort((a, b) => (Math.abs(b.gx - ck.gx) + Math.abs(b.gy - ck.gy)) - (Math.abs(a.gx - ck.gx) + Math.abs(a.gy - ck.gy)));
+  const D = cands[0]; if (!D) return false;
+  D.used = true;
+  const [dx, dy] = DIRV[D.dir], tx = D.gx + dx, ty = D.gy - dy;
+  const at = Q => { const s = Q.d.size || 1; return tx >= Q.gx && tx < Q.gx + s && ty >= Q.gy && ty < Q.gy + s; };
+  const before = new Set(v.parts.filter(P => P.conn));
+  let any = false;
+  for (const w of D.welds) if (w.alive && at(w.a === D ? w.b : w.a)) { w.alive = false; any = true; }
+  for (const W of v.wheels) if (W.J.alive && W.att === D && at(W.P)) { W.J.alive = false; g.world.destroyJoint(W.J.j); any = true; }
+  for (const J of v.cjoints) if (J.alive && ((J.a === D && at(J.b)) || (J.b === D && at(J.a)))) { J.alive = false; if (J.j) g.world.destroyJoint(J.j); any = true; }
+  const p = ppos(D);
+  if (!any) { if (g.mode === 'run') toast('Rien à larguer de ce côté'); return true; }
+  splitChunk(v, D.chunk); recomputeConn(v);
+  const dw = D.chunk.body.getWorldVector(V(dx, dy)), pushed = new Set();
+  for (const P of v.parts) if (before.has(P) && !P.conn) {
+    P.dropped = true; const b = pbody(P);
+    if (!pushed.has(b)) { pushed.add(b); const m = b.getMass(); b.applyLinearImpulse(V(dw.x * 1.6 * m, dw.y * 1.6 * m), b.getWorldCenter(), true); }
+  }
+  v.lost = v.parts.filter(P => !P.conn && !P.dropped).length;
+  for (let i = 0; i < 12; i++) addP(g, { x: p.x + dw.x * .25, y: p.y + dw.y * .25, vx: (Math.random() - .5) * 2 + dw.x * 2, vy: (Math.random() - .5) * 2 + dw.y * 2, r: .08, grow: .6, life: .7, max: .7, col: '#c9c9c9', g: -.5, type: 'dust' });
+  if (g.mode === 'run') { Snd.pop(); toast('Largage !'); }
+  return true;
+}
+/* GRAPPIN */
+const HOOK_AIM = [-.5, .45, .5, -.45], HOOK_RANGE = 15;
+function fireHook(g) {
+  const v = g.veh, H = v.parts.find(P => P.id === 'hook' && P.alive && P.conn); if (!H) return;
+  const b = H.chunk.body, p = b.getWorldPoint(V(H.lx, H.ly)), dv = DIRV[H.dir], a0 = HOOK_AIM[H.dir];
+  const la = V(dv[0] * Math.cos(a0) - dv[1] * Math.sin(a0), dv[0] * Math.sin(a0) + dv[1] * Math.cos(a0)), aim = b.getWorldVector(la);
+  let best = null, bd = 1e9;
+  for (const A of g.ter.anchors) { const dx = A.x - p.x, dy = A.y - p.y, d = Math.hypot(dx, dy); if (d > HOOK_RANGE || d < 1) continue; const cos = (dx * aim.x + dy * aim.y) / d; if (cos < .45) continue; if (d < bd) { bd = d; best = { body: g.ter.body, pt: V(A.x, A.y), ring: A }; } }
+  if (!best) {
+    let hit = null; const end = V(p.x + aim.x * HOOK_RANGE, p.y + aim.y * HOOK_RANGE);
+    g.world.rayCast(p, end, (fix, pt, nrm, frac) => { const u = fix.getUserData(); if (u && u.P) return -1; hit = { body: fix.getBody(), pt: V(pt.x, pt.y) }; return frac; });
+    best = hit;
+  }
+  H.fired = true;
+  if (!best) { g.ropeMiss = { x0: p.x, y0: p.y, x1: p.x + aim.x * HOOK_RANGE, y1: p.y + aim.y * HOOK_RANGE, t: .3 }; if (g.mode === 'run') Snd.tone(900, .12, 'triangle', .05, -500); setTimeout(() => { H.fired = false; }, 300); return; }
+  const len = Math.hypot(best.pt.x - p.x, best.pt.y - p.y);
+  const j = g.world.createJoint(pl.RopeJoint({ bodyA: b, bodyB: best.body, localAnchorA: V(H.lx, H.ly), localAnchorB: best.body.getLocalPoint(best.pt), maxLength: len, collideConnected: true }));
+  g.rope = { j, P: H, body: best.body, lb: best.body.getLocalPoint(best.pt), len, stress: 0, ring: best.ring };
+  if (g.mode === 'run') { Snd.tone(1200, .08, 'square', .05); Snd.noise(.12, .3, 2600, 2); }
+}
+function releaseRope(g) { if (!g.rope) return; try { g.world.destroyJoint(g.rope.j); } catch (e) {} g.rope.P.fired = false; g.rope = null; if (g.mode === 'run') Snd.tone(500, .08, 'triangle', .05, -200); }
 function breakAxle(g, W) {
   if (!W.J.alive) return;
   W.J.alive = false; g.world.destroyJoint(W.J.j);
@@ -1523,7 +1652,7 @@ function newGame(lvl, design, mode) {
   const ter = new Terrain(world, lvl);
   const veh = buildVehicle(world, design, 4, ter, lvl);
   const g = {
-    mode, lvl, world, ter, veh, t: 0, acc: 0, thr: 0, input: { gas: 0, brake: 0, boost: 0, fly: 0, act: 0 }, actPrev: 0,
+    mode, lvl, world, ter, veh, t: 0, acc: 0, thr: 0, input: { gas: 0, brake: 0, boost: 0, fly: 0, act: 0, piston: 0, drop: 0, hook: 0 }, actPrev: 0, dropPrev: 0, hookPrev: 0, rope: null, ropeMiss: null,
     energy: 0, cap: 0, coins: 0, chute: false, springCD: 0, airT: 0, airA0: 0, airMax: 0, stuckT: 0, koT: 0, koHard: 0,
     over: null, overT: 0, cam: { x: 4, y: 0, s: 40 }, shake: 0, parts: [], popQ: [], smashQ: [], flips: 0, frame: 0, grace: .6,
     startX: ppos(veh.cockpit).x, maxX: 0, best: lvl.endless ? store.get('bestInf', 0) : ((App.prog[lvl.id] || {}).bestDist || 0), lastBreak: -9, design
@@ -1535,6 +1664,9 @@ function newGame(lvl, design, mode) {
   g.hasFly = veh.parts.some(P => P.id === 'prop' && P.conn);
   g.hasAct = veh.parts.some(P => (P.id === 'chute' || P.id === 'spring' || P.id === 'horn') && P.conn);
   g.onlyNitro = !veh.parts.some(P => (P.id === 'rocket' || P.id === 'jet') && P.conn);
+  g.hasPiston = veh.cjoints.some(J => J.type === 'piston' && J.j && J.a.conn);
+  g.hasDrop = veh.parts.some(P => P.id === 'decoupler' && P.conn);
+  g.hasHook = veh.parts.some(P => P.id === 'hook' && P.conn);
   const cp = ppos(veh.cockpit); g.cam.x = cp.x + 3; g.cam.y = cp.y + 1;
   world.on('begin-contact', c => onContact(g, c, 1));
   world.on('end-contact', c => onContact(g, c, -1));
@@ -1568,6 +1700,7 @@ function startRun() {
   if (G && G.mode === 'run') bankRun(G);
   if (G && G.world) G.dead = 1;
   G = newGame(App.lvl, JSON.parse(JSON.stringify(App.design)), 'run');
+  $('#kPiston').hidden = !G.hasPiston; $('#kDrop').hidden = !G.hasDrop; $('#kHook').hidden = !G.hasHook;
   $('#kBoost').hidden = !G.hasBoost; $('#kBoostL').textContent = G.onlyNitro ? 'NITRO' : 'BOOST'; $('#kFly').hidden = !G.hasFly; $('#kAct').hidden = !G.hasAct;
   $('#hTimeBox').hidden = !!App.lvl.endless;
   $('#ovResult').classList.remove('on'); $('#ovPause').classList.remove('on');
@@ -1693,6 +1826,24 @@ function physicsStep(g, h) {
     g.energy = Math.min(g.cap, g.energy + v.live.solar * sun * h);
   }
   if (v.live.gen > 0 && g.energy < g.cap) g.energy = Math.min(g.cap, g.energy + v.live.gen * h);
+  // --- vérins
+  for (const J of v.cjoints) {
+    if (J.type !== 'piston' || !J.alive || !J.j) continue;
+    const on = ctl && inp.piston && J.a.conn && g.energy > 0;
+    J.j.setMotorSpeed(on ? 3.6 : -2.5); J.j.setMaxMotorForce(J.a.conn ? (on ? 1400 : 900) : 150);
+    if (on && J.j.getJointTranslation() < CELL * 1.75) g.energy -= .6 * h;
+  }
+  // --- découpleurs et grappin (sur appui)
+  if (ctl && inp.drop && !g.dropPrev) fireDecoupler(g);
+  g.dropPrev = inp.drop;
+  if (ctl && inp.hook && !g.hookPrev) { if (g.rope) releaseRope(g); else fireHook(g); }
+  g.hookPrev = inp.hook;
+  if (g.rope) {
+    const R = g.rope;
+    if (!R.P.alive || !R.P.conn || g.over) releaseRope(g);
+    else { R.len = Math.max(1.6, R.len - 2.2 * h); R.j.setMaxLength(R.len); g.energy = Math.max(0, g.energy - .35 * h); }
+  }
+  if (g.ropeMiss) { g.ropeMiss.t -= h; if (g.ropeMiss.t <= 0) g.ropeMiss = null; }
   if (g.energy < 0) g.energy = 0;
 
   g.world.step(h, 10, 6);
@@ -1710,8 +1861,15 @@ function physicsStep(g, h) {
   }
   for (const W of v.wheels) if (W.J.alive && W.dmg > 1.4) breakAxle(g, W);
   for (const P of crash) detachPart(g, P);
-  // --- ponts
+  // --- liaisons mobiles et câble : arrachées si l'effort est trop fort
   const inv = 1 / h;
+  if (g.grace <= 0) for (const J of v.cjoints) {
+    if (!J.alive || !J.j) continue; const f = J.j.getReactionForce(inv);
+    J.stress += (Math.hypot(f.x, f.y) - J.stress) * .15;
+    if (J.stress > J.str) breakCJoint(g, J);
+  }
+  if (g.rope) { const f = g.rope.j.getReactionForce(inv); g.rope.stress += (Math.hypot(f.x, f.y) - g.rope.stress) * .2; if (g.rope.stress > 2400) { releaseRope(g); if (g.mode === 'run') { Snd.clank(); toast('Le câble a cassé !'); } } }
+  // --- ponts
   for (const B of g.ter.bridgeJoints) {
     if (!B.alive) continue; const f = B.j.getReactionForce(inv), s = Math.hypot(f.x, f.y);
     B.stress += (s - B.stress) * .2;
@@ -1820,7 +1978,7 @@ function postStep(g, dt) {
     const upY = ck.getWorldVector(V(0, 1)).y; if (upY < .35 && sp < .8 && v.groundContacts > 0) g.flipT = (g.flipT || 0) + dt; else g.flipT = 0;
     if (p.x > (g.progX ?? -1e9) + .6) { g.progX = p.x; g.progT = 0; } else g.progT = (g.progT || 0) + dt;
     if (g.progT > 9) endRun(g, false, 'Bloqué : l\'engin n\'avance plus.', 'stuck');
-    if (g.flipT > 1.8) endRun(g, false, upY < -.3 ? 'Sur le toit !' : 'Renversé : impossible de repartir.', 'flip');
+    if (g.flipT > (g.hasPiston || g.hasHook ? 4 : 1.8)) endRun(g, false, upY < -.3 ? 'Sur le toit !' : 'Renversé : impossible de repartir.', 'flip');
     const noProp = g.energy <= 0 || (v.live.force <= 0 && !v.parts.some(P => P.conn && (P.id === 'rocket' || P.id === 'prop' || P.id === 'jet')));
     if (g.stuckT > (noProp ? 2.5 : 6)) endRun(g, false, g.energy <= 0 ? 'Panne d\'énergie.' : noProp ? 'Plus rien pour avancer.' : 'Véhicule immobilisé.', 'stuck');
   } else {
@@ -1890,6 +2048,17 @@ function render(g) {
   const ter = g.ter;
   // décor derrière le sol
   for (const d of ter.decor) { if (d.x < x0 - 3 || d.x > x1 + 3) continue; drawDecor(c, d, ter.heightAt(d.x), T); }
+  const hookOn = g.veh.parts.some(P => P.id === 'hook' && P.conn && P.alive), hp = hookOn ? ppos(g.veh.cockpit) : null;
+  for (const A of ter.anchors) {
+    if (A.x < x0 - 6 || A.px > x1 + 3) continue;
+    const gy = ter.heightAt(A.px);
+    c.fillStyle = '#3a3f46'; c.fillRect(A.px - .1, gy, .2, A.y + .7 - gy); c.fillRect(A.px - .1, A.y + .55, A.x - A.px + .1, .16);
+    c.strokeStyle = '#3a3f46'; c.lineWidth = .06; c.beginPath(); c.moveTo(A.px, A.y - .4); c.lineTo(A.px + 1, A.y + .6); c.stroke();
+    c.strokeStyle = '#7d8b98'; c.lineWidth = .05; c.beginPath(); c.moveTo(A.x, A.y + .55); c.lineTo(A.x, A.y + .22); c.stroke();
+    const near = hp && Math.hypot(A.x - hp.x, A.y - hp.y) < 15;
+    if (near) { c.fillStyle = 'rgba(255,194,26,' + (.25 + .15 * Math.sin(T * 6)) + ')'; c.beginPath(); c.arc(A.x, A.y, .55, 0, TAU); c.fill(); }
+    c.strokeStyle = near ? '#ffc21a' : '#c9a227'; c.lineWidth = .1; c.beginPath(); c.arc(A.x, A.y, .22, 0, TAU); c.stroke();
+  }
   // pentes de lave au fond des ravins
   if (th.lava) for (const pit of ter.pits) { if (pit.x1 < x0 || pit.x0 > x1) continue; c.fillStyle = '#ff5a1f'; c.fillRect(pit.x0, pit.top - 9.6, pit.x1 - pit.x0, 1.2 + Math.sin(T * 3) * .1); }
   // sol
@@ -1984,6 +2153,22 @@ function drawVehicle(c, g, T) {
     c.lineTo(b.x, b.y); c.stroke();
     c.strokeStyle = '#3a4550'; c.lineWidth = .07; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(a.x + dx * .45, a.y + dy * .45); c.stroke();
   }
+  // tiges des vérins (sous les pièces)
+  for (const J of v.cjoints) {
+    if (J.type !== 'piston' || !J.alive || !J.j || !J.a.alive) continue;
+    const a = ppos(J.a), b = J.j.getAnchorB();
+    c.strokeStyle = '#59636d'; c.lineWidth = .16; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+    c.strokeStyle = '#eef2f5'; c.lineWidth = .09; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+  }
+  // câble du grappin
+  if (g.rope && g.rope.P.alive) {
+    const a = ppos(g.rope.P), b = g.rope.body.getWorldPoint(g.rope.lb);
+    c.strokeStyle = '#2b2118'; c.lineWidth = .07; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+    c.strokeStyle = '#d9c38a'; c.lineWidth = .035; c.setLineDash([.12, .08]); c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke(); c.setLineDash([]);
+    const an = Math.atan2(b.y - a.y, b.x - a.x); c.save(); c.translate(b.x, b.y); c.rotate(an - Math.PI / 2); c.strokeStyle = '#c9d2da'; c.lineWidth = .06; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(0, -.2); c.lineTo(0, .05); c.moveTo(0, -.1); c.quadraticCurveTo(-.2, 0, -.18, .14); c.moveTo(0, -.1); c.quadraticCurveTo(.2, 0, .18, .14); c.stroke(); c.restore();
+  }
+  if (g.ropeMiss) { const m = g.ropeMiss, k = m.t / .3; c.strokeStyle = 'rgba(217,195,138,' + k + ')'; c.lineWidth = .04; c.beginPath(); c.moveTo(m.x0, m.y0); c.lineTo(m.x0 + (m.x1 - m.x0) * (1 - k * .2), m.y0 + (m.y1 - m.y0) * (1 - k * .2)); c.stroke(); }
   const ko = g.over && g.over.kind === 'ko';
   for (const P of v.parts) {
     if (!P.alive || P.d.wheel) continue;
@@ -1996,6 +2181,10 @@ function drawVehicle(c, g, T) {
       c.strokeStyle = 'rgba(240,240,230,.9)'; c.lineWidth = .025; c.beginPath(); for (const k of [-1, -.4, .4, 1]) { c.moveTo(p.x, p.y); c.lineTo(cx + Math.cos(ang) * k * .9, cy + Math.sin(ang) * k * .9); } c.stroke();
       c.save(); c.translate(cx, cy); c.rotate(ang); c.fillStyle = '#ff5a47'; c.beginPath(); c.moveTo(-1, 0); c.quadraticCurveTo(0, 1.1, 1, 0); c.closePath(); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.moveTo(-.35, .02); c.quadraticCurveTo(0, .95, .35, .02); c.closePath(); c.fill(); c.restore();
     }
+  }
+  for (const J of v.cjoints) {
+    if (J.type !== 'hinge' || !J.alive || !J.j) continue; const p = J.j.getAnchorA();
+    c.fillStyle = '#e6ebf0'; c.beginPath(); c.arc(p.x, p.y, .1, 0, TAU); c.fill(); c.fillStyle = '#26313b'; c.beginPath(); c.arc(p.x, p.y, .045, 0, TAU); c.fill();
   }
   for (const w of v.wheels) {
     if (!w.P.alive) continue; const p = w.P.body.getPosition();
@@ -2043,8 +2232,8 @@ function bindPlay() {
     el.addEventListener('pointerdown', dn); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up); el.addEventListener('lostpointercapture', up);
     el.addEventListener('contextmenu', e => e.preventDefault());
   };
-  hold('#kGas', 'gas'); hold('#kBrake', 'brake'); hold('#kBoost', 'boost'); hold('#kFly', 'fly'); hold('#kAct', 'act');
-  const keymap = { ArrowRight: 'gas', d: 'gas', D: 'gas', ArrowLeft: 'brake', a: 'brake', q: 'brake', A: 'brake', Q: 'brake', ' ': 'boost', ArrowUp: 'fly', w: 'fly', z: 'fly', W: 'fly', Z: 'fly', e: 'act', E: 'act', Shift: 'act' };
+  hold('#kGas', 'gas'); hold('#kBrake', 'brake'); hold('#kBoost', 'boost'); hold('#kFly', 'fly'); hold('#kAct', 'act'); hold('#kPiston', 'piston'); hold('#kDrop', 'drop'); hold('#kHook', 'hook');
+  const keymap = { ArrowRight: 'gas', d: 'gas', D: 'gas', ArrowLeft: 'brake', a: 'brake', q: 'brake', A: 'brake', Q: 'brake', ' ': 'boost', ArrowUp: 'fly', w: 'fly', z: 'fly', W: 'fly', Z: 'fly', e: 'act', E: 'act', Shift: 'act', c: 'piston', C: 'piston', ArrowDown: 'piston', x: 'drop', X: 'drop', g: 'hook', G: 'hook', f: 'hook', F: 'hook' };
   window.addEventListener('keydown', e => {
     if (App.screen !== 'scrPlay' || !G || G.mode !== 'run') return;
     const k = keymap[e.key]; if (k) { G.input[k] = 1; e.preventDefault(); Snd.init(); }
