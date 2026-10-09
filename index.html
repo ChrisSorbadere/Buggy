@@ -53,6 +53,11 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .mbtn.main{background:var(--hazard);color:#14100a}
 .mbtn.main small{color:#5a4508}
 .menuFoot{display:flex;gap:8px}
+.bankRow{display:flex;align-items:center;gap:7px;font-size:clamp(15px,3.6vh,19px);font-weight:700;color:#c5d2dc}
+.bankRow b{color:var(--hazard);font-size:1.15em;font-variant-numeric:tabular-nums}
+.icoBtn.quit{margin-left:auto;color:#ff9c90}
+.lvBank{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--hazard);font-variant-numeric:tabular-nums}
+.totStars{margin-left:auto}
 .icoBtn{width:42px;height:42px;border-radius:10px;background:var(--steel2);border:2px solid #000;display:grid;place-items:center;font-size:18px}
 .icoBtn.off{color:var(--dim)}
 
@@ -60,7 +65,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 #scrLevels{background:radial-gradient(120% 90% at 70% 0%,#1d2a36 0%,var(--ink) 70%)}
 .topRow{display:flex;align-items:center;gap:12px;padding:10px 14px}
 .topRow h2{font-family:var(--f-display);font-weight:400;font-size:clamp(20px,5vh,30px);margin:0}
-.totStars{margin-left:auto;font-weight:800;font-size:18px;color:var(--hazard)}
+.totStars{font-weight:800;font-size:18px;color:var(--hazard)}
 .cards{display:flex;gap:12px;overflow-x:auto;padding:4px 14px 14px;scroll-snap-type:x mandatory;scrollbar-width:none;height:calc(100% - 64px);align-items:center}
 .cards::-webkit-scrollbar{display:none}
 .card{flex:0 0 clamp(168px,24vw,220px);scroll-snap-align:start;border-radius:14px;background:var(--steel);border:2px solid #000;box-shadow:0 5px 0 #000;
@@ -118,6 +123,15 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .tile.sel{background:#3b4b5c;box-shadow:0 0 0 2px var(--hazard) inset}
 .tile .rot{position:absolute;top:2px;right:3px;font-size:12px;color:var(--chalk)}
 .tile.dis{opacity:.4}
+.tile .tp{display:none;align-items:center;gap:3px;font-size:11.5px;font-weight:800;color:var(--hazard);line-height:1.1}
+.tile .tp .coin{width:10px;height:10px}
+.tile.lock .tc{display:none}.tile.lock .tp{display:flex}
+.tile.lock canvas{opacity:.35;filter:grayscale(.8)}
+.tile.lock::after{content:"";position:absolute;top:4px;left:50%;width:14px;height:11px;margin-left:-7px;border-radius:2px;background:var(--hazard);box-shadow:0 0 0 1.5px #000}
+.tile.lock::before{content:"";position:absolute;top:-1px;left:50%;width:8px;height:9px;margin-left:-6px;border:2px solid var(--hazard);border-bottom:none;border-radius:5px 5px 0 0}
+.tile.arm{box-shadow:0 0 0 2px var(--go) inset;background:#2f4a3c}
+.chip.bankC b{display:flex;align-items:center;gap:4px;color:var(--hazard)}
+.chip.bankC .coin{width:12px;height:12px}
 .pop{position:absolute;z-index:5;display:flex;align-items:center;gap:5px;padding:5px;border-radius:10px;background:#0b1015f0;border:2px solid var(--hazard);box-shadow:0 6px 18px #000a}
 .pop .pn{font-size:14px;font-weight:800;padding:0 5px;white-space:nowrap}
 .pop button{padding:7px 10px;border-radius:7px;background:var(--steel3);border:1px solid #000;font-size:15px}
@@ -149,7 +163,10 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .act{width:58px;height:58px;border-radius:50%;border:3px solid #000;box-shadow:0 4px 0 #000;display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;letter-spacing:.5px;touch-action:none}
 .act svg.i{width:24px;height:24px}
-.act.boost{background:#e2532f} .act.fly{background:#3f8fe0} .act.action{background:#6b8e3a}
+.act{position:relative}
+.act.boost{background:#e2532f}
+.act.boost::after{content:"";position:absolute;left:12px;right:12px;bottom:7px;height:4px;border-radius:2px;background:linear-gradient(90deg,#bfe4ff calc(var(--n,0)*100%),rgba(0,0,0,.35) 0);display:var(--nb,none)}
+.act.boost[style*="--n"]{--nb:block} .act.fly{background:#3f8fe0} .act.action{background:#6b8e3a}
 .act.down{transform:translateY(3px);box-shadow:0 1px 0 #000;filter:brightness(1.3)}
 .act[hidden]{display:none}
 #toast{position:absolute;left:50%;top:22%;transform:translate(-50%,0) scale(.8);opacity:0;pointer-events:none;
@@ -164,6 +181,10 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .panel h3{font-family:var(--f-display);font-weight:400;font-size:clamp(22px,6vh,32px);margin:0;text-align:center}
 .panel h3.win{color:var(--go)} .panel h3.lose{color:var(--danger)}
 .reason{text-align:center;color:#c9d6e0;font-size:17px;font-weight:600;margin:-4px 0 0}
+.rBank{display:flex;justify-content:center;align-items:center;gap:6px;font-size:17px;font-weight:600;color:#c9d6e0}
+.rBank b{color:var(--hazard);font-variant-numeric:tabular-nums}
+.bye{text-align:center;font-size:17px;line-height:1.35;color:#d3dee7;font-weight:500;margin:0}
+.bye b{color:var(--hazard)}
 .bigStars{display:flex;justify-content:center;gap:10px}
 .bigStars .star{width:44px;height:44px}
 .bigStars .star.on{animation:pop .45s cubic-bezier(.2,1.6,.4,1) both}
@@ -214,17 +235,19 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
         <button class="mbtn" id="btnEndless">Route infinie <small id="bestInf">record —</small></button>
         <button class="mbtn" id="btnSandbox">Bac à sable <small>sans budget</small></button>
       </div>
-      <div class="menuFoot">
+      <div class="bankRow"><span class="coin"></span><b id="mBank">0</b>pièces au trésor</div>
+      <div class="menuFoot" style="width:min(300px,44vw)">
         <button class="icoBtn" id="btnSound" aria-label="Son"></button>
         <button class="icoBtn" id="btnFs" aria-label="Plein écran"></button>
         <button class="icoBtn" id="btnHelp" aria-label="Aide">?</button>
+        <button class="icoBtn quit" id="btnQuit" aria-label="Quitter le jeu"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v9M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></button>
       </div>
     </div>
   </section>
 
   <!-- NIVEAUX -->
   <section id="scrLevels" class="screen">
-    <div class="topRow"><button class="icoBtn" id="lvBack" aria-label="Retour">‹</button><h2>Campagne</h2><span class="totStars" id="lvStars"></span></div>
+    <div class="topRow"><button class="icoBtn" id="lvBack" aria-label="Retour">‹</button><h2>Campagne</h2><span class="totStars" id="lvStars"></span><span class="lvBank"><span class="coin"></span><span id="lvBank">0</span></span></div>
     <div class="cards" id="cards"></div>
   </section>
 
@@ -270,7 +293,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <div class="acts">
         <div class="act action" id="kAct" hidden><svg class="i" viewBox="0 0 24 24"><path d="M3 11a9 9 0 0 1 18 0M3 11l9 10 9-10M12 21V11"/></svg>ACTION</div>
         <div class="act fly" id="kFly" hidden><svg class="i" viewBox="0 0 24 24"><path d="M12 12c-5-1-8-3-8-5s4 0 8 5zm0 0c5 1 8 3 8 5s-4 0-8-5zm0 0v9"/></svg>VOL</div>
-        <div class="act boost" id="kBoost" hidden><svg class="i" viewBox="0 0 24 24"><path d="M5 19c1-4 3-6 5-7M14 4c4 0 6 2 6 6l-7 7-6-6zM9 15l-4 4"/></svg>BOOST</div>
+        <div class="act boost" id="kBoost" hidden><svg class="i" viewBox="0 0 24 24"><path d="M5 19c1-4 3-6 5-7M14 4c4 0 6 2 6 6l-7 7-6-6zM9 15l-4 4"/></svg><span id="kBoostL">BOOST</span></div>
       </div>
       <div class="pedal gas" id="kGas">GAZ</div>
     </div>
@@ -281,6 +304,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
   <div class="ov" id="ovResult"><div class="panel">
     <h3 id="rTitle"></h3><p class="reason" id="rReason"></p>
     <div class="bigStars" id="rStars"></div>
+    <div class="rBank" id="rBank"></div>
     <div class="stats" id="rStats"></div>
     <div class="objs" id="rObjs"></div>
     <div class="btns"><button class="btn" id="rBuild">Atelier</button><button class="btn" id="rRetry">Rejouer</button><button class="btn pri" id="rNext">Suivant ▶</button></div>
@@ -306,8 +330,15 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p><b>Montage</b> — les pièces voisines sont soudées. Une roue s'accroche à sa voisine ; contre un <b>amortisseur</b>, elle est suspendue. Le rond jaune et noir est le centre de gravité : plus il est bas, plus c'est stable.</p>
       <p><b>Conduire</b> — GAZ et FREIN. En l'air, GAZ bascule l'engin vers l'arrière, FREIN vers l'avant : rattrape tes sauts. BOOST, VOL et ACTION pilotent fusées, hélices, parachutes et ressorts.</p>
       <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, ramasser 70 % des pièces, ne rien casser.</p>
+      <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Il sert à débloquer les pièces marquées d'un cadenas : touche-les deux fois pour les acheter. Dans le bac à sable, tout est disponible pour essayer.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
+  </div></div>
+
+  <div class="ov" id="ovBye"><div class="panel">
+    <h3>À bientôt !</h3>
+    <p class="bye">Ta progression et ton trésor de <b id="byeBank">0</b> pièces sont enregistrés.<br>Tu peux fermer cet onglet ou revenir à l'écran d'accueil du téléphone.</p>
+    <div class="btns"><button class="btn pri" id="byeBack">Rejouer</button></div>
   </div></div>
 
   <div class="ov" id="ovRotate"><div class="ph"></div>Tourne ton téléphone en paysage</div>
@@ -384,28 +415,43 @@ const CATS = ['Pilote', 'Structure', 'Roues', 'Suspension', 'Moteurs', 'Énergie
 
 const PARTS = {
   cockpit: { n: 'Habitacle', cat: 'Pilote', cost: 0, dens: 7, str: 2600, unique: 1, d: 'Le pilote. Obligatoire : s\'il se cogne la tête, la course s\'arrête.' },
+  cockpit_a: { n: 'Cabine blindée', cat: 'Pilote', cost: 20, dens: 11, str: 4200, unique: 1, armor: 1, price: 200, d: 'Pilote casqué dans une cabine renforcée : il encaisse bien mieux les chocs.' },
   wood:    { n: 'Bois', cat: 'Structure', cost: 4, dens: 4.5, str: 950, d: 'Léger et bon marché, mais il casse vite.' },
+  alu:     { n: 'Alu', cat: 'Structure', cost: 7, dens: 6.5, str: 1800, price: 40, d: 'Entre le bois et l\'acier : léger et assez solide.' },
   steel:   { n: 'Acier', cat: 'Structure', cost: 12, dens: 13, str: 3400, d: 'Lourd et très solide.' },
   carbon:  { n: 'Carbone', cat: 'Structure', cost: 24, dens: 4, str: 2600, d: 'Léger ET solide. Cher.' },
   ballast: { n: 'Lest', cat: 'Structure', cost: 8, dens: 18, str: 3600, d: 'Très lourd : abaisse le centre de gravité.' },
   bumper:  { n: 'Pare-chocs', cat: 'Structure', cost: 10, dens: 3, str: 2200, rest: 0.6, fric: 0.5, d: 'Caoutchouc : rebondit et protège des chocs.' },
+  wedge:   { n: 'Biseau', cat: 'Structure', cost: 6, dens: 6, str: 1700, dir: 1, wedge: 1, fric: .45, price: 30, d: 'Pièce en pente : un nez qui glisse sur les obstacles au lieu de buter.' },
+  rollbar: { n: 'Arceau', cat: 'Structure', cost: 9, dens: 2.5, str: 3000, fric: .12, price: 60, d: 'Tube léger qui glisse sur le sol. Posé au-dessus du pilote, il lui protège la tête.' },
+  wheel_w: { n: 'Roue bois', cat: 'Roues', cost: 4, wheel: 1, r: 0.27, dens: 3.2, fric: 0.7, wood: 1, d: 'Presque gratuite, mais elle accroche mal.' },
   wheel_s: { n: 'Roue sport', cat: 'Roues', cost: 8, wheel: 1, r: 0.22, dens: 2.6, fric: 0.95, d: 'Petite et légère. Rapide sur le plat.' },
   wheel_m: { n: 'Tout-terrain', cat: 'Roues', cost: 12, wheel: 1, r: 0.31, dens: 2.2, fric: 1.15, d: 'Le bon compromis. Bonne accroche.' },
+  wheel_x: { n: 'Pneu clouté', cat: 'Roues', cost: 18, wheel: 1, r: 0.31, dens: 2.6, fric: 1.9, spikes: 1, price: 120, d: 'Clous d\'acier : adhérence maximale, même sur la neige.' },
   wheel_l: { n: 'Monster', cat: 'Roues', cost: 28, wheel: 1, size: 2, r: 0.52, dens: 1.5, fric: 1.3, d: 'Énorme (2×2). Franchit presque tout.' },
   susp_h:  { n: 'Amorti dur', cat: 'Suspension', cost: 8, dens: 6, str: 2600, sag: 0.04, zeta: 1.0, travel: 0.13, col: '#e0503a', d: 'À coller contre une roue. Précis, peu de débattement.' },
   susp_s:  { n: 'Amorti souple', cat: 'Suspension', cost: 10, dens: 6, str: 2600, sag: 0.085, zeta: 0.8, travel: 0.26, col: '#2fb8c9', d: 'À coller contre une roue. Encaisse les gros chocs.' },
+  motor_s: { n: 'Mini-moteur', cat: 'Moteurs', cost: 7, dens: 6, str: 1800, force: 45, vmax: 8, drain: 0.45, d: 'Petit et économe. Pour les engins légers.' },
   motor_e: { n: 'Électrique', cat: 'Moteurs', cost: 15, dens: 10, str: 2200, force: 95, vmax: 10, drain: 1.0, d: 'Sobre et régulier.' },
+  motor_h: { n: 'Hybride', cat: 'Moteurs', cost: 26, dens: 12, str: 2300, force: 140, vmax: 13, drain: 1.3, regen: 1, price: 250, d: 'Recharge la batterie quand tu freines ou en roue libre.' },
   motor_t: { n: 'V8 turbo', cat: 'Moteurs', cost: 35, dens: 15, str: 2600, force: 230, vmax: 17, drain: 2.6, d: 'Énorme couple, gros appétit d\'énergie.' },
   batt_s:  { n: 'Batterie', cat: 'Énergie', cost: 8, dens: 9, str: 1600, cap: 60, d: '60 unités d\'énergie.' },
   batt_l:  { n: 'Grosse batt.', cat: 'Énergie', cost: 18, dens: 15, str: 1900, cap: 150, d: '150 unités d\'énergie. Lourde.' },
   solar:   { n: 'Solaire', cat: 'Énergie', cost: 14, dens: 3, str: 800, solar: 1.1, d: 'Recharge en continu. Fragile.' },
-  rocket:  { n: 'Fusée', cat: 'Propulsion', cost: 22, dens: 5, str: 1900, dir: 1, thrust: 160, drain: 7, d: 'Poussée puissante dans la direction de la pointe.' },
-  prop:    { n: 'Hélice', cat: 'Propulsion', cost: 18, dens: 4, str: 1500, dir: 0, thrust: 80, drain: 3.2, d: 'Poussée douce vers le moyeu. Orientable.' },
+  gen:     { n: 'Générateur', cat: 'Énergie', cost: 20, dens: 16, str: 2400, gen: 1.3, price: 180, d: 'Produit de l\'énergie en continu, même sans soleil. Lourd et fumant.' },
+  rocket:  { n: 'Fusée', cat: 'Propulsion', cost: 22, dens: 5, str: 1900, dir: 1, thrust: 160, drain: 7, d: 'BOOST : poussée puissante dans la direction de la pointe.' },
+  jet:     { n: 'Réacteur', cat: 'Propulsion', cost: 30, dens: 6, str: 2100, dir: 1, thrust: 120, drain: 3.2, price: 300, d: 'BOOST : poussée continue et économe. Met une seconde à monter en régime.' },
+  nitro:   { n: 'Nitro', cat: 'Propulsion', cost: 15, dens: 4, str: 1300, nitro: 3, price: 150, d: 'BOOST : double la puissance des moteurs pendant 3 s par bouteille.' },
+  prop:    { n: 'Hélice', cat: 'Propulsion', cost: 18, dens: 4, str: 1500, dir: 0, thrust: 80, drain: 3.2, d: 'VOL : poussée douce vers le moyeu. Orientable.' },
   wing:    { n: 'Aile', cat: 'Aéro', cost: 12, dens: 2.5, str: 1200, dir: 0, d: 'Portance selon la vitesse et l\'angle. Bord d\'attaque vers l\'avant.' },
+  spoiler: { n: 'Aileron', cat: 'Aéro', cost: 8, dens: 2, str: 1300, down: 1, price: 80, d: 'Plaque l\'engin au sol à grande vitesse : plus d\'adhérence.' },
   balloon: { n: 'Ballon', cat: 'Aéro', cost: 10, dens: 0.4, str: 700, lift: 26, d: 'Allège le véhicule. Éclate au contact du sol.' },
   chute:   { n: 'Parachute', cat: 'Aéro', cost: 9, dens: 2, str: 1800, dir: 0, d: 'S\'ouvre avec ACTION. Freine et stabilise.' },
   spring:  { n: 'Ressort', cat: 'Spécial', cost: 16, dens: 6, str: 2400, dir: 2, d: 'ACTION : propulse le véhicule à l\'opposé du plateau.' },
+  gyro:    { n: 'Gyroscope', cat: 'Spécial', cost: 24, dens: 8, str: 2200, gyro: 1, price: 220, d: 'Stabilise l\'engin : freine les rotations et le remet à plat en l\'air.' },
+  horn:    { n: 'Klaxon', cat: 'Spécial', cost: 2, dens: 3, str: 1200, price: 20, d: 'ACTION : tut tut ! Indispensable.' },
 };
+
 const PART_IDS = Object.keys(PARTS);
 
 const THEMES = {
@@ -434,7 +480,7 @@ const INF_THEMES = ['prairie', 'desert', 'canyon', 'snow', 'volcano', 'moon'];
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
    o roue S, O roue M, M monster (2×2, coin haut-gauche), h amorti dur, u amorti souple, e électrique,
    T V8, B batterie, G grosse batterie, P solaire, R fusée→, H hélice↑, W aile, A ballon, X parachute, J ressort↓ */
-const CODES = { C: 'cockpit', w: 'wood', s: 'steel', k: 'carbon', L: 'ballast', b: 'bumper', o: 'wheel_s', O: 'wheel_m', M: 'wheel_l', h: 'susp_h', u: 'susp_s', e: 'motor_e', T: 'motor_t', B: 'batt_s', G: 'batt_l', P: 'solar', R: 'rocket', H: 'prop', W: 'wing', A: 'balloon', X: 'chute', J: 'spring' };
+const CODES = { V: 'cockpit_a', a: 'alu', Z: 'wedge', r: 'rollbar', i: 'wheel_w', x: 'wheel_x', m: 'motor_s', Y: 'motor_h', g: 'gen', E: 'jet', N: 'nitro', S: 'spoiler', Q: 'gyro', K: 'horn', C: 'cockpit', w: 'wood', s: 'steel', k: 'carbon', L: 'ballast', b: 'bumper', o: 'wheel_s', O: 'wheel_m', M: 'wheel_l', h: 'susp_h', u: 'susp_s', e: 'motor_e', T: 'motor_t', B: 'batt_s', G: 'batt_l', P: 'solar', R: 'rocket', H: 'prop', W: 'wing', A: 'balloon', X: 'chute', J: 'spring' };
 const PRESETS = [
   { name: 'Buggy', d: 'Simple et fiable', rows: ['.CeB.', 'wwwww', 'h...h', 'O...O'] },
   { name: 'Tout-terrain', d: 'V8, suspension souple, lest bas', rows: ['.PCT.', 'wwwww', 'uLGLu', 'O...O'] },
@@ -473,10 +519,10 @@ function analyze(design) {
     for (const [x, y, pri] of c) { const j = at(x, y); if (j < 0 || isW(j)) continue; const sc = PARTS[design[j].id].cat === 'Suspension' ? 0 : 1 + pri; if (sc < bs) { bs = sc; best = j; } }
     if (best >= 0) { links.push({ w: i, to: best, susp: PARTS[design[best].id].cat === 'Suspension' }); adj[i].push(best); adj[best].push(i); }
   });
-  const ci = design.findIndex(p => p.id === 'cockpit');
+  const ci = design.findIndex(p => PARTS[p.id].cat === 'Pilote');
   const conn = new Set();
   if (ci >= 0) { const st = [ci]; conn.add(ci); while (st.length) { const k = st.pop(); for (const n of adj[k]) if (!conn.has(n)) { conn.add(n); st.push(n); } } }
-  const S = { mass: 0, cost: 0, cap: 0, force: 0, vw: 0, solar: 0, thrust: 0, lift: 0, wheels: 0, linked: 0, motors: 0, rockets: 0, props: 0, wings: 0, chutes: 0, springs: 0, balloons: 0, drain: 0 };
+  const S = { mass: 0, cost: 0, cap: 0, force: 0, vw: 0, solar: 0, gen: 0, thrust: 0, lift: 0, wheels: 0, linked: 0, motors: 0, rockets: 0, props: 0, jets: 0, nitro: 0, wings: 0, chutes: 0, springs: 0, balloons: 0, horns: 0, drain: 0 };
   let mx = 0, my = 0;
   design.forEach((p, i) => {
     const d = PARTS[p.id], s = d.size || 1;
@@ -487,7 +533,11 @@ function analyze(design) {
     if (d.solar) S.solar += d.solar;
     if (d.force) { S.force += d.force; S.vw += d.force * d.vmax; S.motors++; S.drain += d.drain; }
     if (d.wheel) S.wheels++;
+    if (d.gen) S.gen += d.gen;
     if (p.id === 'rocket') { S.rockets++; S.thrust += d.thrust; }
+    if (p.id === 'jet') { S.jets++; S.thrust += d.thrust; }
+    if (d.nitro) S.nitro += d.nitro;
+    if (p.id === 'horn') S.horns++;
     if (p.id === 'prop') { S.props++; S.thrust += d.thrust; }
     if (p.id === 'wing') S.wings++;
     if (p.id === 'chute') S.chutes++;
@@ -501,14 +551,17 @@ function analyze(design) {
 function validate(design, budget) {
   const A = analyze(design), S = A.S, err = [], warn = [];
   if (A.ci < 0) err.push('Ajoute l\'habitacle du pilote.');
+  const lockedP = design.find(p => !isOwned(p.id));
+  if (lockedP) err.push('À débloquer d\'abord : ' + PARTS[lockedP.id].n + ' (' + PARTS[lockedP.id].price + ' pièces au trésor).');
   if (S.cost > budget) err.push('Budget dépassé de ' + (S.cost - budget) + ' : retire des pièces.');
   const loose = design.length - A.conn.size;
   if (A.ci >= 0) {
-    const canDrive = S.linked >= 1 && S.motors > 0, canPush = S.rockets + S.props > 0;
+    const canDrive = S.linked >= 1 && S.motors > 0, canPush = S.rockets + S.props + S.jets > 0;
     if (!canDrive && !canPush) err.push('Rien ne fait avancer l\'engin : roues + moteur, fusée ou hélice.');
-    else if ((S.motors || canPush) && S.cap <= 0 && S.solar <= 0) err.push('Ajoute une batterie pour alimenter tout ça.');
+    else if ((S.motors || canPush) && S.cap <= 0 && S.solar <= 0 && S.gen <= 0) err.push('Ajoute une batterie pour alimenter tout ça.');
     if (loose > 0) warn.push(loose + (loose > 1 ? ' pièces ne sont pas reliées' : ' pièce n\'est pas reliée') + ' au pilote : elles tomberont.');
     if (S.motors && S.linked === 0) warn.push('Le moteur n\'entraîne aucune roue.');
+    if (S.nitro && !S.motors) warn.push('La nitro n\'a aucun moteur à booster.');
   }
   return { A, err, warn, ok: err.length === 0 };
 }
@@ -520,6 +573,115 @@ function lg(c, y0, y1, ...cols) { const g = c.createLinearGradient(0, y0, 0, y1)
 function dot(c, x, y, r) { c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); }
 function plate(c, f1, f2, edge) { c.fillStyle = lg(c, -16, 16, f1, f2); rr(c, -15.5, -15.5, 31, 31, 3.5); c.fill(); c.lineWidth = 1.4; c.strokeStyle = edge; c.stroke(); }
 const ART = {
+  cockpit_a(c, o) {
+    plate(c, '#4b5560', '#262c33', '#0d1013');
+    c.fillStyle = '#1b2026'; rr(c, -12, 4, 24, 9, 2); c.fill();
+    c.fillStyle = '#d7302a'; for (let i = -9; i <= 7; i += 5) c.fillRect(i, 7, 3, 3);
+    c.save(); c.beginPath(); c.arc(0, -2, 12, Math.PI, 0); c.lineTo(12, 3); c.lineTo(-12, 3); c.closePath(); c.clip();
+    c.fillStyle = lg(c, -14, 3, '#7fa2c2', '#334d68'); c.fillRect(-13, -15, 26, 19);
+    c.fillStyle = '#f2c49b'; dot(c, 0, -1, 5.6);
+    c.fillStyle = '#d7302a'; c.beginPath(); c.arc(0, -2, 7.2, Math.PI, 0); c.lineTo(7.2, 0); c.lineTo(-7.2, 0); c.closePath(); c.fill();
+    c.fillStyle = '#ffc21a'; c.fillRect(-1, -9, 2, 7);
+    c.fillStyle = '#10151a'; rr(c, -6, -2.6, 12, 3.2, 1.4); c.fill();
+    c.restore();
+    c.strokeStyle = '#9aa5b0'; c.lineWidth = 2.2;
+    c.beginPath(); c.arc(0, -2, 12, Math.PI, 0); c.stroke();
+    c.beginPath(); c.moveTo(-6, -12.4); c.lineTo(-6, 3); c.moveTo(6, -12.4); c.lineTo(6, 3); c.moveTo(0, -14); c.lineTo(0, -10); c.stroke();
+    c.fillStyle = '#c9d2da'; for (const [x, y] of [[-13, -13], [13, -13], [-13, 13], [13, 13]]) dot(c, x, y, 1.6);
+    if (o && o.ko) { c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-4, -3); c.lineTo(-1, 0); c.moveTo(-1, -3); c.lineTo(-4, 0); c.moveTo(1, -3); c.lineTo(4, 0); c.moveTo(4, -3); c.lineTo(1, 0); c.stroke(); }
+  },
+  alu(c) {
+    plate(c, '#d5dde5', '#8d99a6', '#3e4852');
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = .7; for (let y = -13; y <= 13; y += 3) { c.beginPath(); c.moveTo(-14, y); c.lineTo(14, y); c.stroke(); }
+    c.fillStyle = '#5d6975'; for (const x of [-7, 7]) { c.beginPath(); c.arc(x, 0, 4.6, 0, TAU); c.fill(); }
+    c.fillStyle = '#2b333b'; for (const x of [-7, 7]) { c.beginPath(); c.arc(x, .6, 3.6, 0, TAU); c.fill(); }
+    c.fillStyle = '#e9eef3'; for (const [x, y] of [[-12, -12], [12, -12], [-12, 12], [12, 12]]) dot(c, x, y, 1.4);
+  },
+  wedge(c) {
+    const P = [[16, 16], [16, -16], [-16, 16]];
+    c.beginPath(); c.moveTo(P[0][0] - .5, P[0][1] - .5); c.lineTo(P[1][0] - .5, P[1][1] + .5); c.lineTo(P[2][0] + .5, P[2][1] - .5); c.closePath();
+    c.fillStyle = lg(c, -16, 16, '#a9b8c6', '#55636f'); c.fill();
+    c.save(); c.clip();
+    c.strokeStyle = '#ffc21a'; c.lineWidth = 5; c.beginPath(); c.moveTo(-16, 16); c.lineTo(16, -16); c.stroke();
+    c.strokeStyle = '#111'; c.lineWidth = 5; c.setLineDash([5, 5]); c.beginPath(); c.moveTo(-16, 16); c.lineTo(16, -16); c.stroke(); c.setLineDash([]);
+    c.restore();
+    c.strokeStyle = '#26313b'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(16, 16); c.lineTo(16, -16); c.lineTo(-16, 16); c.closePath(); c.stroke();
+    c.fillStyle = '#e1e8ee'; dot(c, 11, 11, 1.6); dot(c, 11, -4, 1.6); dot(c, -4, 11, 1.6);
+  },
+  rollbar(c) {
+    c.strokeStyle = '#7a1410'; c.lineWidth = 7; c.lineJoin = 'round';
+    c.beginPath(); c.moveTo(-12, 15); c.lineTo(-12, -6); c.quadraticCurveTo(-12, -12, -6, -12); c.lineTo(6, -12); c.quadraticCurveTo(12, -12, 12, -6); c.lineTo(12, 15); c.moveTo(-12, 2); c.lineTo(12, -9); c.stroke();
+    c.strokeStyle = '#e8433a'; c.lineWidth = 4.5; c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-13, 12); c.lineTo(-13, -6); c.quadraticCurveTo(-13, -13, -6, -13); c.lineTo(5, -13); c.stroke();
+    c.fillStyle = '#3a4550'; c.fillRect(-15, 12, 7, 4); c.fillRect(8, 12, 7, 4);
+  },
+  motor_s(c) {
+    plate(c, '#8fa6b3', '#4f6371', '#1f2b33');
+    c.fillStyle = '#26323b'; dot(c, 0, 0, 10);
+    c.strokeStyle = '#c9d2da'; c.lineWidth = 2.2; for (let k = 0; k < 6; k++) { const a = k / 6 * TAU; c.beginPath(); c.moveTo(Math.cos(a) * 2.5, Math.sin(a) * 2.5); c.quadraticCurveTo(Math.cos(a + .5) * 7, Math.sin(a + .5) * 7, Math.cos(a + .9) * 8.5, Math.sin(a + .9) * 8.5); c.stroke(); }
+    c.fillStyle = '#ffc21a'; dot(c, 0, 0, 2.4);
+  },
+  motor_h(c) {
+    c.save(); rr(c, -15.5, -15.5, 31, 31, 3.5); c.clip();
+    c.fillStyle = lg(c, -16, 16, '#3fa9ff', '#1563b8'); c.fillRect(-16, -16, 32, 32);
+    c.fillStyle = lg(c, -16, 16, '#4fe08f', '#1a8a4a'); c.beginPath(); c.moveTo(-16, 16); c.lineTo(16, -16); c.lineTo(16, 16); c.fill();
+    c.restore(); c.strokeStyle = '#0b2f4f'; c.lineWidth = 1.4; rr(c, -15.5, -15.5, 31, 31, 3.5); c.stroke();
+    c.fillStyle = '#0c2238'; dot(c, 0, 0, 8.5);
+    c.fillStyle = '#7dffb0'; c.beginPath(); c.moveTo(-4.5, 4); c.quadraticCurveTo(-5, -5, 5, -5.5); c.quadraticCurveTo(5, 4, -4.5, 4); c.fill();
+    c.fillStyle = '#ffe14a'; c.beginPath(); c.moveTo(1.5, -4); c.lineTo(-2, 1); c.lineTo(.5, 1); c.lineTo(-.8, 5); c.lineTo(3, -.5); c.lineTo(.5, -.5); c.closePath(); c.fill();
+  },
+  gen(c) {
+    plate(c, '#5b7a43', '#2f4521', '#141f0d');
+    c.fillStyle = '#2a2f33'; rr(c, 6, -16.5, 5, 9, 1); c.fill(); c.fillStyle = '#111'; c.fillRect(6.5, -17, 4, 2);
+    c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1.6; for (let y = -6; y <= 12; y += 4) { c.beginPath(); c.moveTo(-13, y); c.lineTo(3, y); c.stroke(); }
+    c.fillStyle = '#e9e4cf'; dot(c, 8, 5, 5); c.strokeStyle = '#2a2f33'; c.lineWidth = 1; c.beginPath(); c.arc(8, 5, 5, 0, TAU); c.stroke();
+    c.strokeStyle = '#d7302a'; c.lineWidth = 1.3; c.beginPath(); c.moveTo(8, 5); c.lineTo(10.5, 2); c.stroke();
+    c.fillStyle = '#ffc21a'; c.fillRect(-13, -13, 12, 4);
+  },
+  jet(c, o) {
+    const sp = o && o.spool ? o.spool : 0;
+    if (o && o.fire && sp > .1) { const f = (.6 + Math.random() * .4) * sp; c.fillStyle = 'rgba(90,170,255,.85)'; c.beginPath(); c.moveTo(-5, 14); c.quadraticCurveTo(0, 14 + 24 * f, 5, 14); c.fill(); c.fillStyle = '#e8f6ff'; c.beginPath(); c.moveTo(-2.5, 14); c.quadraticCurveTo(0, 14 + 11 * f, 2.5, 14); c.fill(); }
+    const g = c.createLinearGradient(-9, 0, 9, 0); g.addColorStop(0, '#6d7884'); g.addColorStop(.45, '#e6ebf0'); g.addColorStop(1, '#5d6874'); c.fillStyle = g;
+    c.beginPath(); c.moveTo(-9, -12); c.lineTo(9, -12); c.lineTo(7, 14); c.lineTo(-7, 14); c.closePath(); c.fill();
+    c.strokeStyle = '#2a3036'; c.lineWidth = 1.2; c.stroke();
+    c.fillStyle = '#1b2026'; c.beginPath(); c.ellipse(0, -12, 9, 3, 0, 0, TAU); c.fill();
+    c.save(); c.translate(0, -12); c.rotate((o && o.fire ? performance.now() / 40 : 0)); c.strokeStyle = '#9aa5b0'; c.lineWidth = 1; for (let k = 0; k < 8; k++) { c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(k / 8 * TAU) * 8, Math.sin(k / 8 * TAU) * 2.6); c.stroke(); } c.restore();
+    c.fillStyle = '#d7302a'; c.fillRect(-8.5, -3, 17, 3);
+    c.fillStyle = '#3a3f46'; c.fillRect(-6, 12, 12, 3);
+  },
+  nitro(c, o) {
+    c.fillStyle = '#2b333b'; rr(c, -15, 9, 30, 6, 2); c.fill();
+    for (const x of [-7, 7]) {
+      const g = c.createLinearGradient(x - 5, 0, x + 5, 0); g.addColorStop(0, '#0d4fa8'); g.addColorStop(.45, '#58a8ff'); g.addColorStop(1, '#0b3f86'); c.fillStyle = g;
+      rr(c, x - 5, -10, 10, 22, 4); c.fill();
+      c.fillStyle = '#c9d2da'; c.fillRect(x - 2, -15, 4, 5);
+      c.fillStyle = '#fff'; c.font = '800 6px Barlow Condensed, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N₂O', x, 1);
+      c.fillStyle = '#ff5a1f'; c.fillRect(x - 5, 5, 10, 2);
+    }
+    c.strokeStyle = '#111'; c.lineWidth = 1; rr(c, -12, -10, 10, 22, 4); c.stroke(); rr(c, 2, -10, 10, 22, 4); c.stroke();
+  },
+  spoiler(c) {
+    c.fillStyle = '#3a4550'; c.fillRect(-9, -4, 3.5, 20); c.fillRect(5.5, -4, 3.5, 20); c.fillRect(-13, 12, 26, 4);
+    c.fillStyle = lg(c, -12, -2, '#ff5a3c', '#a6200f');
+    c.beginPath(); c.moveTo(-16, -6); c.bezierCurveTo(-6, -1, 6, -1, 16, -8); c.lineTo(16, -11); c.bezierCurveTo(6, -6, -6, -6, -16, -10); c.closePath(); c.fill();
+    c.strokeStyle = '#3a0a04'; c.lineWidth = 1.2; c.stroke();
+    c.fillStyle = '#1b1f24'; c.fillRect(-16, -11, 3, 7); c.fillRect(13, -12, 3, 7);
+  },
+  gyro(c) {
+    plate(c, '#3b4651', '#1e252c', '#0b0e11');
+    const a = performance.now() / 260;
+    c.strokeStyle = '#ffc21a'; c.lineWidth = 2; c.beginPath(); c.ellipse(0, 0, 12, 12 * Math.abs(Math.cos(a * .7)) + 1, 0, 0, TAU); c.stroke();
+    c.strokeStyle = '#c9d2da'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(0, 0, 12 * Math.abs(Math.cos(a)) + 1, 12, 0, 0, TAU); c.stroke();
+    c.fillStyle = lg(c, -6, 6, '#e6ebf0', '#6d7884'); dot(c, 0, 0, 6);
+    c.fillStyle = '#d7302a'; dot(c, 0, 0, 2);
+  },
+  horn(c) {
+    c.fillStyle = '#3a4550'; rr(c, -14, 8, 28, 7, 2); c.fill();
+    c.fillStyle = lg(c, -10, 8, '#ffe08a', '#b8860b');
+    c.beginPath(); c.moveTo(-12, 2); c.lineTo(-4, 2); c.lineTo(10, -10); c.lineTo(14, -10); c.lineTo(14, 8); c.lineTo(10, 8); c.lineTo(-4, 6); c.lineTo(-12, 6); c.closePath(); c.fill();
+    c.strokeStyle = '#6b4a00'; c.lineWidth = 1; c.stroke();
+    c.fillStyle = '#d7302a'; dot(c, -13, 4, 3.6); c.fillStyle = '#ff9a8f'; dot(c, -14, 3, 1.2);
+  },
   cockpit(c, o) {
     plate(c, '#5d6f80', '#36434f', '#1a2229');
     c.fillStyle = '#26313b'; rr(c, -12, 4, 24, 9, 2); c.fill();
@@ -661,9 +823,21 @@ const ART = {
 };
 function drawWheel(c, def, R, ang) {
   c.save(); c.rotate(ang || 0);
+  if (def.wood) {
+    c.fillStyle = '#3a3f46'; c.beginPath(); c.arc(0, 0, R, 0, TAU); c.fill();
+    c.fillStyle = lg(c, -R, R, '#d39552', '#9a5f2b'); c.beginPath(); c.arc(0, 0, R * .86, 0, TAU); c.fill();
+    c.strokeStyle = '#6f4320'; c.lineWidth = R * .05; for (const y of [-.3, .3]) { c.beginPath(); c.moveTo(-R * .82, y * R); c.lineTo(R * .82, y * R); c.stroke(); }
+    c.fillStyle = '#4b4b4b'; for (let k = 0; k < 8; k++) { const a = k / 8 * TAU; c.beginPath(); c.arc(Math.cos(a) * R * .93, Math.sin(a) * R * .93, R * .05, 0, TAU); c.fill(); }
+    c.fillStyle = '#2b2f36'; c.beginPath(); c.arc(0, 0, R * .2, 0, TAU); c.fill();
+    c.restore(); return;
+  }
   const g = c.createRadialGradient(-R * .3, -R * .3, R * .1, 0, 0, R); g.addColorStop(0, '#3d3d3d'); g.addColorStop(1, '#0d0d0d');
   c.fillStyle = g; c.beginPath(); c.arc(0, 0, R, 0, TAU); c.fill();
   const knobs = def.size ? 14 : def.r > 0.25 ? 12 : 18, kh = def.size ? .16 : def.r > .25 ? .13 : .07;
+  if (def.spikes) { const g2 = c.createRadialGradient(-R * .3, -R * .3, R * .1, 0, 0, R); g2.addColorStop(0, '#3d3d3d'); g2.addColorStop(1, '#0d0d0d'); c.fillStyle = g2; c.beginPath(); c.arc(0, 0, R, 0, TAU); c.fill();
+    c.fillStyle = '#d9dee3'; for (let a = 0; a < 16; a++) { c.save(); c.rotate(a / 16 * TAU); c.beginPath(); c.moveTo(-R * .07, -R * .9); c.lineTo(0, -R * 1.08); c.lineTo(R * .07, -R * .9); c.fill(); c.restore(); }
+    const rimR2 = R * .56; c.fillStyle = lg(c, -rimR2, rimR2, '#3fa9ff', '#1563b8'); c.beginPath(); c.arc(0, 0, rimR2, 0, TAU); c.fill();
+    c.fillStyle = '#20252b'; c.beginPath(); c.arc(0, 0, rimR2 * .32, 0, TAU); c.fill(); c.restore(); return; }
   c.fillStyle = '#050505';
   for (let a = 0; a < knobs; a++) { c.save(); c.rotate(a / knobs * TAU); c.fillRect(-R * .09, -R, R * .18, R * kh); c.restore(); }
   const rimR = R * (def.size ? .5 : def.r > .25 ? .56 : .64);
@@ -741,6 +915,8 @@ const Snd = {
   pop() { this.noise(.12, .5, 2500, .6); },
   jump() { this.tone(220, .25, 'triangle', .14, 500); },
   click() { this.tone(660, .04, 'square', .04); },
+  horn() { [0, .26].forEach(d => { this.tone(392, .2, 'square', .07, 0, d); this.tone(494, .2, 'square', .05, 0, d); }); },
+  buy() { [660, 880, 1320].forEach((f, i) => this.tone(f, .14, 'square', .05, 0, i * .07)); },
   win() { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, .22, 'triangle', .12, 0, i * .11)); },
   lose() { [392, 330, 262].forEach((f, i) => this.tone(f, .3, 'sawtooth', .07, 0, i * .16)); },
 };
@@ -815,11 +991,11 @@ class Terrain {
     this.chainFrom = b;
   }
   coinRow(x0) {
-    if (this.inPit(x0) || this.inPit(x0 + 6)) return;
+    if (this.inPit(x0) || this.inPit(x0 + 6) || (this.finishX != null && x0 + 6 > this.finishX - 2)) return;
     const n = 5, r = this.rng(), lift = r < .25 ? 1.6 : .95;
     for (let i = 0; i < n; i++) { const x = x0 + i * 1.25; this.coins.push({ x, y: this.heightAt(x) + lift + Math.sin(i / (n - 1) * Math.PI) * (r < .25 ? .9 : .25), got: 0 }); }
   }
-  coinArc(x0, x1, y0, h) { const n = Math.max(4, Math.round((x1 - x0) / 1.4)); for (let i = 0; i <= n; i++) { const t = i / n; this.coins.push({ x: lerp(x0, x1, t), y: y0 + Math.sin(t * Math.PI) * h, got: 0 }); } }
+  coinArc(x0, x1, y0, h) { if (this.finishX != null && x1 > this.finishX - 2) return; const n = Math.max(4, Math.round((x1 - x0) / 1.4)); for (let i = 0; i <= n; i++) { const t = i / n; this.coins.push({ x: lerp(x0, x1, t), y: y0 + Math.sin(t * Math.PI) * h, got: 0 }); } }
   addDecor(x) {
     if (this.inPit(x)) return;
     const i = this.idxAt(x); if (this.pts[i] && this.pts[i].nd) return;
@@ -900,7 +1076,8 @@ class Terrain {
 }
 
 /* =============================== ÉCRANS =============================== */
-const App = { screen: 'menu', lvl: LEVELS[0], lvlIndex: 0, design: [], tool: null, toolDir: {}, undo: [], prog: store.get('prog', {}), plans: store.get('plans', []) };
+const App = { screen: 'menu', lvl: LEVELS[0], lvlIndex: 0, design: [], tool: null, toolDir: {}, undo: [], prog: store.get('prog', {}), plans: store.get('plans', []), bank: store.get('bank', 150), owned: new Set(store.get('owned', [])), buyArm: null };
+function isOwned(id) { const d = PARTS[id]; return !d || !d.price || App.owned.has(id) || !!(App.lvl && App.lvl.sandbox); }
 function show(id) {
   ['scrMenu', 'scrLevels', 'scrBuild', 'scrPlay'].forEach(s => $('#' + s).classList.toggle('on', s === id));
   App.screen = id;
@@ -910,6 +1087,7 @@ function show(id) {
 function totalStars() { return LEVELS.reduce((s, l) => s + ((App.prog[l.id] || {}).stars || 0), 0); }
 function refreshMenu() {
   $('#campStars').textContent = totalStars() + ' / ' + LEVELS.length * 3 + ' ★';
+  $('#mBank').textContent = fmtN(App.bank);
   const b = store.get('bestInf', 0); $('#bestInf').textContent = b ? 'record ' + Math.round(b) + ' m' : 'sans fin';
   $('#btnSound').innerHTML = Snd.on ? '<svg class="i" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>' : '<svg class="i" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM17 9l5 6M22 9l-5 6"/></svg>';
   $('#btnSound').classList.toggle('off', !Snd.on);
@@ -929,7 +1107,7 @@ function buildCards() {
     box.appendChild(b);
     requestAnimationFrame(() => drawLevelThumb(cv, L));
   });
-  $('#lvStars').textContent = totalStars() + ' ★';
+  $('#lvStars').textContent = totalStars() + ' ★'; $('#lvBank').textContent = fmtN(App.bank);
 }
 function flashMsgMenu(el) { el.animate && el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 250 }); }
 function drawLevelThumb(cv, L) {
@@ -962,7 +1140,7 @@ function buildTray() {
     if (d.cat !== last) { last = d.cat; const l = document.createElement('div'); l.className = 'tcat'; l.textContent = d.cat; t.appendChild(l); }
     const b = document.createElement('button'); b.className = 'tile'; b.dataset.id = id;
     b.appendChild(partIcon(id, App.toolDir[id] ?? d.dir ?? 0, 36));
-    b.insertAdjacentHTML('beforeend', '<span class="tn">' + d.n + '</span><span class="tc">' + (d.cost ? d.cost : 'gratuit') + '</span>' + (d.dir !== undefined ? '<span class="rot">↻</span>' : ''));
+    b.insertAdjacentHTML('beforeend', '<span class="tn">' + d.n + '</span><span class="tc">' + (d.cost ? d.cost : 'gratuit') + '</span><span class="tp"><span class="coin"></span>' + (d.price || '') + '</span>' + (d.dir !== undefined ? '<span class="rot">↻</span>' : ''));
     b.onclick = () => selectTool(id);
     t.appendChild(b);
   });
@@ -970,7 +1148,7 @@ function buildTray() {
 }
 function refreshTray() {
   document.querySelectorAll('.tile').forEach(el => {
-    const id = el.dataset.id; el.classList.toggle('sel', App.tool === id);
+    const id = el.dataset.id; el.classList.toggle('sel', App.tool === id); el.classList.toggle('lock', !isOwned(id)); el.classList.toggle('arm', App.buyArm === id);
     const cv = el.querySelector('canvas'), want = partIcon(id, App.toolDir[id] ?? PARTS[id].dir ?? 0, 36); if (cv !== want) el.replaceChild(want, cv);
   });
   $('#tErase').classList.toggle('on', App.tool === 'erase');
@@ -978,6 +1156,13 @@ function refreshTray() {
 function selectTool(id) {
   Snd.init();
   const d = PARTS[id];
+  if (!isOwned(id)) {
+    if (App.bank < d.price) { App.buyArm = null; setMsg(d.n + ' coûte ' + d.price + ' pièces au trésor. Il t\'en manque ' + (d.price - App.bank) + ' : ramasse-les sur les parcours.', 'err'); Snd.tone(150, .15, 'square', .05); refreshTray(); return; }
+    if (App.buyArm !== id) { App.buyArm = id; setMsg('Débloquer ' + d.n + ' pour ' + d.price + ' pièces ? Touche encore pour acheter. ' + d.d, 'info', true); Snd.click(); refreshTray(); return; }
+    App.bank -= d.price; App.owned.add(id); App.buyArm = null; store.set('bank', App.bank); store.set('owned', [...App.owned]);
+    Snd.buy(); App.tool = id; closePop(); refreshTray(); updateBuildInfo(); drawBuild(); setMsg('Nouvelle pièce : ' + d.n + ' ! Il reste ' + fmtN(App.bank) + ' pièces au trésor.', 'ok'); return;
+  }
+  App.buyArm = null;
   if (App.tool === id && d.dir !== undefined) { App.toolDir[id] = ((App.toolDir[id] ?? d.dir) + 1) % 4; setMsg(d.n + ' orientée vers le ' + DIRN[App.toolDir[id]] + '.', 'info'); }
   else { App.tool = id; setMsg(d.n + ' — ' + d.d, 'info', true); }
   Snd.click(); closePop(); refreshTray(); drawBuild();
@@ -992,7 +1177,7 @@ function updateBuildInfo() {
   bb.classList.toggle('over', S.cost > B);
   const g = App.lvl.g || 10, pw = S.mass ? (S.force / (S.mass * g)) : 0;
   const auto = S.drain > 0 ? Math.round((S.cap) / (S.drain)) : 0;
-  $('#bChips').innerHTML = [['Masse', S.mass.toFixed(1) + ' kg'], ['Traction', S.force ? pw.toFixed(2) + ' g' : '—'], ['Vitesse', S.vmax ? Math.round(S.vmax * 3.6) + ' km/h' : '—'], ['Énergie', S.cap + (S.solar ? ' +☀' : '')], ['Autonomie', auto ? auto + ' s' : '—']]
+  $('#bChips').innerHTML = '<div class="chip bankC"><i>Trésor</i><b><span class="coin"></span>' + fmtN(App.bank) + '</b></div>' + [['Masse', S.mass.toFixed(1) + ' kg'], ['Traction', S.force ? pw.toFixed(2) + ' g' : '—'], ['Vitesse', S.vmax ? Math.round(S.vmax * 3.6) + ' km/h' : '—'], ['Énergie', S.cap + (S.solar ? ' +☀' : '') + (S.gen ? ' +⚙' : '')], ['Autonomie', auto ? auto + ' s' : '—']]
     .map(([k, v]) => '<div class="chip"><i>' + k + '</i><b>' + v + '</b></div>').join('');
   const m = $('#bMsg');
   if (v.err.length) { m.textContent = v.err[0]; m.className = 'msg err'; }
@@ -1041,7 +1226,7 @@ function drawBuild() {
     drawPartArt(c, p.id, p.dir);
     c.restore();
     if (!A.conn.has(i) && A.ci >= 0) { c.strokeStyle = '#ff5a47'; c.lineWidth = 2; c.setLineDash([4, 3]); c.strokeRect(ox + p.gx * cs + 2, oy + p.gy * cs + 2, s * cs - 4, s * cs - 4); c.setLineDash([]); }
-    if (d.dir !== undefined && p.id !== 'wing') arrow(c, ox + (p.gx + .5) * cs, oy + (p.gy + .5) * cs, p.dir, cs);
+    if (d.dir !== undefined && p.id !== 'wing' && !d.wedge) arrow(c, ox + (p.gx + .5) * cs, oy + (p.gy + .5) * cs, p.dir, cs);
   });
   // soudures
   c.fillStyle = 'rgba(255,194,26,.9)';
@@ -1081,7 +1266,7 @@ function changed() { store.set('design.' + App.lvl.id, App.design); store.set('l
 function placeAt(gx, gy) {
   const id = App.tool, d = PARTS[id];
   if (!canPlace(id, gx, gy)) return false;
-  if (d.unique) { const k = App.design.findIndex(p => p.id === id); if (k >= 0) App.design.splice(k, 1); }
+  if (d.unique) { const k = App.design.findIndex(p => PARTS[p.id].unique); if (k >= 0) App.design.splice(k, 1); }
   const B = budgetOf(), cost = analyze(App.design).S.cost;
   if (cost + d.cost > B) { setMsg('Budget insuffisant pour ' + d.n.toLowerCase() + ' (' + d.cost + ').', 'err'); return false; }
   App.design.push({ id, gx, gy, dir: App.toolDir[id] ?? d.dir ?? 0 });
@@ -1201,8 +1386,10 @@ const GC = { cv: null, c: null, w: 0, h: 0, dpr: 1 };
 function pbody(P) { return P.d.wheel ? P.body : P.chunk.body; }
 function ppos(P) { return P.d.wheel ? P.body.getPosition() : P.chunk.body.getWorldPoint(V(P.lx, P.ly)); }
 function pangle(P) { return pbody(P).getAngle(); }
+function wedgePts(dir) { let P = [[16, 16], [16, -16], [-16, 16]]; for (let k = 0; k < (dir || 0); k++) P = P.map(([x, y]) => [-y, x]); return P; }
 function boxFix(body, P) {
-  const f = body.createFixture({ shape: pl.Box(CELL / 2, CELL / 2, V(P.lx, P.ly), 0), density: P.d.dens, friction: P.d.fric ?? .7, restitution: P.d.rest ?? .04, filterGroupIndex: -1 });
+  const shape = P.d.wedge ? pl.Polygon(wedgePts(P.dir).map(([x, y]) => V(P.lx + x / 32 * CELL, P.ly - y / 32 * CELL))) : pl.Box(CELL / 2, CELL / 2, V(P.lx, P.ly), 0);
+  const f = body.createFixture({ shape, density: P.d.dens, friction: P.d.fric ?? .7, restitution: P.d.rest ?? .04, filterGroupIndex: -1 });
   f.setUserData({ P }); return f;
 }
 function buildVehicle(world, design, spawnX, ter, lvl) {
@@ -1270,8 +1457,8 @@ function tuneSuspension(v) {
   }
 }
 function refreshLive(v) {
-  const L = { force: 0, vw: 0, drain: 0, cap: 0, solar: 0 };
-  for (const P of v.parts) { if (!P.alive || !P.conn) continue; const d = P.d; if (d.force) { L.force += d.force; L.vw += d.force * d.vmax; L.drain += d.drain; } if (d.cap) L.cap += d.cap; if (d.solar) L.solar += d.solar; }
+  const L = { force: 0, vw: 0, drain: 0, cap: 0, solar: 0, gen: 0, regen: 0, gyro: 0, nitro: 0 };
+  for (const P of v.parts) { if (!P.alive || !P.conn) continue; const d = P.d; if (d.force) { L.force += d.force; L.vw += d.force * d.vmax; L.drain += d.drain; } if (d.cap) L.cap += d.cap; if (d.solar) L.solar += d.solar; if (d.gen) L.gen += d.gen; if (d.regen) L.regen += d.regen; if (d.gyro) L.gyro += d.gyro; if (d.nitro) L.nitro += d.nitro; }
   L.vmax = L.force ? L.vw / L.force : 0; v.live = L;
 }
 function recomputeConn(v) {
@@ -1281,7 +1468,7 @@ function recomputeConn(v) {
   for (const W of v.wheels) W.P.conn = !!(W.J && W.J.alive && W.att.conn && W.att.alive);
   const oldCap = v.live ? v.live.cap : 0; refreshLive(v);
   if (G && G.veh === v && oldCap > 0 && v.live.cap < oldCap) G.energy *= v.live.cap / oldCap;
-  if (G && G.veh === v) G.cap = v.live.cap || (v.live.solar ? 30 : 0);
+  if (G && G.veh === v) G.cap = v.live.cap || (v.live.solar || v.live.gen ? 30 : 0);
   v.lost = v.parts.filter(P => !P.conn).length;
 }
 /* scinde un bloc dont des soudures ont cédé */
@@ -1341,11 +1528,13 @@ function newGame(lvl, design, mode) {
     over: null, overT: 0, cam: { x: 4, y: 0, s: 40 }, shake: 0, parts: [], popQ: [], smashQ: [], flips: 0, frame: 0, grace: .6,
     startX: ppos(veh.cockpit).x, maxX: 0, best: lvl.endless ? store.get('bestInf', 0) : ((App.prog[lvl.id] || {}).bestDist || 0), lastBreak: -9, design
   };
-  g.cap = veh.live.cap || (veh.live.solar ? 30 : 0); g.energy = g.cap;
+  g.cap = veh.live.cap || (veh.live.solar || veh.live.gen ? 30 : 0); g.energy = g.cap;
+  g.nitro = g.nitroMax = veh.live.nitro * 3;
   g.coinsTotal = lvl.endless ? 0 : ter.coins.filter(c => c.x < (ter.finishX || 1e9)).length;
-  g.hasBoost = veh.parts.some(P => P.id === 'rocket' && P.conn);
+  g.hasBoost = veh.parts.some(P => (P.id === 'rocket' || P.id === 'jet' || P.id === 'nitro') && P.conn);
   g.hasFly = veh.parts.some(P => P.id === 'prop' && P.conn);
-  g.hasAct = veh.parts.some(P => (P.id === 'chute' || P.id === 'spring') && P.conn);
+  g.hasAct = veh.parts.some(P => (P.id === 'chute' || P.id === 'spring' || P.id === 'horn') && P.conn);
+  g.onlyNitro = !veh.parts.some(P => (P.id === 'rocket' || P.id === 'jet') && P.conn);
   const cp = ppos(veh.cockpit); g.cam.x = cp.x + 3; g.cam.y = cp.y + 1;
   world.on('begin-contact', c => onContact(g, c, 1));
   world.on('end-contact', c => onContact(g, c, -1));
@@ -1376,9 +1565,10 @@ function onImpact(g, c, imp) {
 }
 function startRun() {
   Snd.init();
+  if (G && G.mode === 'run') bankRun(G);
   if (G && G.world) G.dead = 1;
   G = newGame(App.lvl, JSON.parse(JSON.stringify(App.design)), 'run');
-  $('#kBoost').hidden = !G.hasBoost; $('#kFly').hidden = !G.hasFly; $('#kAct').hidden = !G.hasAct;
+  $('#kBoost').hidden = !G.hasBoost; $('#kBoostL').textContent = G.onlyNitro ? 'NITRO' : 'BOOST'; $('#kFly').hidden = !G.hasFly; $('#kAct').hidden = !G.hasAct;
   $('#hTimeBox').hidden = !!App.lvl.endless;
   $('#ovResult').classList.remove('on'); $('#ovPause').classList.remove('on');
   show('scrPlay');
@@ -1400,12 +1590,15 @@ function physicsStep(g, h) {
   g.thr += clamp(target - g.thr, -rate * h, rate * h);
   const live = v.live, can = g.energy > 0 && live.force > 0;
   const drv = v.wheels.filter(w => w.J.alive && w.P.conn);
+  const nOn = ctl && inp.boost && g.nitro > 0 && can && live.nitro > 0 && g.thr > .05;
+  g.nitroOn = nOn; if (nOn) g.nitro = Math.max(0, g.nitro - h);
+  const fK = nOn ? 2 : 1, vK = nOn ? 1.35 : 1;
   for (const w of v.wheels) {
     if (!w.J.alive) continue; const j = w.J.j;
     if (can && w.P.conn && Math.abs(g.thr) > .01) {
       const back = g.thr < 0;
-      j.setMotorSpeed(-Math.sign(g.thr) * live.vmax * (back ? .55 : 1) / w.r);
-      j.setMaxMotorTorque(Math.abs(g.thr) * live.force / Math.max(1, drv.length) * w.r * (back ? 1.2 : 1));
+      j.setMotorSpeed(-Math.sign(g.thr) * live.vmax * vK * (back ? .55 : 1) / w.r);
+      j.setMaxMotorTorque(Math.abs(g.thr) * live.force * fK / Math.max(1, drv.length) * w.r * (back ? 1.2 : 1));
     } else { j.setMotorSpeed(0); j.setMaxMotorTorque(.02 * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
     if (w.susp) { // butées progressives : la suspension durcit en fin de course
       const t = j.getJointTranslation(), tr = w.travel, over = Math.max(0, -t - tr) / tr;
@@ -1413,21 +1606,33 @@ function physicsStep(g, h) {
       if (over > 1.3 && g.grace <= 0) w.dmg += (over - 1.3) * .05;
     }
   }
-  if (can && Math.abs(g.thr) > .01) g.energy -= live.drain * Math.abs(g.thr) * h;
+  if (can && Math.abs(g.thr) > .01) g.energy -= live.drain * Math.abs(g.thr) * h * (nOn ? 1.3 : 1);
+  if (nOn) for (const P of v.parts) if (P.id === 'nitro' && P.conn && P.alive && Math.random() < .5) { const b = P.chunk.body, pt = b.getWorldPoint(V(P.lx, P.ly)), d = b.getWorldVector(V(-1, 0)); flame(g, pt.x + d.x * .25, pt.y + d.y * .25, d.x, d.y, 1); }
+  // --- moteur hybride : récupération d'énergie au freinage et en roue libre
+  g.charging = false;
+  if (live.regen > 0 && wc > 0 && g.energy < g.cap) {
+    const vx = ck.getLinearVelocity().x, sp = Math.abs(vx);
+    const k = g.thr < -.05 && vx > .8 ? 1.8 : Math.abs(g.thr) < .05 && sp > 2 ? .6 : 0;
+    if (k) { g.energy = Math.min(g.cap, g.energy + live.regen * k * Math.min(1, sp / 6) * h); g.charging = true; }
+  }
   // --- contrôle en l'air : bascule autour du centre de masse
   const airborne = gc === 0;
   if (airborne) g.airT += h; else g.airT = 0;
-  if (airborne && g.airT > .15 && Math.abs(g.thr) > .02) {
-    const lc = ck.getLocalCenter(); let I = ck.getInertia() - ck.getMass() * (lc.x * lc.x + lc.y * lc.y);
-    const c0 = ck.getWorldCenter();
-    for (const W of v.wheels) if (W.P.conn) { const p = W.P.body.getPosition(); I += W.P.body.getMass() * ((p.x - c0.x) ** 2 + (p.y - c0.y) ** 2); }
-    ck.applyTorque(3.4 * g.thr * I, true);
+  const vehI = () => { const lc = ck.getLocalCenter(); let I = ck.getInertia() - ck.getMass() * (lc.x * lc.x + lc.y * lc.y); const c0 = ck.getWorldCenter(); for (const W of v.wheels) if (W.P.conn) { const p = W.P.body.getPosition(); I += W.P.body.getMass() * ((p.x - c0.x) ** 2 + (p.y - c0.y) ** 2); } return I; };
+  if (airborne && g.airT > .15 && Math.abs(g.thr) > .02) ck.applyTorque(3.4 * g.thr * vehI(), true);
+  // --- gyroscope : amortit les rotations et remet à plat en l'air
+  if (live.gyro > 0 && g.energy > 0) {
+    const n = Math.min(2, live.gyro), w = ck.getAngularVelocity(), a = ck.getAngle(), sa = Math.sin(a);
+    const pilot = Math.abs(g.thr) > .1 && airborne ? .3 : 1;
+    const tq = airborne ? -(1.5 * w + 2.2 * sa * pilot) * n * pilot : -.9 * w * n;
+    ck.applyTorque(tq * vehI(), true); g.energy -= .25 * n * h;
   }
   // --- propulsion et aérodynamique
   const boost = ctl && inp.boost && g.energy > 0, fly = ctl && inp.fly && g.energy > 0;
   for (const P of v.parts) {
     if (!P.alive || P.d.wheel) continue; const id = P.id;
-    if (id !== 'rocket' && id !== 'prop' && id !== 'wing' && id !== 'balloon' && id !== 'chute') continue;
+    if (id !== 'rocket' && id !== 'prop' && id !== 'wing' && id !== 'balloon' && id !== 'chute' && id !== 'jet' && id !== 'spoiler' && id !== 'gen') continue;
+    if (id === 'gen') { if (P.conn && Math.random() < .06) { const b = P.chunk.body, pt = b.getWorldPoint(V(P.lx + .1, P.ly + .3)); addP(g, { x: pt.x, y: pt.y, vx: (Math.random() - .5) * .4, vy: .8, r: .07, grow: .35, life: 1.2, max: 1.2, col: '#8a8f94', g: -.4, type: 'dust' }); } continue; }
     const b = P.chunk.body, pt = b.getWorldPoint(V(P.lx, P.ly)), dv = DIRV[P.dir], d = b.getWorldVector(V(dv[0], dv[1]));
     if (id === 'rocket' || id === 'prop') {
       const on = P.conn && (id === 'rocket' ? boost : fly);
@@ -1436,7 +1641,14 @@ function physicsStep(g, h) {
         b.applyForce(V(d.x * P.d.thrust, d.y * P.d.thrust), pt, true); g.energy -= P.d.drain * h;
         if (id === 'rocket' && Math.random() < .5) flame(g, pt.x - d.x * .32, pt.y - d.y * .32, -d.x, -d.y);
       }
+    } else if (id === 'jet') {
+      const on = P.conn && boost; P.spool = clamp((P.spool || 0) + (on ? h * 1.1 : -h * 2), 0, 1); P.fire = on;
+      if (P.spool > 0 && P.conn) { const F = P.d.thrust * P.spool * P.spool; b.applyForce(V(d.x * F, d.y * F), pt, true); if (on) g.energy -= P.d.drain * P.spool * h; if (Math.random() < .45 * P.spool) flame(g, pt.x - d.x * .32, pt.y - d.y * .32, -d.x, -d.y, 1); }
     } else if (air <= 0) continue;
+    else if (id === 'spoiler') {
+      const vel = b.getLinearVelocityFromWorldPoint(pt), sp2 = vel.x * vel.x + vel.y * vel.y, dn = b.getWorldVector(V(0, -1)), F = Math.min(340, .07 * sp2) * air;
+      b.applyForce(V(dn.x * F, dn.y * F), pt, true);
+    }
     else if (id === 'wing') {
       const vel = b.getLinearVelocityFromWorldPoint(pt), sp = Math.hypot(vel.x, vel.y); if (sp < .6) continue;
       const tx = d.y, ty = -d.x, vn = vel.x * d.x + vel.y * d.y, vt = vel.x * tx + vel.y * ty;
@@ -1452,9 +1664,10 @@ function physicsStep(g, h) {
       b.applyForce(V(fx, fy), V(pt.x + d.x * 1.6, pt.y + d.y * 1.6), true);
     }
   }
-  if (g.mode === 'run') Snd.boost(boost && v.parts.some(P => P.fire) ? 1 : 0);
+  if (g.mode === 'run') Snd.boost((boost && v.parts.some(P => P.fire)) || nOn ? 1 : 0);
   // --- ACTION : parachutes et ressorts
   if (ctl && inp.act && !g.actPrev) {
+    if (v.parts.some(P => P.id === 'horn' && P.alive && P.conn) && g.mode === 'run') { Snd.horn(); if (g.t - (g.hornT || -9) > 4) { g.hornT = g.t; toast('Tut tut !'); } }
     if (v.parts.some(P => P.id === 'chute' && P.alive && P.conn)) { g.chute = !g.chute; if (g.mode === 'run') Snd.tone(g.chute ? 300 : 200, .15, 'triangle', .1, g.chute ? 200 : -80); }
     if (g.springCD <= 0 && g.energy > 2) {
       let hit = null;
@@ -1474,11 +1687,12 @@ function physicsStep(g, h) {
   }
   g.actPrev = inp.act; g.springCD -= h;
   for (const P of v.parts) if (P.ext > 0) P.ext = Math.max(0, P.ext - h * 4);
-  // --- solaire
+  // --- solaire et générateur
   if (v.live.solar > 0 && g.energy < g.cap) {
     const th = g.ter.themeAt(ck.getPosition().x), sun = th === 'desert' ? 1.5 : th === 'moon' ? 1.7 : th === 'volcano' ? .45 : th === 'snow' ? .9 : 1.1;
     g.energy = Math.min(g.cap, g.energy + v.live.solar * sun * h);
   }
+  if (v.live.gen > 0 && g.energy < g.cap) g.energy = Math.min(g.cap, g.energy + v.live.gen * h);
   if (g.energy < 0) g.energy = 0;
 
   g.world.step(h, 10, 6);
@@ -1491,7 +1705,7 @@ function physicsStep(g, h) {
     if (g.grace > 0 || !P.alive) continue;
     if (P.d.wheel) { const W = P.wheel; if (W && W.J.alive) { const tol = Math.max(W.att.d.str, 1800) * (W.susp ? (W.susp.id === 'susp_s' ? .011 : .0085) : .0085) * Math.sqrt(Math.max(8, v.mass) / 16); if (I > tol) { W.dmg += (I - tol) / tol; if (I > tol * 1.9) W.dmg = 9; } } continue; }
     const tol = P.d.str * KI;
-    if (P.id === 'cockpit') { if (P.conn && I > tol * 1.25 && !g.over) g.koHard = 1; continue; }
+    if (P.d.cat === 'Pilote') { if (P.conn && I > tol * 1.25 && !g.over) g.koHard = 1; continue; }
     if (I > tol) { P.dmg += (I - tol) / tol; if (I > tol * 1.8 || P.dmg > 1.2) crash.push(P); }
   }
   for (const W of v.wheels) if (W.J.alive && W.dmg > 1.4) breakAxle(g, W);
@@ -1509,7 +1723,7 @@ function physicsStep(g, h) {
   if (!g.over) {
     const up = ck.getWorldVector(V(0, 1));
     if (ckP.contacts > 0 && up.y < .3) g.koT += h; else g.koT = Math.max(0, g.koT - h);
-    if (g.koT > .12 || g.koHard) endRun(g, false, 'Le pilote s\'est cogné la tête !', 'ko');
+    if (g.koT > (ckP.d.armor ? .45 : .12) || g.koHard) endRun(g, false, 'Le pilote s\'est cogné la tête !', 'ko');
   }
 }
 
@@ -1527,8 +1741,10 @@ function computeResult(g) {
   const stars = L.endless || L.sandbox ? 0 : (win ? 1 : 0) + (win && coinPct >= .7 ? 1 : 0) + (win && g.veh.lost === 0 ? 1 : 0);
   return { dist, win, coinPct, stars, time: g.t };
 }
+function bankRun(g) { if (!g || g.mode !== 'run' || g.banked) return 0; g.banked = 1; App.bank += g.coins; store.set('bank', App.bank); return g.coins; }
+function fmtN(n) { return Math.round(n).toLocaleString('fr-FR'); }
 function showResult() {
-  const g = G, L = g.lvl, R = computeResult(g);
+  const g = G, L = g.lvl, R = computeResult(g), gain = bankRun(g);
   let newRec = false;
   if (L.endless) { if (R.dist > store.get('bestInf', 0)) { store.set('bestInf', R.dist); newRec = true; } }
   else if (!L.sandbox) {
@@ -1542,7 +1758,8 @@ function showResult() {
   $('#rStars').innerHTML = (L.endless || L.sandbox) ? '' : [0, 1, 2].map(k => starSvg(R.stars > k)).join('');
   $('#rStats').innerHTML = [['Distance', R.dist + ' m'], ['Pièces', g.coins + (g.coinsTotal ? ' / ' + g.coinsTotal : '')], ['Casse', g.veh.lost ? g.veh.lost + ' pièce' + (g.veh.lost > 1 ? 's' : '') : 'aucune'], ['Saltos', g.flips]]
     .map(([k, v]) => '<div><i>' + k + '</i><b>' + v + '</b></div>').join('');
-  $('#rObjs').innerHTML = (L.endless || L.sandbox) ? (L.endless ? '<div>Record : ' + Math.round(store.get('bestInf', 0)) + ' m</div>' : '') : objectivesHtml(R.win, R.coinPct >= .7, g.veh.lost === 0);
+  $('#rObjs').innerHTML = (L.endless || L.sandbox) ? (L.endless ? '<div>Record : ' + Math.round(store.get('bestInf', 0)) + ' m</div>' : '') : objectivesHtml(R.win, R.win && R.coinPct >= .7, R.win && g.veh.lost === 0);
+  $('#rBank').innerHTML = '<span class="coin"></span><b>+' + fmtN(gain) + '</b> au trésor · total <b>' + fmtN(App.bank) + '</b>';
   const next = LEVELS[App.lvlIndex + 1];
   $('#rNext').hidden = !(R.win && next && !L.endless && !L.sandbox);
   $('#ovResult').classList.add('on');
@@ -1577,7 +1794,7 @@ function postStep(g, dt) {
   // terrain infini
   if (g.lvl.endless && p.x > g.ter.x - 220) g.ter.genTo(g.ter.x + 220);
   // ramassage
-  if (!g.over || g.over.win) {
+  if (!g.over) {
     const near = (o, R) => { for (const P of v.parts) { if (!P.conn || !P.alive) continue; const q = ppos(P), r = R + (P.d.wheel ? P.d.r : .28); if ((q.x - o.x) ** 2 + (q.y - o.y) ** 2 < r * r) return true; } return false; };
     for (const c of g.ter.coins) { if (c.got || Math.abs(c.x - p.x) > 5) continue; if (near(c, .25)) { c.got = 1; g.coins++; if (g.mode === 'run') Snd.coin(); sparkle(g, c.x, c.y, '#ffd34a'); } }
     for (const c of g.ter.cells) { if (c.got || Math.abs(c.x - p.x) > 5) continue; if (near(c, .3)) { c.got = 1; g.energy = Math.min(Math.max(g.cap, 1), g.energy + Math.max(30, g.cap * .5)); if (g.mode === 'run') { Snd.cell(); toast('Énergie +'); } sparkle(g, c.x, c.y, '#36d17c'); } }
@@ -1604,7 +1821,7 @@ function postStep(g, dt) {
     if (p.x > (g.progX ?? -1e9) + .6) { g.progX = p.x; g.progT = 0; } else g.progT = (g.progT || 0) + dt;
     if (g.progT > 9) endRun(g, false, 'Bloqué : l\'engin n\'avance plus.', 'stuck');
     if (g.flipT > 1.8) endRun(g, false, upY < -.3 ? 'Sur le toit !' : 'Renversé : impossible de repartir.', 'flip');
-    const noProp = g.energy <= 0 || (v.live.force <= 0 && !v.parts.some(P => P.conn && (P.id === 'rocket' || P.id === 'prop')));
+    const noProp = g.energy <= 0 || (v.live.force <= 0 && !v.parts.some(P => P.conn && (P.id === 'rocket' || P.id === 'prop' || P.id === 'jet')));
     if (g.stuckT > (noProp ? 2.5 : 6)) endRun(g, false, g.energy <= 0 ? 'Panne d\'énergie.' : noProp ? 'Plus rien pour avancer.' : 'Véhicule immobilisé.', 'stuck');
   } else {
     g.overT += dt;
@@ -1639,7 +1856,7 @@ function dust(g, x, y, n, big, dir) {
   for (let i = 0; i < n; i++) addP(g, { x, y, vx: (dir || (Math.random() - .5) * 2) * (1 + Math.random() * 2), vy: Math.random() * (big ? 3 : 1.4), r: .06 + Math.random() * (big ? .16 : .08), grow: .5, life: .5 + Math.random() * .5, max: 1, col, g: 2, type: 'dust' });
 }
 function sparks(g, x, y, n, col) { for (let i = 0; i < n; i++) { const a = Math.random() * TAU, s = 2 + Math.random() * 6; addP(g, { x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s + 2, r: .035 + Math.random() * .03, life: .3 + Math.random() * .5, max: .8, col, g: 12, type: 'spark' }); } }
-function flame(g, x, y, dx, dy) { addP(g, { x, y, vx: dx * 7 + (Math.random() - .5), vy: dy * 7 + (Math.random() - .5), r: .1 + Math.random() * .06, grow: .9, life: .35, max: .35, col: '#ff9a2e', g: -1, type: 'flame' }); }
+function flame(g, x, y, dx, dy, blue) { addP(g, { x, y, vx: dx * 7 + (Math.random() - .5), vy: dy * 7 + (Math.random() - .5), r: .1 + Math.random() * .06, grow: .9, life: .35, max: .35, col: '#ff9a2e', g: -1, type: 'flame', blue }); }
 function splinters(g, x, y, h) { for (let i = 0; i < 14; i++) { const a = Math.random() * TAU, sp = 1.5 + Math.random() * 4; addP(g, { x: x + (Math.random() - .5) * h, y: y + (Math.random() - .5) * h, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp + 2, r: .09 + Math.random() * .08, life: .9, max: .9, col: i % 3 ? '#b97d3c' : '#6e4320', g: 12, type: 'conf', a: Math.random() * 6, spin: (Math.random() - .5) * 18 }); } }
 function sparkle(g, x, y, col) { for (let i = 0; i < 8; i++) { const a = i / 8 * TAU; addP(g, { x, y, vx: Math.cos(a) * 2.2, vy: Math.sin(a) * 2.2, r: .05, life: .4, max: .4, col, g: 0, type: 'spark' }); } }
 function confetti(g) { const p = ppos(g.veh.cockpit); const cols = ['#ffc21a', '#36d17c', '#5fb3ff', '#ff5a47', '#fff']; for (let i = 0; i < 90; i++) addP(g, { x: p.x + (Math.random() - .5) * 3, y: p.y + 3 + Math.random() * 2, vx: (Math.random() - .5) * 6, vy: Math.random() * 6, r: .08, life: 2.5, max: 2.5, col: cols[i % 5], g: 4, type: 'conf', a: Math.random() * 6, spin: (Math.random() - .5) * 14 }); }
@@ -1750,7 +1967,7 @@ function drawParts(c, g, only) {
     if (only ? q.type !== only : q.type === 'dust') continue;
     const a = clamp(q.life / q.max, 0, 1);
     c.globalAlpha = q.type === 'dust' ? a * .55 : a;
-    c.fillStyle = q.type === 'flame' ? (a > .6 ? '#fff2a8' : a > .3 ? '#ff9a2e' : '#7a7a7a') : q.col;
+    c.fillStyle = q.type === 'flame' ? (q.blue ? (a > .6 ? '#e8f6ff' : a > .3 ? '#5aaaff' : '#5c6b80') : (a > .6 ? '#fff2a8' : a > .3 ? '#ff9a2e' : '#7a7a7a')) : q.col;
     if (q.type === 'conf') { c.save(); c.translate(q.x, q.y); c.rotate(q.a); c.fillRect(-q.r, -q.r * .5, q.r * 2, q.r); c.restore(); }
     else { c.beginPath(); c.arc(q.x, q.y, q.r, 0, TAU); c.fill(); }
   }
@@ -1771,7 +1988,7 @@ function drawVehicle(c, g, T) {
   for (const P of v.parts) {
     if (!P.alive || P.d.wheel) continue;
     const p = ppos(P); c.save(); c.translate(p.x, p.y); c.rotate(pangle(P)); c.scale(sc, -sc);
-    const o = P.id === 'batt_s' || P.id === 'batt_l' ? { level: P.conn ? g.energy / Math.max(1, g.cap) : 0 } : P.id === 'cockpit' ? { ko } : P;
+    const o = P.id === 'batt_s' || P.id === 'batt_l' ? { level: P.conn ? g.energy / Math.max(1, g.cap) : 0 } : P.d.cat === 'Pilote' ? { ko } : P;
     drawPartArt(c, P.id, P.dir, o);
     c.restore();
     if (P.id === 'chute' && g.chute && (g.lvl.air ?? 1) > 0) {
@@ -1793,7 +2010,8 @@ function hud(g) {
   if (L.endless) { $('#hGoal').textContent = 'record ' + Math.round(g.best) + ' m'; $('#hBar').style.width = clamp(d / Math.max(200, g.best * 1.1), 0, 1) * 100 + '%'; const b = $('#hBest'); b.hidden = !g.best; b.style.left = clamp(g.best / Math.max(200, g.best * 1.1), 0, 1) * 100 + '%'; }
   else { $('#hGoal').textContent = L.len + ' m'; $('#hBar').style.width = clamp(d / L.len, 0, 1) * 100 + '%'; const b = $('#hBest'); b.hidden = !g.best || g.best >= L.len; b.style.left = clamp(g.best / L.len, 0, 1) * 100 + '%'; }
   $('#hCoins').textContent = g.coins + (g.coinsTotal ? ' / ' + g.coinsTotal : '');
-  const e = g.cap ? g.energy / g.cap : 0, el = $('#hEn'); el.style.width = clamp(e, 0, 1) * 100 + '%'; el.style.background = e < .2 ? '#ff5a47' : e < .45 ? '#ffc21a' : '#36d17c';
+  const e = g.cap ? g.energy / g.cap : 0, el = $('#hEn'); el.style.width = clamp(e, 0, 1) * 100 + '%'; el.style.background = g.charging ? '#5fb3ff' : e < .2 ? '#ff5a47' : e < .45 ? '#ffc21a' : '#36d17c';
+  if (g.nitroMax) $('#kBoost').style.setProperty('--n', (g.nitro / g.nitroMax).toFixed(3));
   $('#hTime').textContent = fmtTime(g.t);
 }
 let toastTimer = 0;
@@ -1838,13 +2056,13 @@ function bindPlay() {
   $('#paResume').onclick = togglePause;
   $('#paRetry').onclick = () => { $('#ovPause').classList.remove('on'); startRun(); };
   $('#paBuild').onclick = () => { $('#ovPause').classList.remove('on'); toBuild(); };
-  $('#paMenu').onclick = () => { $('#ovPause').classList.remove('on'); paused = false; show('scrMenu'); };
+  $('#paMenu').onclick = () => { $('#ovPause').classList.remove('on'); paused = false; bankRun(G); Snd.engine(0, 0, 'e'); Snd.boost(0); show('scrMenu'); };
   $('#rRetry').onclick = () => startRun();
   $('#rBuild').onclick = () => toBuild();
   $('#rNext').onclick = () => { $('#ovResult').classList.remove('on'); const i = App.lvlIndex + 1; if (LEVELS[i]) openLevel(LEVELS[i], i); };
   document.addEventListener('visibilitychange', () => { if (document.hidden && App.screen === 'scrPlay' && G && G.mode === 'run' && !G.over && !paused) togglePause(); });
 }
-function toBuild() { $('#ovResult').classList.remove('on'); paused = false; Snd.engine(0, 0, 'e'); Snd.boost(0); G.dead = 1; cancelAnimationFrame(rafId); show('scrBuild'); updateBuildInfo(); }
+function toBuild() { $('#ovResult').classList.remove('on'); paused = false; bankRun(G); Snd.engine(0, 0, 'e'); Snd.boost(0); G.dead = 1; cancelAnimationFrame(rafId); show('scrBuild'); updateBuildInfo(); }
 function togglePause() {
   if (!G || G.mode !== 'run' || G.over) return;
   paused = !paused; $('#ovPause').classList.toggle('on', paused);
@@ -1871,6 +2089,16 @@ function onResize() {
   if (App.screen === 'scrMenu') setGC($('#menuCv'));
   if (App.screen === 'scrLevels') buildCards();
 }
+function quitGame() {
+  if (G && G.mode === 'run') bankRun(G);
+  if (G) G.dead = 1; cancelAnimationFrame(rafId); stopDemo();
+  Snd.engine(0, 0, 'e'); Snd.boost(0);
+  try { if (Snd.ctx) Snd.ctx.suspend(); } catch (e) {}
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+  try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch (e) {}
+  try { window.close(); } catch (e) {}
+  setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
+}
 function init() {
   $('#btnCampaign').onclick = () => { Snd.init(); Snd.click(); goLandscape(); buildCards(); show('scrLevels'); };
   $('#btnEndless').onclick = () => { Snd.init(); Snd.click(); goLandscape(); openLevel(MODE_INF, -1); };
@@ -1878,6 +2106,8 @@ function init() {
   $('#btnSound').onclick = () => { Snd.init(); Snd.setOn(!Snd.on); refreshMenu(); };
   $('#btnFs').onclick = toggleFs;
   $('#btnHelp').onclick = () => $('#ovHelp').classList.add('on');
+  $('#btnQuit').onclick = quitGame;
+  $('#byeBack').onclick = () => { $('#ovBye').classList.remove('on'); Snd.init(); show('scrMenu'); };
   $('#helpClose').onclick = () => { $('#ovHelp').classList.remove('on'); store.set('helpSeen', 1); };
   $('#lvBack').onclick = () => show('scrMenu');
   $('#planClose').onclick = () => $('#ovPlans').classList.remove('on');
