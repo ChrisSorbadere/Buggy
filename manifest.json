@@ -1,0 +1,16 @@
+{
+  "name": "Atelier Méca",
+  "short_name": "Atelier Méca",
+  "description": "Construis ton véhicule pièce par pièce et teste-le sur des parcours physiques.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0d1114",
+  "theme_color": "#0d1114",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
