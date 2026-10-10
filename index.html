@@ -343,6 +343,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p><b>Conduire</b> — GAZ et FREIN. En l'air, GAZ bascule l'engin vers l'arrière, FREIN vers l'avant : rattrape tes sauts. BOOST, VOL et ACTION pilotent fusées, hélices, parachutes et ressorts.</p>
       <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, ramasser 70 % des pièces, ne rien casser.</p>
       <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
+      <p style="grid-column:1/-1"><b>Obstacles</b> — la <b>bascule</b> pivote sous ton poids : ralentis au sommet. Les <b>tonneaux</b> dévalent les côtes : attends-les ou saute. Le <b>bac</b> traverse le ravin et l'<b>ascenseur</b> monte la falaise : monte dessus et lâche les gaz, il te porte. Les <b>barils rouges</b> explosent au contact. Dans les <b>chutes de pierres</b>, l'ombre au sol montre où ça tombe : change de vitesse !</p>
       <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Chaque pièce posée sur ton engin se paie en or ; retirée, elle est remboursée. Ton engin te suit d'un niveau à l'autre. Dans le bac à sable, tout est gratuit, avec un engin à part.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
@@ -483,17 +484,17 @@ const THEMES = {
 };
 
 const LEVELS = [
-  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, featGap: [45, 75], tip: 'Un buggy simple suffit. Garde le doigt sur le gaz.' },
-  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, featGap: [40, 65], tip: 'Les tremplins envoient haut : rattrape-toi avec GAZ / FREIN en l\'air.' },
-  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, featGap: [45, 70], tip: 'Les ponts plient sous les engins lourds. Reste léger.' },
-  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, featGap: [40, 70], cells: 150, tip: 'Les recharges sont rares : le solaire aide beaucoup ici.' },
-  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, featGap: [40, 70], tip: 'La neige glisse. Des roues larges et un centre de gravité bas sont tes amis.' },
-  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, featGap: [50, 80], tip: 'Des ravins à franchir : vitesse, ailes ou fusées.' },
-  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
-  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
+  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, must: ['seesaw'], featGap: [45, 75], tip: 'Un buggy simple suffit. Sur la bascule, ralentis au sommet.' },
+  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, must: ['logs', 'seesaw'], featGap: [40, 65], tip: 'Des tonneaux dévalent la côte : attends qu\'ils passent, ou fonce entre eux.' },
+  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'rockfall'], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
+  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, must: ['barrels', 'logs', 'barrels'], featGap: [40, 70], cells: 150, tip: 'Barils rouges : ils explosent au contact. Saute-les ou passe vite. Le solaire aide ici.' },
+  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'seesaw', 'logs'], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
+  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['lift', 'ferry'], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
+  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, must: ['lift', 'barrels', 'seesaw'], featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
+  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
 ];
-const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1 }, featGap: [40, 70], endless: 1 };
-const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1 }, featGap: [35, 55], sandbox: 1 };
+const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8 }, featGap: [40, 70], endless: 1 };
+const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1 }, featGap: [35, 55], sandbox: 1 };
 const INF_THEMES = ['prairie', 'desert', 'canyon', 'snow', 'volcano', 'moon'];
 
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
@@ -1010,6 +1011,7 @@ class Terrain {
     this.nA = makeNoise(lvl.seed * 3 + 1); this.nB = makeNoise(lvl.seed * 7 + 2); this.nC = makeNoise(lvl.seed * 13 + 5);
     this.pts = []; this.coins = []; this.cells = []; this.decor = []; this.pits = []; this.signs = [];
     this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = []; this.anchors = [];
+    this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
     this.body = world.createBody(); this.body.setUserData({ kind: 'ground' });
     for (let x = -60; x <= 18; x += 2) this.pts.push({ x, y: 0 });
     this.x = 18; this.y = 0; this.slope = 0; this.nfeat = 0; this.chainFrom = 0; this.finishX = null;
@@ -1087,6 +1089,8 @@ class Terrain {
     const keys = Object.keys(L.feat); let tot = 0; for (const k of keys) tot += L.feat[k];
     let pick = r() * tot, f = keys[0]; for (const k of keys) { pick -= L.feat[k]; if (pick <= 0) { f = k; break; } }
     if (this.nfeat++ === 0 && f === 'gap') f = 'ramp';
+    const M = L.must; // obstacles garantis, répartis le long du parcours
+    if (M && !L.endless && this.mustDone < M.length && this.x >= (this.mustDone + .6) / (M.length + .4) * L.len) f = M[this.mustDone++];
     const y0 = this.y; this.slope = 0;
     const flat = (len, nd) => { const n = Math.max(1, Math.round(len)); for (let i = 0; i < n; i++) this.push(this.x + len / n, y0, nd); };
     if (f === 'bump') {
@@ -1129,6 +1133,153 @@ class Terrain {
     } else if (f === 'crater') {
       const w = 11 + r() * 7, dep = 1.6 + r() * 1.4 + d;
       for (let i = 1; i <= 22; i++) { const t = i / 22; const rim = Math.exp(-Math.pow((t - .07) / .06, 2)) * .5 + Math.exp(-Math.pow((t - .93) / .06, 2)) * .5; this.push(this.x + w / 22, y0 - dep * Math.pow(Math.sin(Math.PI * t), 1.4) + rim); }
+    } else if (f === 'seesaw') { // bascule au-dessus d'une fosse
+      flat(5);
+      const ph = 1.3 + d * .6, Lh = 4.4 + d * .6, a = Math.asin(ph / Lh), half = Lh * Math.cos(a) - .3;
+      const x0 = this.x, xc = x0 + half, x1 = xc + half, dep = 5;
+      this.push(x0 + .1, y0 - dep, 1); this.push(x1 - .1, y0 - dep, 1); this.push(x1, y0, 1);
+      this.pits.push({ x0, x1, top: y0 });
+      this.spawnQ.push(() => this.makeSeesaw(xc, y0 + ph, Lh, a, y0 - dep));
+      this.coinArc(xc - 1.4, xc + 1.4, y0 + ph + 1, .35);
+      flat(6, 1);
+    } else if (f === 'logs') { // côte d'où dévalent des tonneaux ; ils comblent la fosse au pied
+      flat(6);
+      const n = 3 + Math.floor(r() * 1.6 + d * 2), rad = .36 + d * .14, tw = n * 2 * rad + .25, dep = 2 * rad + .02;
+      for (let i = 1; i <= 4; i++) this.push(this.x + .4, y0 + .14 * Math.sin(i / 4 * Math.PI / 2), 1);
+      const tx0 = this.x; this.push(tx0 + .06, y0 - dep, 1); this.push(tx0 + tw, y0 - dep, 1); this.push(tx0 + tw + .06, y0, 1);
+      this.pits.push({ x0: tx0, x1: tx0 + tw, top: y0 - 3 });
+      this.warns.push({ x: tx0 - 22, t: 'logs' });
+      flat(1.5, 1);
+      const H = 3.2 + r() * 1.4 + d * 2, W = H / Math.tan(13 * Math.PI / 180), xs = this.x;
+      for (let i = 1; i <= 18; i++) { const t = i / 18; this.push(xs + W * t, y0 + H * t * t * (3 - 2 * t), 1); }
+      const top = this.y, cx = this.x + 1.5;
+      for (let i = 0; i < 9; i++) this.push(this.x + 1, top, 1);
+      this.spawnQ.push(() => this.makeRollers(tx0 - 28, cx, top, n, rad, tx0, tx0 + tw, y0));
+    } else if (f === 'ferry') { // bac qui fait la navette au-dessus d'un ravin
+      flat(6);
+      const gw = 12 + r() * 2 + d * 3, x0 = this.x, x1 = x0 + gw, pw = 5.6;
+      this.push(x0 + .12, y0 - 9, 1); this.push(x1 - .12, y0 - 9.2, 1); this.push(x1, y0, 1);
+      this.pits.push({ x0, x1, top: y0 });
+      this.warns.push({ x: x0 - 26, t: 'ferry' });
+      this.spawnQ.push(() => this.makeMover('ferry', x0 + pw / 2 + .06, y0 - .16, x1 - pw / 2 - .06, y0 - .16, pw));
+      this.coinArc(x0 + 4, x1 - 4, y0 + 1.1, 0);
+      for (let i = 0; i < 7; i++) this.push(this.x + 1, y0, 1);
+    } else if (f === 'lift') { // ascenseur au pied d'une falaise
+      flat(6);
+      const H = 4.5 + r() * 1.5 + d * 2.5, pw = 5.8, xa = this.x;
+      this.push(xa + .06, y0 - .32, 1); this.push(xa + pw + .2, y0 - .32, 1);
+      const xw = this.x; this.push(xw + .06, y0 + H, 1);
+      this.warns.push({ x: xa - 24, t: 'lift' });
+      this.spawnQ.push(() => this.makeMover('lift', xa + .1 + pw / 2, y0 - .16, xa + .1 + pw / 2, y0 + H - .16, pw));
+      this.anchors.push({ x: xw + 1.2, y: y0 + H + 4.6, px: xw + 3.6, py: y0 + H });
+      for (let i = 0; i < 9; i++) this.push(this.x + 1, y0 + H, 1);
+      this.coinArc(xw + 2, xw + 7, y0 + H + .9, .3);
+    } else if (f === 'barrels') { // barils explosifs
+      this.warns.push({ x: this.x - 12, t: 'boom' }); flat(15, 1); const n = 1 + Math.floor(r() * 1.6 + d * 1.5), xs = this.x - 10;
+      this.spawnQ.push(() => { for (let k = 0; k < n; k++) this.addBarrel(xs + k * 3.2, y0 + .41); });
+    } else if (f === 'rockfall') { // chute de pierres : l'ombre au sol annonce l'impact
+      const len = Math.round(28 + d * 14), xs = this.x;
+      this.warns.push({ x: xs - 3, t: 'fall' });
+      for (let i = 0; i < len; i++) this.push(this.x + 1, y0 + Math.sin(i * .35) * .12);
+      this.falls.push({ x0: xs, x1: xs + len, next: .4, n: 0, max: 4 + Math.round(d * 4), marks: [], bomb: THEMES[this.themeAt(xs)].lava ? 1 : 0 });
+    }
+  }
+  makeSeesaw(xc, py, Lh, a, floor) {
+    const b = this.world.createBody({ type: 'dynamic', position: V(xc, py), angularDamping: 1.2 });
+    b.createFixture({ shape: pl.Box(Lh, .13), density: 1.4, friction: .95 }); b.setUserData({ kind: 'seesaw' });
+    this.world.createJoint(pl.RevoluteJoint({ enableLimit: true, lowerAngle: -a, upperAngle: a, enableMotor: true, maxMotorTorque: 40, motorSpeed: 0 }, this.body, b, V(xc, py)));
+    b.setTransform(V(xc, py), a);
+    this.seesaws.push({ b, x: xc, y: py, floor, L: Lh });
+  }
+  makeRollers(trig, cx, top, n, rad, tx0, tx1, ty) {
+    const th = this.themeAt(cx), style = th === 'snow' ? 'snow' : th === 'prairie' ? 'barrel' : 'boulder', bodies = [];
+    for (let k = 0; k < n; k++) {
+      const b = this.world.createBody({ type: 'static', position: V(cx + k * (rad * 2 + .15), top + rad + .01), angularDamping: .05 });
+      b.createFixture({ shape: pl.Circle(rad), density: style === 'snow' ? 1.6 : 3, friction: .8 });
+      b.setUserData({ kind: 'log', r: rad, style, seed: cx + k }); this.props.push(b); bodies.push(b);
+    }
+    this.rollers.push({ trig, bodies, i: 0, t: 0, on: 0, tx0, tx1, ty, done: 0, filled: 0 });
+  }
+  makeMover(type, ax, ay, bx, by, w) {
+    const b = this.world.createBody({ type: 'kinematic', position: V(ax, ay) });
+    b.createFixture({ shape: pl.Box(w / 2, .16), friction: 1 }); b.setUserData({ kind: 'mover' });
+    const D = Math.hypot(bx - ax, by - ay);
+    this.movers.push({ type, b, ax, ay, bx, by, w, D, ux: (bx - ax) / D, uy: (by - ay) / D, s: 0, v: 0, goal: 0, wait: type === 'ferry' ? 1.5 : 0, onT: 0, offT: 0 });
+  }
+  addBarrel(x, y) {
+    const b = this.world.createBody({ type: 'dynamic', position: V(x, y) });
+    b.createFixture({ shape: pl.Box(.3, .4), density: .6, friction: .7 }); b.setUserData({ kind: 'barrel', body: b, fuse: -1 });
+    this.props.push(b);
+  }
+  // cadrage : montrer le bac ou le haut de l'ascenseur quand on approche
+  focusAt(x) {
+    for (const M of this.movers) { const e = M.ax - M.w / 2; if (x > e - 14 && x < Math.max(M.ax, M.bx) + M.w / 2) return M.type === 'ferry' ? { x: M.bx + M.w / 2 + 1, y: M.by } : { x: M.ax + M.w / 2 + 2, y: M.by + 1 }; }
+    return null;
+  }
+  // zone où l'on attend un bac, un ascenseur : pas de « bloqué »
+  waitAt(x) { for (const R of this.rollers) if (R.on && R.done < R.bodies.length && x > R.trig - 4 && x < R.tx0 + .5) return true; for (const M of this.movers) { const lo = Math.min(M.ax, M.bx) - M.w / 2 - 10, hi = Math.max(M.ax, M.bx) + M.w / 2 + 2.5; if (x > lo && x < hi) return true; } return false; }
+  // obstacles animés, avant chaque pas de physique
+  update(g, h) {
+    const ck = g.veh.cockpit, cp = ppos(ck), cb = ck.chunk.body;
+    g.onMover = null;
+    let vx0 = 1e9; if (this.movers.length) for (const P of g.veh.parts) if (P.conn && P.alive) { const q = ppos(P); vx0 = Math.min(vx0, q.x - (P.d.wheel ? .05 : .2)); }
+    for (const M of this.movers) {
+      const p = M.b.getPosition(), top = p.y + .16;
+      const aboard = Math.abs(cp.x - p.x) < M.w / 2 + .3 && cp.y > top && cp.y - top < 3.2;
+      if (aboard) g.onMover = M;
+      M.s = clamp((p.x - M.ax) * M.ux + (p.y - M.ay) * M.uy, 0, M.D);
+      let vmax = M.type === 'lift' ? 2 : 3;
+      if (M.type === 'ferry' && M.wait > 0 && M.goal === 1 && M.s < .05) { // au quai de départ : part peu après l'embarquement, attend si l'engin est à cheval
+        if (aboard && !M.boarded) { M.boarded = 1; M.wait = Math.min(M.wait, .9); }
+        const edge = M.ax - M.w / 2; if (cp.x > edge - 3 && cp.x < M.ax + M.w / 2 && vx0 < edge && M.wait < .1) { M.wait = .1; M.holdT = (M.holdT || 0) + h; if (M.holdT > 1.5 && g.mode === 'run') { M.holdT = -4; toast('Avance un peu', 'Le bac part quand tout l\'engin est dessus'); } } // une roue encore sur le quai
+      }
+      if (M.wait > 0) { M.wait -= h; M.v = 0; }
+      else {
+        const T = M.goal ? M.D : 0, rem = T - M.s;
+        if (Math.abs(rem) < .03) {
+          M.v = 0; M.b.setTransform(V(M.goal ? M.bx : M.ax, M.goal ? M.by : M.ay), 0);
+          if (M.type === 'ferry') { M.goal = 1 - M.goal; M.wait = M.goal ? 3.5 : 2; M.boarded = 0; }
+          else if (M.goal === 0) { const full = vx0 > M.ax - M.w / 2; M.onT = aboard && full ? M.onT + h : 0; if (aboard && !full) { M.holdT = (M.holdT || 0) + h; if (M.holdT > 1.5 && g.mode === 'run') { M.holdT = -4; toast('Avance un peu', 'L\'ascenseur monte quand tout l\'engin est dessus'); } } if (M.onT > .7) { M.goal = 1; M.onT = 0; } }
+          else { M.offT = !aboard && cp.x > M.ax + M.w / 2 ? M.offT + h : (!aboard && cp.y < top - 1 ? M.offT + h : 0); if (M.offT > 1.2) { M.goal = 0; M.offT = 0; } }
+        } else {
+          const want = Math.sign(rem) * Math.min(vmax, Math.sqrt(2 * 1.5 * Math.abs(rem)));
+          M.v += clamp(want - M.v, -1.5 * h, 1.5 * h);
+          if (M.type === 'lift' && M.goal === 0 && Math.abs(cp.x - p.x) < M.w / 2 + .6 && cp.y < p.y) M.v = 0; // ne pas écraser l'engin
+        }
+      }
+      M.b.setLinearVelocity(V(M.ux * M.v, M.uy * M.v));
+    }
+    for (const S of this.seesaws) { const w = S.b.getAngularVelocity(); if (Math.abs(w) > .75) S.b.setAngularVelocity(Math.sign(w) * .75); }
+    for (const R of this.rollers) {
+      if (!R.on) { if (cp.x > R.trig) { R.on = 1; R.t = 0; } else continue; }
+      for (const b of R.bodies) { // arrivé à la fosse, le tonneau y tombe et la comble
+        const u = b.getUserData(); if (u.set) continue; const q = b.getPosition();
+        if (u.slot) { u.st -= h; if (u.st <= 0) { u.set = 1; b.setLinearVelocity(V(0, 0)); b.setAngularVelocity(0); b.setTransform(V(u.slot.x, u.slot.y), b.getAngle()); b.setType('static'); R.done++; dust(g, u.slot.x, u.slot.y + u.r, 6, true); if (g.mode === 'run') Snd.thud(.3); } continue; }
+        if (!b.isDynamic()) continue;
+        if (q.x < R.tx1 + u.r * .5 && q.x > R.tx0 - 1 && q.y < R.ty + u.r * 1.6) {
+          const k = R.filled++, sx = R.tx0 + .12 + u.r + k * 2 * u.r, sy = R.ty - .02 - u.r;
+          u.slot = { x: sx, y: sy }; u.st = .35; b.setType('kinematic'); b.setLinearVelocity(V((sx - q.x) / .35, (sy - q.y) / .35)); b.setAngularVelocity(-(sx - q.x) / .35 / u.r);
+        } else if (q.y < R.ty - 25) { u.set = 1; R.done++; }
+      }
+      if (R.i >= R.bodies.length) continue;
+      R.t -= h; if (R.t > 0) continue;
+      const b = R.bodies[R.i++]; b.setType('dynamic'); b.setAwake(true); b.setAngularDamping(.6); b.setLinearDamping(.15); b.setLinearVelocity(V(-2.5, 0)); b.setAngularVelocity(4); R.t = .75;
+      if (g.mode === 'run' && R.i === 1) toast(b.getUserData().style === 'snow' ? 'Boules de neige !' : b.getUserData().style === 'barrel' ? 'Attention, tonneaux !' : 'Rochers en approche !', 'Laisse-les combler la fosse');
+    }
+    for (const F of this.falls) {
+      for (let i = F.marks.length - 1; i >= 0; i--) { const m = F.marks[i]; m.t += h; if (m.t > 1.6 || m.b.getPosition().y < m.gy + 1) F.marks.splice(i, 1); }
+      if (cp.x < F.x0 - 4 || cp.x > F.x1 || F.n >= F.max) continue;
+      F.next -= h; if (F.next > 0) continue;
+      F.next = .95 + Math.random() * .55; F.n++;
+      const tx = clamp(cp.x + cb.getLinearVelocity().x * 1.05 + (Math.random() - .35) * 1.6, F.x0, F.x1 + 4), gy = this.heightAt(tx), rad = .3 + Math.random() * .22;
+      const b = this.world.createBody({ type: 'dynamic', position: V(tx, gy + 10), angularDamping: .4, bullet: true });
+      b.createFixture({ shape: pl.Circle(rad), density: 1.8, friction: .6 }); b.setUserData({ kind: 'rock', r: rad, seed: tx, bomb: F.bomb });
+      b.setLinearVelocity(V(0, -7)); b.setAngularVelocity((Math.random() - .5) * 6); this.props.push(b);
+      F.marks.push({ x: tx, gy, b, t: 0, r: rad });
+    }
+    for (let i = this.props.length - 1; i >= 0; i--) {
+      const b = this.props[i], u = b.getUserData(); if (u.kind !== 'barrel' || u.fuse < 0) continue;
+      u.fuse -= h; if (u.fuse <= 0) boom(g, b);
     }
   }
   addBox(x, y, h) {
@@ -1154,6 +1305,25 @@ class Terrain {
     const j = this.world.createJoint(pl.RevoluteJoint({ enableLimit: true, lowerAngle: -.09, upperAngle: .09 }, prev, this.body, V(x1, y - .1)));
     this.bridgeJoints.push({ j, str: 2600 / sag, stress: 0, alive: 1, x: x1, y });
   }
+}
+
+function boom(g, bb) {
+  const ter = g.ter, p = bb.getPosition(), x = p.x, y = p.y, R = 3.4;
+  ter.props.splice(ter.props.indexOf(bb), 1); g.world.destroyBody(bb);
+  for (let b = g.world.getBodyList(); b; b = b.getNext()) {
+    if (!b.isDynamic()) continue; const c = b.getWorldCenter(), dx = c.x - x, dy = c.y - y, dd = Math.hypot(dx, dy); if (dd > R || dd < .01) continue;
+    const k = 1 - dd / R, m = b.getMass(), J = 6 * k * m; b.applyLinearImpulse(V(dx / dd * J, dy / dd * J + 2.5 * k * m), c, true);
+    const u = b.getUserData(); if (u && u.kind === 'barrel' && (u.fuse < 0 || u.fuse > .15)) u.fuse = .15;
+  }
+  if (g.grace <= 0) for (const P of g.veh.parts) {
+    if (!P.alive || P.d.wheel || P.d.cat === 'Pilote') continue; const q = ppos(P), dd = Math.hypot(q.x - x, q.y - y); if (dd > R) continue;
+    P.hitI = Math.max(P.hitI || 0, P.d.str * KI * (.3 + 1.3 * (1 - dd / R)));
+  }
+  for (let i = 0; i < 26; i++) { const a = Math.random() * TAU, s = 1 + Math.random() * 5; addP(g, { x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s + 1, r: .15 + Math.random() * .2, grow: 1.2, life: .5 + Math.random() * .3, max: .8, col: '#ff9a2e', g: -1, type: 'flame' }); }
+  for (let i = 0; i < 12; i++) addP(g, { x: x + (Math.random() - .5), y: y + Math.random(), vx: (Math.random() - .5) * 2, vy: 1 + Math.random() * 2, r: .3, grow: .9, life: 1.4, max: 1.4, col: '#4a4a4a', g: -.5, type: 'dust' });
+  sparks(g, x, y, 20, '#ffd34a');
+  g.shake = Math.min(.9, g.shake + .6);
+  if (g.mode === 'run') { Snd.noise(.7, .7, 260, .6); buzz([90]); toast('BOUM !'); }
 }
 
 /* =============================== ÉCRANS =============================== */
@@ -1733,8 +1903,9 @@ function contactPart(c) {
   return [null, null];
 }
 function onContact(g, c, s) {
-  const [P] = contactPart(c); if (!P) return;
+  const [P, other] = contactPart(c); if (!P) return;
   P.contacts = Math.max(0, P.contacts + s);
+  if (s > 0 && other && other.kind === 'barrel' && other.fuse < 0 && P.alive) other.fuse = .12;
   if (s > 0 && P.id === 'balloon' && P.alive) g.popQ.push(P);
 }
 function onImpact(g, c, imp) {
@@ -1784,7 +1955,7 @@ function physicsStep(g, h) {
       j.setMotorSpeed(-Math.sign(g.thr) * w.vm * vK * (back ? .55 : 1) / w.r);
       j.setMaxMotorTorque(Math.abs(g.thr) * w.F * fK * w.r * (back ? 1.2 : 1));
     } else if (g.thr < -.05 && w.P.conn) { j.setMotorSpeed(0); j.setMaxMotorTorque(-g.thr * .35 * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
-    else { j.setMotorSpeed(0); j.setMaxMotorTorque(.02 * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
+    else { j.setMotorSpeed(0); j.setMaxMotorTorque((g.onMover && Math.abs(g.thr) < .05 ? .6 : .02) * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
     if (w.susp) { // butées progressives : la suspension durcit en fin de course
       const t = j.getJointTranslation(), tr = w.travel, over = Math.max(0, -t - tr) / tr;
       j.setSpringFrequencyHz(w.hz * (1 + 4 * over * over + 1.5 * over)); j.setSpringDampingRatio(w.dr * (1 + 2 * over));
@@ -1897,6 +2068,7 @@ function physicsStep(g, h) {
   }
   if (g.ropeMiss) { g.ropeMiss.t -= h; if (g.ropeMiss.t <= 0) g.ropeMiss = null; }
   if (g.energy < 0) g.energy = 0;
+  g.ter.update(g, h);
 
   g.world.step(h, 10, 6);
   g.grace -= h;
@@ -2028,6 +2200,7 @@ function postStep(g, dt) {
     for (const pit of g.ter.pits) if (p.x > pit.x0 - .5 && p.x < pit.x1 + .5 && p.y < pit.top - 2.8) endRun(g, false, 'Tombé dans le ravin…', 'pit');
     if (sp < .35 && Math.abs(ck.getAngularVelocity()) < .6) g.stuckT += dt; else g.stuckT = 0;
     const upY = ck.getWorldVector(V(0, 1)).y; if (upY < .35 && sp < .8 && v.groundContacts > 0) g.flipT = (g.flipT || 0) + dt; else g.flipT = 0;
+    if (g.mode !== 'demo' && g.ter.waitAt(p.x)) { g.progT = 0; g.stuckT = 0; }
     if (p.x > (g.progX ?? -1e9) + .6) { g.progX = p.x; g.progT = 0; } else g.progT = (g.progT || 0) + dt;
     if (g.progT > 9) endRun(g, false, 'Bloqué : l\'engin n\'avance plus.', 'stuck');
     if (g.flipT > (g.hasPiston || g.hasHook ? 4 : 1.8)) endRun(g, false, upY < -.3 ? 'Sur le toit !' : 'Renversé : impossible de repartir.', 'flip');
@@ -2043,12 +2216,13 @@ function postStep(g, dt) {
   // poussière des roues
   for (const w of v.wheels) { if (!w.P.alive || w.P.contacts === 0) continue; const wv = w.P.body.getLinearVelocity(); const ws = Math.abs(w.P.body.getAngularVelocity() * w.r); if (ws > 3 && Math.random() < .25) { const q = w.P.body.getPosition(); dust(g, q.x - w.r * .3, q.y - w.r * .8, 1, false, -Math.sign(wv.x || 1)); } }
   // caméra
-  const look = clamp(vel.x * .35, -3, 7);
-  const tgtS = baseScale() / (1 + Math.min(1.1, sp * .028));
+  let look = clamp(vel.x * .35, -3, 7), tgtS = baseScale() / (1 + Math.min(1.1, sp * .028)), fy = 0;
+  const foc = g.mode !== 'demo' && g.ter.focusAt(p.x);
+  if (foc) { const dx = foc.x - p.x; look = Math.max(look, dx / 2 - 1.5); fy = (foc.y - p.y) / 2; tgtS = Math.min(tgtS, GC.w / (Math.abs(dx) + 9), GC.h / (Math.abs(foc.y - p.y) + 7)); }
   g.cam.s += (tgtS - g.cam.s) * Math.min(1, dt * 1.6);
   const lead = g.mode === 'demo' ? -GC.w * .16 / g.cam.s : 0;
   g.cam.x += (p.x + look + 1.5 + lead - g.cam.x) * Math.min(1, dt * 3);
-  g.cam.y += (p.y + 1.1 + vel.y * .08 - g.cam.y) * Math.min(1, dt * 3);
+  g.cam.y += (p.y + 1.1 + fy + vel.y * .08 - g.cam.y) * Math.min(1, dt * 3);
   g.shake *= Math.pow(.02, dt);
   // son moteur
   if (g.mode === 'run') {
@@ -2127,7 +2301,8 @@ function render(g) {
   c.strokeStyle = th.crust; c.lineWidth = .26; c.beginPath(); for (let i = i0; i <= i1; i++) c[i === i0 ? 'moveTo' : 'lineTo'](P[i].x, P[i].y + .02); c.stroke();
   // ponts, caisses, rochers
   for (const b of ter.planks) { const p = b.getPosition(); if (p.x < x0 - 2 || p.x > x1 + 2) continue; const u = b.getUserData(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); c.fillStyle = '#a8703a'; c.fillRect(-u.w / 2, -.1, u.w - .04, .2); c.fillStyle = '#6e4320'; c.fillRect(-u.w / 2, -.1, u.w - .04, .05); c.restore(); }
-  for (const b of ter.props) { const p = b.getPosition(); if (p.x < x0 - 2 || p.x > x1 + 2) continue; const u = b.getUserData(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); if (u.kind === 'crate') crate(c, u.h); else rock(c, u.r, u.seed); c.restore(); }
+  drawObstacles(c, g, x0, x1, T);
+  for (const b of ter.props) { const p = b.getPosition(); if (p.x < x0 - 2 || p.x > x1 + 2) continue; const u = b.getUserData(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); if (u.kind === 'crate') crate(c, u.h); else if (u.kind === 'log') roller(c, u); else if (u.kind === 'barrel') barrel(c, u, T); else rock(c, u.r, u.seed, u.bomb, T); c.restore(); }
   // panneaux et arrivée
   for (const s of ter.signs) { if (s < x0 - 2 || s > x1 + 2) continue; const y = ter.heightAt(s); c.fillStyle = '#5b3a1e'; c.fillRect(s - .05, y, .1, 1.1); c.fillStyle = '#e8d3a8'; c.fillRect(s - .45, y + .8, .9, .45); c.strokeStyle = '#5b3a1e'; c.lineWidth = .05; c.strokeRect(s - .45, y + .8, .9, .45); }
   if (ter.finishX != null && ter.finishX > x0 - 4 && ter.finishX < x1 + 4) finishArch(c, ter.finishX, ter.heightAt(ter.finishX));
@@ -2156,7 +2331,74 @@ function ridge(c, g, col, par, base, amp, per, k) {
 }
 const _nc = {}; function makeNoiseCached(k) { return _nc[k] || (_nc[k] = makeNoise(1000 + k * 77)); }
 function crate(c, h) { c.fillStyle = '#b97d3c'; c.fillRect(-h, -h, h * 2, h * 2); c.strokeStyle = '#6e4320'; c.lineWidth = .06; c.strokeRect(-h + .03, -h + .03, h * 2 - .06, h * 2 - .06); c.beginPath(); c.moveTo(-h, -h); c.lineTo(h, h); c.moveTo(h, -h); c.lineTo(-h, h); c.stroke(); }
-function rock(c, r, seed) { c.fillStyle = '#7d7a73'; c.beginPath(); for (let i = 0; i < 9; i++) { const a = i / 9 * TAU, rr2 = r * (.85 + hash(seed + i) * .2); c.lineTo(Math.cos(a) * rr2, Math.sin(a) * rr2); } c.closePath(); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.arc(-r * .3, r * .3, r * .35, 0, TAU); c.fill(); }
+function stripes(c, x, y, w, h) { c.fillStyle = '#ffc21a'; c.fillRect(x, y, w, h); c.fillStyle = '#1b1d21'; for (let s = x; s < x + w; s += .5) { c.beginPath(); c.moveTo(s, y); c.lineTo(Math.min(x + w, s + .25), y); c.lineTo(Math.min(x + w, s + .25 - h), y + h); c.lineTo(Math.max(x, s - h), y + h); c.closePath(); c.fill(); } }
+function drawObstacles(c, g, x0, x1, T) {
+  const ter = g.ter;
+  // bascules : pied puis planche
+  for (const S of ter.seesaws) {
+    if (S.x + S.L < x0 || S.x - S.L > x1) continue;
+    c.fillStyle = '#4a4f57'; c.beginPath(); c.moveTo(S.x - .8, S.floor); c.lineTo(S.x - .12, S.y); c.lineTo(S.x + .12, S.y); c.lineTo(S.x + .8, S.floor); c.closePath(); c.fill();
+    c.save(); c.translate(S.x, S.y); c.rotate(S.b.getAngle());
+    c.fillStyle = '#a8703a'; c.fillRect(-S.L, -.13, S.L * 2, .26); c.fillStyle = '#6e4320'; c.fillRect(-S.L, -.13, S.L * 2, .07);
+    c.fillStyle = '#5b3a1e'; for (let k = -S.L + .5; k < S.L; k += 1.1) c.fillRect(k, -.13, .06, .26);
+    c.restore();
+    c.fillStyle = '#c9d2da'; c.beginPath(); c.arc(S.x, S.y, .16, 0, TAU); c.fill(); c.fillStyle = '#2b2f36'; c.beginPath(); c.arc(S.x, S.y, .07, 0, TAU); c.fill();
+  }
+  // bacs et ascenseurs
+  for (const M of ter.movers) {
+    const p = M.b.getPosition(), lo = Math.min(M.ax, M.bx) - M.w, hi = Math.max(M.ax, M.bx) + M.w; if (hi < x0 || lo > x1) continue;
+    if (M.type === 'lift') {
+      const top = M.by + 2.2; c.fillStyle = '#3a3f46';
+      c.fillRect(M.ax - M.w / 2 - .25, M.ay - .3, .18, top - M.ay + .3); c.fillRect(M.ax + M.w / 2 + .07, M.ay - .3, .18, top - M.ay + .3);
+      c.fillRect(M.ax - M.w / 2 - .25, top, M.w + .5, .2);
+      c.strokeStyle = '#8a939c'; c.lineWidth = .05; c.beginPath(); c.moveTo(M.ax - M.w / 2 + .3, top); c.lineTo(p.x - M.w / 2 + .3, p.y + .16); c.moveTo(M.ax + M.w / 2 - .3, top); c.lineTo(p.x + M.w / 2 - .3, p.y + .16); c.stroke();
+      c.fillStyle = '#ffc21a'; c.beginPath(); c.arc(M.ax + M.w / 2 - .1, top + .45, .14, 0, TAU); c.fill();
+    } else {
+      const cy = M.ay + 4.2, xa = M.ax - M.w / 2 - .6, xb = M.bx + M.w / 2 + .6;
+      c.fillStyle = '#3a3f46'; c.fillRect(xa - .1, M.ay, .2, cy - M.ay + .3); c.fillRect(xb - .1, M.by, .2, cy - M.by + .3);
+      c.strokeStyle = '#2b2f36'; c.lineWidth = .06; c.beginPath(); c.moveTo(xa, cy); c.lineTo(xb, cy); c.stroke();
+      c.strokeStyle = '#8a939c'; c.lineWidth = .05; c.beginPath(); c.moveTo(p.x - M.w / 2 + .3, p.y + .16); c.lineTo(p.x, cy); c.lineTo(p.x + M.w / 2 - .3, p.y + .16); c.stroke();
+      c.fillStyle = '#2b2f36'; c.beginPath(); c.arc(p.x, cy, .16, 0, TAU); c.fill();
+    }
+    stripes(c, p.x - M.w / 2, p.y - .16, M.w, .32);
+    c.fillStyle = '#2b2f36'; c.fillRect(p.x - M.w / 2, p.y - .2, M.w, .06);
+    if (M.wait > 0 || M.v === 0) { const on = Math.sin(T * 6) > 0; c.fillStyle = on ? '#36d17c' : '#1a6b3f'; c.beginPath(); c.arc(p.x, p.y + .02, .08, 0, TAU); c.fill(); }
+  }
+  // chutes de pierres : panneau et ombres
+  for (const W of ter.warns) {
+    const w = W.x; if (w < x0 - 2 || w > x1 + 2 || ter.inPit(w)) continue; const y = ter.heightAt(w);
+    c.fillStyle = '#5b3a1e'; c.fillRect(w - .05, y, .1, 1.2);
+    c.fillStyle = W.t === 'boom' ? '#ff5a47' : '#ffc21a'; c.strokeStyle = '#1b1d21'; c.lineWidth = .07; c.beginPath(); c.moveTo(w - .55, y + 1.05); c.lineTo(w + .55, y + 1.05); c.lineTo(w, y + 1.95); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = '#1b1d21'; c.strokeStyle = '#1b1d21'; c.lineWidth = .06; c.beginPath();
+    if (W.t === 'fall') { c.arc(w + .05, y + 1.3, .1, 0, TAU); c.arc(w - .12, y + 1.42, .07, 0, TAU); c.fill(); }
+    else if (W.t === 'logs') { c.moveTo(w - .3, y + 1.15); c.lineTo(w + .3, y + 1.45); c.stroke(); c.beginPath(); c.arc(w - .02, y + 1.38, .09, 0, TAU); c.fill(); }
+    else if (W.t === 'ferry') { c.fillRect(w - .25, y + 1.22, .5, .07); c.moveTo(w, y + 1.29); c.lineTo(w, y + 1.55); c.stroke(); }
+    else if (W.t === 'lift') { c.moveTo(w - .14, y + 1.35); c.lineTo(w, y + 1.58); c.lineTo(w + .14, y + 1.35); c.closePath(); c.fill(); c.fillRect(w - .2, y + 1.17, .4, .07); }
+    else { c.fillRect(w - .04, y + 1.32, .08, .26); c.fillRect(w - .04, y + 1.17, .08, .08); }
+  }
+  for (const F of ter.falls) for (const m of F.marks) {
+    const k = clamp(m.t / .85, 0, 1); c.fillStyle = 'rgba(0,0,0,' + (.15 + .3 * k) + ')';
+    c.beginPath(); c.ellipse(m.x, ter.heightAt(m.x) + .04, m.r * (2.2 - k * 1.1), .1, 0, 0, TAU); c.fill();
+  }
+}
+function roller(c, u) {
+  const r = u.r;
+  if (u.style === 'snow') { c.fillStyle = '#f4f9ff'; c.beginPath(); c.arc(0, 0, r, 0, TAU); c.fill(); c.fillStyle = '#c9dbea'; c.beginPath(); c.arc(r * .25, -r * .2, r * .55, 0, TAU); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(-r * .3, r * .3, r * .3, 0, TAU); c.fill(); return; }
+  if (u.style === 'boulder') { rock(c, r, u.seed); c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = .04; c.beginPath(); c.moveTo(-r * .5, 0); c.lineTo(r * .4, r * .2); c.stroke(); return; }
+  c.fillStyle = '#8b5a2b'; c.beginPath(); c.arc(0, 0, r, 0, TAU); c.fill();
+  c.strokeStyle = '#4a2f1c'; c.lineWidth = .07; c.beginPath(); c.arc(0, 0, r - .04, 0, TAU); c.stroke();
+  c.strokeStyle = '#c99a5b'; c.lineWidth = .04; c.beginPath(); c.arc(0, 0, r * .62, 0, TAU); c.stroke(); c.beginPath(); c.arc(0, 0, r * .3, 0, TAU); c.stroke();
+  c.strokeStyle = '#4a2f1c'; c.lineWidth = .05; c.beginPath(); c.moveTo(-r * .9, 0); c.lineTo(r * .9, 0); c.stroke();
+}
+function barrel(c, u, T) {
+  const lit = u.fuse >= 0 && Math.sin(T * 40) > 0;
+  c.fillStyle = lit ? '#fff2a8' : '#d8342a'; c.fillRect(-.3, -.4, .6, .8);
+  c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(.12, -.4, .18, .8);
+  c.fillStyle = '#2b2f36'; c.fillRect(-.3, .22, .6, .07); c.fillRect(-.3, -.29, .6, .07);
+  c.fillStyle = '#ffc21a'; c.beginPath(); c.moveTo(-.14, -.1); c.lineTo(.14, -.1); c.lineTo(0, .14); c.closePath(); c.fill();
+  c.fillStyle = '#1b1d21'; c.fillRect(-.02, -.02, .04, .1);
+}
+function rock(c, r, seed, bomb, T) { if (bomb) { c.fillStyle = 'rgba(255,110,30,.35)'; c.beginPath(); c.arc(0, 0, r * 1.45, 0, TAU); c.fill(); } c.fillStyle = bomb ? '#3a2018' : '#7d7a73'; c.beginPath(); for (let i = 0; i < 9; i++) { const a = i / 9 * TAU, rr2 = r * (.85 + hash(seed + i) * .2); c.lineTo(Math.cos(a) * rr2, Math.sin(a) * rr2); } c.closePath(); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.arc(-r * .3, r * .3, r * .35, 0, TAU); c.fill(); }
 function finishArch(c, x, y) {
   c.fillStyle = '#2b2f36'; c.fillRect(x - 2.2, y, .18, 3); c.fillRect(x + 2.02, y, .18, 3);
   for (let i = 0; i < 10; i++) for (let j = 0; j < 2; j++) { c.fillStyle = (i + j) % 2 ? '#111' : '#fff'; c.fillRect(x - 2.1 + i * .42, y + 2.55 + j * .22, .42, .22); }
@@ -2342,7 +2584,7 @@ function quitGame() {
   setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
 }
 /* ---------- mises à jour : on compare la version en ligne à celle qui tourne ---------- */
-const APP_VERSION = '7', APP_DATE = '9 oct. 2026';
+const APP_VERSION = '8', APP_DATE = '10 oct. 2026';
 function checkVersion() {
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.version && j.version !== APP_VERSION) showUpdate(j.version); }).catch(() => {});
 }
