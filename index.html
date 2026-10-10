@@ -353,7 +353,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p style="grid-column:1/-1"><b>Objectifs</b> — <b>étoile dorée</b> perchée au-dessus d'un tremplin ou cachée dans un ravin ; <b>caisse fragile</b> posée sur ton engin au-dessus de son centre de gravité (le contour pointillé dans l'atelier) : construis-lui un berceau et roule en douceur ; <b>contraintes</b> de masse, de hauteur ou de pièces, vérifiées dès l'atelier ; <b>chrono</b> à battre.</p>
       <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
       <p style="grid-column:1/-1"><b>Obstacles</b> — la <b>bascule</b> pivote sous ton poids : ralentis au sommet. Les <b>tonneaux</b> dévalent les côtes : attends-les ou saute. Le <b>bac</b> traverse le ravin et l'<b>ascenseur</b> monte la falaise : monte dessus et lâche les gaz, il te porte. Les <b>barils rouges</b> explosent au contact. Dans les <b>chutes de pierres</b>, l'ombre au sol montre où ça tombe : change de vitesse !</p>
-      <p style="grid-column:1/-1"><b>Terrains</b> — les <b>galeries</b> ont un plafond bas : construis trapu. Les <b>marches</b> se gravissent avec de grandes roues, une 4×4 ou un vérin. La <b>boue</b> freine et fait patiner : moteurs costauds et élan. Le <b>mur</b> se franchit au grappin, au vérin, au ressort ou en volant. Les <b>défis</b> se débloquent avec les étoiles et imposent une règle de construction.</p>
+      <p style="grid-column:1/-1"><b>Terrains</b> — les <b>galeries</b> ont un plafond bas : construis trapu. Les <b>marches</b> se gravissent avec de grandes roues, une 4×4 ou un vérin. La <b>boue</b> freine et fait patiner : moteurs costauds et élan. Le <b>mur</b> se franchit au grappin, au vérin, au ressort ou en volant. L'<b>eau</b> : un gué se traverse en roulant ; une rivière profonde demande de flotter (<b>flotteurs</b>), les roues qui tournent servent de pagaies, et le pilote ne doit pas avoir la tête sous l'eau. La <b>soufflerie</b> allège l'engin au-dessus d'un ravin ; le <b>vent</b> de face freine et peut renverser un engin haut. Les <b>défis</b> se débloquent avec les étoiles et imposent une règle de construction.</p>
       <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Chaque pièce posée sur ton engin se paie en or ; retirée, elle est remboursée. Ton engin te suit d'un niveau à l'autre. Dans le bac à sable, tout est gratuit, avec un engin à part.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
@@ -479,6 +479,7 @@ const PARTS = {
   chute:   { n: 'Parachute', cat: 'Aéro', cost: 9, dens: 2, str: 1800, dir: 0, d: 'S\'ouvre avec ACTION. Freine et stabilise.' },
   spring:  { n: 'Ressort', cat: 'Spécial', cost: 16, dens: 6, str: 2400, dir: 2, d: 'ACTION : propulse le véhicule à l\'opposé du plateau.' },
   gyro:    { n: 'Gyroscope', cat: 'Spécial', cost: 45, dens: 8, str: 2200, gyro: 1, d: 'Stabilise l\'engin : freine les rotations et le remet à plat en l\'air.' },
+  float:   { n: 'Flotteur', cat: 'Spécial', cost: 12, dens: 0.8, str: 1400, d: 'Caisson creux : fait flotter l\'engin sur l\'eau. Les roues qui tournent dans l\'eau servent de pagaies.' },
   horn:    { n: 'Klaxon', cat: 'Spécial', cost: 2, dens: 3, str: 1200, d: 'ACTION : tut tut ! Indispensable.' },
 };
 
@@ -499,18 +500,18 @@ const THEMES = {
 const LEVELS = [
   { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, must: ['seesaw'], goals: [{ t: 'coins' }, { t: 'intact' }], featGap: [45, 75], tip: 'Un buggy simple suffit. Sur la bascule, ralentis au sommet.' },
   { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, must: ['starRamp', 'logs', 'seesaw'], goals: [{ t: 'star' }, { t: 'coins' }], featGap: [40, 65], tip: 'Des tonneaux dévalent la côte : attends qu\'ils passent, ou fonce entre eux.' },
-  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
+  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'fan', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
   { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, must: ['barrels', 'logs', 'barrels'], goals: [{ t: 'mass', max: 18 }, { t: 'coins' }], featGap: [40, 70], cells: 150, tip: 'Barils rouges : ils explosent au contact. Saute-les ou passe vite. Le solaire aide ici.' },
-  { id: 'marais', name: 'Marais boueux', theme: 'marais', len: 560, amp: 3.5, per: 44, slope: 16, curv: .06, seed: 47, feat: { bump: 2, ramp: 1, crates: 1 }, must: ['mud', 'seesaw', 'mud', 'logs', 'mud'], goals: [{ t: 'coins' }, { t: 'time', s: 100 }], featGap: [40, 65], tip: 'La boue freine et fait patiner : 4×4, moteurs costauds et de l\'élan.' },
-  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'starRamp', 'seesaw', 'logs'], goals: [{ t: 'cargo' }, { t: 'star' }], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
+  { id: 'marais', name: 'Marais boueux', theme: 'marais', len: 560, amp: 3.5, per: 44, slope: 16, curv: .06, seed: 47, feat: { bump: 2, ramp: 1, crates: 1 }, must: ['mud', 'seesaw', 'water', 'mud', 'logs', 'mud'], goals: [{ t: 'coins' }, { t: 'time', s: 100 }], featGap: [40, 65], tip: 'La boue freine et fait patiner : 4×4, moteurs costauds et de l\'élan.' },
+  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'starRamp', 'wind', 'seesaw', 'logs'], goals: [{ t: 'cargo' }, { t: 'star' }], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
   { id: 'mine', name: 'Galerie de la mine', theme: 'mine', len: 600, amp: 5, per: 40, slope: 20, curv: .07, seed: 59, feat: { bump: 2, crates: 1, rocks: 1 }, must: ['tunnel', 'steps', 'tunnel', 'logs', 'tunnel'], goals: [{ t: 'height', max: 4 }, { t: 'intact' }], featGap: [40, 65], tip: 'Galeries basses : un engin trapu passe mieux. Les marches aiment les grandes roues.' },
-  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['lift', 'starGap', 'ferry'], goals: [{ t: 'star' }, { t: 'nofly' }], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
+  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['fan', 'lift', 'starGap', 'ferry', 'fan'], goals: [{ t: 'star' }, { t: 'nofly' }], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
   { id: 'chantier', name: 'Le chantier', theme: 'chantier', len: 640, amp: 4, per: 40, slope: 18, curv: .07, seed: 67, feat: { ramp: 2, crates: 2, bump: 1 }, must: ['steps', 'barrels', 'lift', 'starRamp', 'steps'], goals: [{ t: 'star' }, { t: 'time', s: 115 }], featGap: [40, 65], tip: 'Escaliers de béton : grandes roues, 4×4 ou vérin. Attention aux barils.' },
-  { id: 'bayou', name: 'Le bayou', theme: 'marais', len: 700, amp: 4, per: 46, slope: 18, curv: .065, seed: 73, mudK: .42, feat: { bridge: 2, bump: 1, ramp: 1 }, must: ['mud', 'ferry', 'mud', 'logs', 'mud', 'seesaw'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [40, 65], tip: 'Boue profonde et bac : prends ton temps, la caisse est fragile.' },
+  { id: 'bayou', name: 'Le bayou', theme: 'marais', len: 700, amp: 4, per: 46, slope: 18, curv: .065, seed: 73, mudK: .42, feat: { bridge: 2, bump: 1, ramp: 1 }, must: ['mud', 'water', 'ferry', 'mud', 'logs', 'water', 'seesaw'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [40, 65], tip: 'Boue profonde et bac : prends ton temps, la caisse est fragile.' },
   { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, must: ['lift', 'barrels', 'seesaw'], goals: [{ t: 'height', max: 3 }, { t: 'time', s: 120 }], featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
   { id: 'puits', name: 'Le puits profond', theme: 'mine', len: 760, amp: 7, per: 44, slope: 24, curv: .085, seed: 79, clear: 2.5, feat: { bump: 1, gap: 1, rocks: 1 }, must: ['tunnel', 'lift', 'rockfall', 'tunnel', 'steps', 'lift', 'tunnel'], goals: [{ t: 'cargo' }, { t: 'time', s: 175 }], featGap: [40, 65], tip: 'Galeries, ascenseurs et éboulements : bas, solide et patient.' },
   { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'time', s: 150 }], featGap: [40, 70], tip: 'Lave, bombes et ascenseur : du solide et du sang-froid.' },
-  { id: 'gratteciel', name: 'Le gratte-ciel', theme: 'chantier', len: 900, amp: 6, per: 46, slope: 24, curv: .09, seed: 89, feat: { ramp: 2, gap: 1, crates: 1 }, must: ['steps', 'barrels', 'wall', 'ferry', 'mud', 'lift', 'rockfall', 'steps', 'tunnel'], goals: [{ t: 'cargo' }, { t: 'nofly' }], featGap: [36, 60], tip: 'Le grand final. Le mur se franchit au grappin, au vérin, au ressort… ou en volant.' },
+  { id: 'gratteciel', name: 'Le gratte-ciel', theme: 'chantier', len: 900, amp: 6, per: 46, slope: 24, curv: .09, seed: 89, feat: { ramp: 2, gap: 1, crates: 1 }, must: ['steps', 'barrels', 'wall', 'wind', 'ferry', 'mud', 'lift', 'rockfall', 'steps', 'tunnel'], goals: [{ t: 'cargo' }, { t: 'nofly' }], featGap: [36, 60], tip: 'Le grand final. Le mur se franchit au grappin, au vérin, au ressort… ou en volant.' },
 ];
 const DEFIS = [
   { id: 'd_mur', defi: 1, need: 8, name: 'Le mur', theme: 'chantier', len: 230, amp: 2, per: 40, slope: 12, curv: .05, seed: 101, feat: { bump: 1 }, must: ['wall', 'wall'], rules: [{ t: 'nofly' }], goals: [{ t: 'intact' }, { t: 'time', s: 70 }], featGap: [40, 50], tip: 'Défi : sans fusée, réacteur ni hélice. Grappin, vérin ou ressort !' },
@@ -518,8 +519,9 @@ const DEFIS = [
   { id: 'd_livr', defi: 1, need: 24, name: 'Livraison express', theme: 'canyon', len: 420, amp: 3, per: 40, slope: 14, curv: .05, seed: 107, feat: { bump: 2, ramp: 1 }, must: ['seesaw', 'ferry', 'logs'], rules: [{ t: 'cargo' }], goals: [{ t: 'time', s: 90 }, { t: 'intact' }], featGap: [40, 55], tip: 'Défi : la caisse doit arriver entière, sinon c\'est perdu.' },
   { id: 'd_ras', defi: 1, need: 32, name: 'Ras du sol', theme: 'mine', len: 360, amp: 2, per: 40, slope: 12, curv: .05, seed: 109, clear: 1.75, feat: { bump: 1 }, must: ['tunnel', 'tunnel', 'tunnel'], rules: [{ t: 'height', max: 3 }], goals: [{ t: 'intact' }, { t: 'time', s: 60 }], featGap: [30, 40], tip: 'Défi : 3 cases de haut au maximum, plafonds très bas.' },
 ];
-const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8, tunnel: .8, steps: .7, mud: 1 }, featGap: [40, 70], endless: 1 };
-const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1, tunnel: 1, steps: 1, mud: 1, wall: .5 }, featGap: [35, 55], sandbox: 1 };
+DEFIS.push({ id: 'd_eau', defi: 1, need: 38, name: 'La traversée', theme: 'marais', len: 320, amp: 2, per: 40, slope: 12, curv: .05, seed: 113, feat: { bump: 1 }, must: ['water', 'water', 'water'], rules: [{ t: 'nofly' }], goals: [{ t: 'intact' }, { t: 'time', s: 80 }], featGap: [36, 46], tip: 'Défi : rivières profondes, sans fusée ni hélice. Flotteurs et roues-pagaies !' });
+const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8, tunnel: .8, steps: .7, mud: 1, water: .7, fan: .6, wind: .6 }, featGap: [40, 70], endless: 1 };
+const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1, tunnel: 1, steps: 1, mud: 1, wall: .5, water: 1, fan: 1, wind: 1 }, featGap: [35, 55], sandbox: 1 };
 /* Objectifs : 1re étoile = arriver ; les deux autres dépendent du niveau */
 function levelGoals(L) { return L.endless || L.sandbox ? [] : (L.goals || [{ t: 'coins' }, { t: 'intact' }]); }
 function designHeight(d) { if (!d.length) return 0; let lo = 1e9, hi = -1e9; for (const p of d) { const s = PARTS[p.id].size || 1; lo = Math.min(lo, p.gy); hi = Math.max(hi, p.gy + s - 1); } return hi - lo + 1; }
@@ -562,7 +564,7 @@ const INF_THEMES = ['prairie', 'desert', 'marais', 'canyon', 'mine', 'snow', 'ch
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
    o roue S, O roue M, M monster (2×2, coin haut-gauche), h amorti dur, u amorti souple, e électrique,
    T V8, B batterie, G grosse batterie, P solaire, R fusée→, H hélice↑, W aile, A ballon, X parachute, J ressort↓ */
-const CODES = { V: 'cockpit_a', a: 'alu', Z: 'wedge', r: 'rollbar', i: 'wheel_w', x: 'wheel_x', m: 'motor_s', Y: 'motor_h', g: 'gen', E: 'jet', N: 'nitro', S: 'spoiler', Q: 'gyro', K: 'horn', C: 'cockpit', w: 'wood', s: 'steel', k: 'carbon', L: 'ballast', b: 'bumper', o: 'wheel_s', O: 'wheel_m', M: 'wheel_l', h: 'susp_h', u: 'susp_s', e: 'motor_e', T: 'motor_t', B: 'batt_s', G: 'batt_l', P: 'solar', R: 'rocket', H: 'prop', W: 'wing', A: 'balloon', X: 'chute', J: 'spring' };
+const CODES = { p: 'piston', f: 'hook', n: 'hinge', d: 'decoupler', U: 'float', V: 'cockpit_a', a: 'alu', Z: 'wedge', r: 'rollbar', i: 'wheel_w', x: 'wheel_x', m: 'motor_s', Y: 'motor_h', g: 'gen', E: 'jet', N: 'nitro', S: 'spoiler', Q: 'gyro', K: 'horn', C: 'cockpit', w: 'wood', s: 'steel', k: 'carbon', L: 'ballast', b: 'bumper', o: 'wheel_s', O: 'wheel_m', M: 'wheel_l', h: 'susp_h', u: 'susp_s', e: 'motor_e', T: 'motor_t', B: 'batt_s', G: 'batt_l', P: 'solar', R: 'rocket', H: 'prop', W: 'wing', A: 'balloon', X: 'chute', J: 'spring' };
 const PRESETS = [
   { name: 'Buggy', d: 'Simple et fiable, propulsion', rows: ['.C.B.', 'wwwww', 'he..h', 'O...O'] },
   { name: 'Tout-terrain', d: '4×4 : V8 avant, électrique arrière', rows: ['.PC..', 'wwwww', 'ueGTu', 'O...O'] },
@@ -570,12 +572,15 @@ const PRESETS = [
   { name: 'Planeur', d: 'Ailes et fusée', rows: ['..WWW.', '.C.B..', 'Rwwwww', 'he...h', 'O....O'] },
   { name: 'Drone', d: 'Vole avec les hélices', rows: ['HH.HH', 'wwCGw', '.b.b.'] },
   { name: 'Dragster', d: 'Fusées, roues libres', rows: ['.C.B.', 'RRwww', '.o..o'] },
+  { name: 'Taupe', d: 'Bas et 4×4 : galeries et boue', rows: ['.CG..', 'kkkkk', 'OT.eO'] },
+  { name: 'Grimpeur', d: '4×4, grappin et vérin : marches et murs', rows: ['.C.Bf', 'wwwww', 'uepTu', 'O.b.O'], dirs: { p: 2 } },
+  { name: 'Amphibie', d: 'Flotteurs : traverse l\'eau en pagayant', rows: ['.C.B.', 'UwwwU', 'ueGeu', 'O...O'] },
 ];
 function presetDesign(pr) {
   const rows = pr.rows, h = rows.length, w = Math.max(...rows.map(r => r.length));
   const ox = Math.floor((GW - w) / 2), oy = Math.max(0, GH - h - 1);
   const out = [];
-  rows.forEach((r, y) => [...r].forEach((ch, x) => { const id = CODES[ch]; if (id) out.push({ id, gx: ox + x, gy: oy + y, dir: PARTS[id].dir ?? 0 }); }));
+  rows.forEach((r, y) => [...r].forEach((ch, x) => { const id = CODES[ch]; if (id) out.push({ id, gx: ox + x, gy: oy + y, dir: (pr.dirs && pr.dirs[ch]) ?? PARTS[id].dir ?? 0 }); }));
   return out;
 }
 
@@ -811,6 +816,12 @@ const ART = {
     c.strokeStyle = '#c9d2da'; c.lineWidth = 1.6; c.beginPath(); c.ellipse(0, 0, 12 * Math.abs(Math.cos(a)) + 1, 12, 0, 0, TAU); c.stroke();
     c.fillStyle = lg(c, -6, 6, '#e6ebf0', '#6d7884'); dot(c, 0, 0, 6);
     c.fillStyle = '#d7302a'; dot(c, 0, 0, 2);
+  },
+  float(c) {
+    plate(c, '#ff9a4a', '#d9541a', '#5a1e08');
+    c.fillStyle = '#fff4e8'; c.fillRect(-15, -5, 30, 10);
+    c.fillStyle = '#d9541a'; for (let x = -11; x <= 11; x += 7.3) dot(c, x, 0, 1.6);
+    c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-14, -5); c.lineTo(14, -5); c.moveTo(-14, 5); c.lineTo(14, 5); c.stroke();
   },
   horn(c) {
     c.fillStyle = '#3a4550'; rr(c, -14, 8, 28, 7, 2); c.fill();
@@ -1073,7 +1084,7 @@ class Terrain {
     this.nA = makeNoise(lvl.seed * 3 + 1); this.nB = makeNoise(lvl.seed * 7 + 2); this.nC = makeNoise(lvl.seed * 13 + 5);
     this.pts = []; this.coins = []; this.cells = []; this.decor = []; this.pits = []; this.signs = [];
     this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = []; this.anchors = [];
-    this.star = null; this.tunnels = []; this.muds = []; this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
+    this.star = null; this.tunnels = []; this.muds = []; this.waters = []; this.fans = []; this.winds = []; this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
     this.body = world.createBody(); this.body.setUserData({ kind: 'ground' });
     for (let x = -60; x <= 18; x += 2) this.pts.push({ x, y: 0 });
     this.x = 18; this.y = 0; this.slope = 0; this.nfeat = 0; this.chainFrom = 0; this.finishX = null;
@@ -1128,7 +1139,8 @@ class Terrain {
     this.spawnQ = [];
     this.buildChain();
   }
-  inPit(x) { for (const p of this.pits) if (x > p.x0 - 1.5 && x < p.x1 + 1.5) return true; return false; }
+  inPit(x) { for (const p of this.pits) if (x > p.x0 - 1.5 && x < p.x1 + 1.5) return true; for (const w of this.waters) if (x > w.x0 && x < w.x1) return true; return false; }
+  waterAt(x) { for (const w of this.waters) if (x > w.x0 && x < w.x1) return w; return null; }
   buildChain() {
     const a = this.chainFrom, b = this.pts.length - 1; if (b - a < 2) return;
     const vs = []; for (let i = a; i <= b; i++) vs.push(V(this.pts[i].x, this.pts[i].y));
@@ -1271,6 +1283,31 @@ class Terrain {
       for (let i = 1; i <= len; i++) this.push(this.x + 1, y0 - dep * Math.pow(Math.max(0, Math.sin(Math.PI * i / len)), .45), 1);
       this.muds.push({ x0: xs, x1: this.x, y: y0 - .04, k: L.mudK || (.28 + d * .14) });
       flat(3);
+    } else if (f === 'water') { // plan d'eau : gué peu profond au début, rivière profonde ensuite
+      flat(4);
+      const D = 1.1 + d * 2 + r() * .5, sl = Math.tan(24 * Math.PI / 180), wd = D / sl, B = 6 + d * 6 + r() * 3, xs = this.x, sy = y0 - .25;
+      this.warns.push({ x: xs - 14, t: D > 1.8 ? 'water' : 'ford' });
+      for (let i = 1; i <= 8; i++) { const t = i / 8; this.push(xs + wd * t, y0 - D * (t * t * (3 - 2 * t)), 1); }
+      for (let i = 0; i < Math.round(B); i++) this.push(this.x + B / Math.round(B), y0 - D + (i % 3 === 1 ? .08 : 0), 1);
+      const xb = this.x; for (let i = 1; i <= 8; i++) { const t = i / 8; this.push(xb + wd * t, y0 - D + D * (t * t * (3 - 2 * t)), 1); }
+      const x0w = xs + wd * .25 / D, x1w = this.x - wd * .25 / D;
+      this.waters.push({ x0: xs, x1: this.x, y: sy, D, deep: D > 1.8 });
+      this.coinArc(x0w + 2, x1w - 2, sy + 1, .5);
+      flat(3);
+    } else if (f === 'fan') { // soufflerie au fond d'un ravin : allège les engins qui passent au-dessus
+      flat(6);
+      const gw = 9 + r() * 3 + d * 4, x0 = this.x, depth = 9;
+      this.warns.push({ x: x0 - 16, t: 'fan' });
+      this.push(x0 + .12, y0 - depth, 1); this.push(x0 + gw - .12, y0 - depth, 1); this.push(x0 + gw, y0 - .2, 1); this.push(x0 + gw + .8, y0, 1);
+      this.pits.push({ x0, x1: x0 + gw, top: y0 });
+      this.fans.push({ x0: x0 + .3, x1: x0 + gw - .3, y0: y0 - depth, rim: y0, top: y0 + 4.5, k: 1 });
+      this.coinArc(x0 + 1, x0 + gw - 1, y0 + 2.5, 2.2);
+      for (let i = 0; i < 6; i++) this.push(this.x + 1, y0, 1);
+    } else if (f === 'wind') { // rafales de vent de face
+      const len = Math.round(34 + d * 18), xs = this.x;
+      this.warns.push({ x: xs - 6, t: 'wind' });
+      for (let i = 0; i < len; i++) this.push(this.x + 1, y0 + Math.sin(i * .21) * .5 * (1 + d));
+      this.winds.push({ x0: xs, x1: this.x, k: 1 + d * .8, ph: r() * 10 });
     } else if (f === 'rockfall') { // chute de pierres : l'ombre au sol annonce l'impact
       const len = Math.round(28 + d * 14), xs = this.x;
       this.warns.push({ x: xs - 3, t: 'fall' });
@@ -2077,6 +2114,31 @@ function startRun() {
   loopStart();
 }
 
+/* ============================ EAU, SOUFFLERIES, VENT ============================ */
+const WATER_D = 8, FAN_K = 7.5, WIND_K = 11;
+function partArea(P) { return P.d.wheel ? Math.PI * P.d.r * P.d.r : CELL * CELL * (P.d.size || 1) * (P.d.size || 1); }
+function fluids(g, h, grav, air) {
+  const ter = g.ter, v = g.veh; if (!ter.waters.length && !ter.fans.length && !ter.winds.length) return;
+  const ckq = ppos(v.cockpit); g.inWater = 0; g.wet = 0;
+  for (const P of v.parts) {
+    if (!P.alive) continue;
+    const b = P.d.wheel ? P.body : P.chunk.body; if (!b) continue;
+    const q = P.d.wheel ? b.getPosition() : ppos(P), A = partArea(P), hr = P.d.wheel ? P.d.r : CELL / 2 * (P.d.size || 1);
+    const W = ter.waterAt(q.x);
+    if (W && q.y - hr < W.y) {
+      const f = clamp((W.y - (q.y - hr)) / (2 * hr), 0, 1), vel = b.getLinearVelocityFromWorldPoint(q); g.wet = 1;
+      let fx = -vel.x * 5 * A * f, fy = WATER_D * grav * A * f - vel.y * 7 * A * f;
+      if (P.d.wheel) { const slip = clamp(-b.getAngularVelocity() * P.d.r - vel.x, -9, 9); fx += slip * 3.2 * A * 10 * f; }
+      b.applyForce(V(fx, fy), q, true);
+      if (P === v.cockpit && q.y < W.y - .12) g.inWater = 1;
+      if (Math.abs(vel.y) > 2.5 && Math.abs(q.y - W.y) < .3 && Math.random() < .3) for (let k = 0; k < 4; k++) addP(g, { x: q.x, y: W.y, vx: (Math.random() - .5) * 3, vy: 1.5 + Math.random() * 2.5, r: .06 + Math.random() * .06, life: .6, max: .6, col: '#bfe4ff', g: 9, type: 'spark' });
+    }
+    if (air > 0) for (const F of ter.fans) if (q.x > F.x0 && q.x < F.x1 && q.y > F.y0 && q.y < F.top) { const k = q.y < F.rim ? 1 : 1 - (q.y - F.rim) / (F.top - F.rim); b.applyForce(V(0, FAN_K * grav * A * k * F.k * air), q, true); }
+    if (air > 0) for (const Wd of ter.winds) if (q.x > Wd.x0 && q.x < Wd.x1) { const gust = .55 + .45 * Math.sin(g.t * 1.3 + Wd.ph) + .25 * Math.sin(g.t * 3.7); b.applyForce(V(-WIND_K * A * Wd.k * Math.max(0, gust) * air, 0), q, true); }
+  }
+  if (!g.over) { g.drownT = g.inWater ? (g.drownT || 0) + h : 0; if (g.drownT > 2.2) endRun(g, false, 'Le pilote a bu la tasse !', 'water'); }
+}
+
 /* ============================ PAS DE SIMULATION ============================ */
 const WK = .55, WC = .085, WD = .012, CK = .95;
 function physicsStep(g, h) {
@@ -2123,7 +2185,7 @@ function physicsStep(g, h) {
     if (k) { g.energy = Math.min(g.cap, g.energy + live.regen * k * Math.min(1, sp / 6) * h); g.charging = true; }
   }
   // --- contrôle en l'air : bascule autour du centre de masse
-  const airborne = gc === 0;
+  const airborne = gc === 0 && !g.wet;
   if (airborne) g.airT += h; else g.airT = 0;
   const vehI = () => { const lc = ck.getLocalCenter(); let I = ck.getInertia() - ck.getMass() * (lc.x * lc.x + lc.y * lc.y); const c0 = ck.getWorldCenter(); for (const W of v.wheels) if (W.P.conn) { const p = W.P.body.getPosition(); I += W.P.body.getMass() * ((p.x - c0.x) ** 2 + (p.y - c0.y) ** 2); } return I; };
   if (airborne && g.airT > .15 && Math.abs(g.thr) > .02) ck.applyTorque(3.4 * g.thr * vehI(), true);
@@ -2220,6 +2282,7 @@ function physicsStep(g, h) {
   if (g.ropeMiss) { g.ropeMiss.t -= h; if (g.ropeMiss.t <= 0) g.ropeMiss = null; }
   if (g.energy < 0) g.energy = 0;
   g.ter.update(g, h);
+  fluids(g, h, grav, air);
 
   g.world.step(h, 10, 6);
   g.grace -= h;
@@ -2486,6 +2549,7 @@ function render(g) {
   drawVehicle(c, g, T);
   drawParts(c, g, null);
   drawMud(c, g, x0, x1, T);
+  drawFluids(c, g, x0, x1, T);
   // ---- textes en coordonnées écran
   c.setTransform(dpr, 0, 0, dpr, 0, 0);
   const toS = (x, y) => [(x - g.cam.x) * S + W / 2 + sx, H / 2 - (y - g.cam.y) * S + sy];
@@ -2524,6 +2588,34 @@ function drawTunnels(c, g, x0, x1, T, th0) {
       c.fillStyle = mine ? '#4a3018' : '#5d6268'; c.fillRect(x - .22, gy, .07, cy - gy);
     }
     if (mine) for (let x = Tn.xs + 5; x < Tn.xe - 2; x += 7) { const p = Tn.top[Math.min(Tn.top.length - 1, Math.round(x - Tn.xs))]; c.strokeStyle = '#2b2f36'; c.lineWidth = .04; c.beginPath(); c.moveTo(x, p.y); c.lineTo(x, p.y - .35); c.stroke(); c.fillStyle = 'rgba(255,200,90,' + (.18 + .05 * Math.sin(T * 7 + x)) + ')'; c.beginPath(); c.arc(x, p.y - .45, .9, 0, TAU); c.fill(); c.fillStyle = '#ffd36a'; c.beginPath(); c.arc(x, p.y - .45, .1, 0, TAU); c.fill(); }
+  }
+}
+function drawFluids(c, g, x0, x1, T) {
+  const ter = g.ter;
+  for (const W of ter.waters) {
+    if (W.x1 < x0 || W.x0 > x1) continue;
+    const sw = ter.themeAt(W.x0) === 'marais';
+    c.beginPath(); let st = 0;
+    for (let x = W.x0; x <= W.x1; x += .4) { if (ter.heightAt(x) > W.y && !st) continue; if (!st) { c.moveTo(x, W.y); st = 1; } c.lineTo(x, W.y + Math.sin(T * 2 + x * 1.1) * .04); }
+    for (let x = W.x1; x >= W.x0; x -= .4) { const gy = ter.heightAt(x); if (gy < W.y) c.lineTo(x, gy - .02); }
+    c.closePath(); c.fillStyle = sw ? 'rgba(58,92,70,.72)' : 'rgba(40,120,200,.55)'; c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = .05; c.beginPath(); st = 0;
+    for (let x = W.x0; x <= W.x1; x += .4) { if (ter.heightAt(x) > W.y) continue; c[st ? 'lineTo' : 'moveTo'](x, W.y + Math.sin(T * 2 + x * 1.1) * .04); st = 1; } c.stroke();
+  }
+  for (const F of ter.fans) {
+    if (F.x1 < x0 || F.x0 > x1) continue;
+    c.fillStyle = '#3a3f46'; c.fillRect(F.x0, F.y0, F.x1 - F.x0, .35);
+    c.strokeStyle = '#8a939c'; c.lineWidth = .05; c.beginPath(); for (let x = F.x0 + .3; x < F.x1; x += .4) { c.moveTo(x, F.y0); c.lineTo(x, F.y0 + .35); } c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = .05;
+    for (let k = 0; k < 14; k++) { const x = F.x0 + hash(k * 3.3 + F.x0) * (F.x1 - F.x0), ph = (T * .9 + hash(k + F.x0)) % 1, y = F.y0 + ph * (F.top - F.y0); c.globalAlpha = 1 - ph; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.sin(T * 3 + k) * .1, y + .9); c.stroke(); }
+    c.globalAlpha = 1;
+  }
+  for (const Wd of ter.winds) {
+    if (Wd.x1 < x0 || Wd.x0 > x1) continue;
+    const gust = Math.max(0, .55 + .45 * Math.sin(g.t * 1.3 + Wd.ph) + .25 * Math.sin(g.t * 3.7));
+    c.strokeStyle = 'rgba(255,255,255,' + (.15 + gust * .35) + ')'; c.lineWidth = .045;
+    for (let k = 0; k < 16; k++) { const span = Wd.x1 - Wd.x0, x = Wd.x1 - ((T * 9 * (.8 + hash(k)) + hash(k * 7) * span) % span), y = ter.heightAt(x) + .4 + hash(k * 13) * 3.5; if (x < x0 || x > x1) continue; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + .6, y + .08, x + 1.3 + gust, y); c.stroke(); }
+    for (const sx of [Wd.x0 + 2, (Wd.x0 + Wd.x1) / 2]) { const gy = ter.heightAt(sx); c.fillStyle = '#5d6268'; c.fillRect(sx - .03, gy, .06, 1.6); const a = -Math.PI / 2 * gust * .9; c.save(); c.translate(sx, gy + 1.55); c.rotate(-Math.PI / 2 + Math.PI / 2 * Math.min(1, gust)); c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(0, -.12); c.lineTo(0, .12); c.lineTo(-.7, .05); c.lineTo(-.7, -.05); c.closePath(); c.fill(); c.fillStyle = '#fff'; c.fillRect(-.45, -.09, .12, .18); c.restore(); }
   }
 }
 function drawMud(c, g, x0, x1, T) {
@@ -2597,6 +2689,9 @@ function drawObstacles(c, g, x0, x1, T) {
     else if (W.t === 'logs') { c.moveTo(w - .3, y + 1.15); c.lineTo(w + .3, y + 1.45); c.stroke(); c.beginPath(); c.arc(w - .02, y + 1.38, .09, 0, TAU); c.fill(); }
     else if (W.t === 'ferry') { c.fillRect(w - .25, y + 1.22, .5, .07); c.moveTo(w, y + 1.29); c.lineTo(w, y + 1.55); c.stroke(); }
     else if (W.t === 'lift') { c.moveTo(w - .14, y + 1.35); c.lineTo(w, y + 1.58); c.lineTo(w + .14, y + 1.35); c.closePath(); c.fill(); c.fillRect(w - .2, y + 1.17, .4, .07); }
+    else if (W.t === 'water' || W.t === 'ford') { for (let k = 0; k < (W.t === 'water' ? 2 : 1); k++) { c.moveTo(w - .3, y + 1.22 + k * .16); for (let i = 1; i <= 6; i++) c.lineTo(w - .3 + i * .1, y + 1.22 + k * .16 + (i % 2 ? .05 : 0)); } c.stroke(); }
+    else if (W.t === 'fan') { c.fillRect(w - .25, y + 1.14, .5, .07); for (let i = -1; i <= 1; i++) { c.moveTo(w + i * .15, y + 1.24); c.lineTo(w + i * .15, y + 1.55); } c.stroke(); }
+    else if (W.t === 'wind') { for (let i = 0; i < 3; i++) { c.moveTo(w + .28, y + 1.2 + i * .12); c.lineTo(w - .28 + i * .08, y + 1.2 + i * .12); } c.stroke(); }
     else if (W.t === 'tunnel') { c.arc(w, y + 1.18, .26, 0, Math.PI); c.lineTo(w + .26, y + 1.18); c.fill(); c.fillStyle = W.t === 'boom' ? '#ff5a47' : '#ffc21a'; c.beginPath(); c.arc(w, y + 1.18, .14, 0, Math.PI); c.fill(); }
     else if (W.t === 'steps') { c.moveTo(w - .3, y + 1.15); c.lineTo(w - .3, y + 1.27); c.lineTo(w - .1, y + 1.27); c.lineTo(w - .1, y + 1.39); c.lineTo(w + .1, y + 1.39); c.lineTo(w + .1, y + 1.51); c.lineTo(w + .3, y + 1.51); c.lineTo(w + .3, y + 1.15); c.closePath(); c.fill(); }
     else if (W.t === 'wall') { c.fillRect(w + .02, y + 1.15, .2, .45); c.moveTo(w - .25, y + 1.45); c.lineTo(w - .12, y + 1.62); c.lineTo(w + .01, y + 1.45); c.closePath(); c.fill(); c.fillRect(w - .15, y + 1.18, .06, .28); }
@@ -2824,7 +2919,7 @@ function quitGame() {
   setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
 }
 /* ---------- mises à jour : on compare la version en ligne à celle qui tourne ---------- */
-const APP_VERSION = '10', APP_DATE = '10 oct. 2026';
+const APP_VERSION = '11', APP_DATE = '10 oct. 2026';
 function checkVersion() {
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.version && j.version !== APP_VERSION) showUpdate(j.version); }).catch(() => {});
 }
