@@ -154,6 +154,9 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .coin{width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6b0,#ffc21a 45%,#b67900);box-shadow:0 0 0 1.5px #5a3d00}
 .ebar{width:78px;height:10px;border-radius:5px;background:#2b3742;overflow:hidden;border:1px solid #000}
 .ebar i{display:block;height:100%;background:var(--go);transition:width .15s}
+.hp.hobj{gap:9px;font-size:15px}.hp.hobj span{color:#8b98a5}.hp.hobj span.ok{color:#ffc21a}.hp.hobj span.ko{color:#ff8a7a}
+.goals{position:absolute;left:8px;bottom:6px;pointer-events:none;display:flex;flex-direction:column;gap:1px;padding:4px 8px;border-radius:8px;background:#0b101599;font-size:12px;font-weight:700;color:var(--chalk);line-height:1.2}
+.goals .ok{color:#9ef0c0}.goals .ko{color:#ffb0a6}.goals i{font-style:normal;color:#ffc21a;margin-right:4px}
 .hudR{position:absolute;right:8px;top:6px;display:flex;gap:6px}
 .hb{width:42px;height:40px;border-radius:10px;background:#0b1015c4;border:2px solid #000;display:grid;place-items:center;font-size:18px}
 .ctrl{position:absolute;left:0;right:0;bottom:0;pointer-events:none}
@@ -271,6 +274,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
     <div class="stage" id="stage">
       <canvas id="buildCv"></canvas>
       <div class="msg" id="bMsg"></div>
+      <div class="goals" id="bGoals" hidden></div>
       <div class="pop" id="partPop" hidden><span class="pn" id="popName"></span><button id="popRot">⟳ Tourner</button><button id="popDel" class="del">Retirer</button></div>
       <button class="mv" id="mvU" hidden>▲</button><button class="mv" id="mvD" hidden>▼</button>
       <button class="mv" id="mvL" hidden>◀</button><button class="mv" id="mvR" hidden>▶</button>
@@ -293,6 +297,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <div class="hp"><span class="coin"></span><span id="hCoins">0</span></div>
       <div class="hp"><svg class="i" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><div class="ebar"><i id="hEn" style="width:100%"></i></div></div>
       <div class="hp" id="hTimeBox"><span id="hTime">0:00</span></div>
+      <div class="hp hobj" id="hObj" hidden></div>
     </div>
     <div class="hudR">
       <button class="hb" id="pPause" aria-label="Pause"><svg class="i" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg></button>
@@ -341,7 +346,8 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p><b>Construire</b> — choisis une pièce en bas, touche la grille pour la poser, glisse pour en poser plusieurs. Touche une pièce posée pour la tourner ou la retirer.</p>
       <p><b>Montage</b> — les pièces voisines sont soudées. Une roue s'accroche à sa voisine ; contre un <b>amortisseur</b>, elle est suspendue. Elle n'est <b>motrice</b> (engrenage orange) que si un moteur la touche, ou touche son amortisseur. Le rond jaune et noir est le centre de gravité : plus il est bas, plus c'est stable.</p>
       <p><b>Conduire</b> — GAZ et FREIN. En l'air, GAZ bascule l'engin vers l'arrière, FREIN vers l'avant : rattrape tes sauts. BOOST, VOL et ACTION pilotent fusées, hélices, parachutes et ressorts.</p>
-      <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, ramasser 70 % des pièces, ne rien casser.</p>
+      <p><b>Casser</b> — un choc violent arrache les pièces touchées. Si le pilote se cogne la tête, la course s'arrête. Trois étoiles : arriver, plus deux objectifs propres à chaque niveau (affichés dans l'atelier).</p>
+      <p style="grid-column:1/-1"><b>Objectifs</b> — <b>étoile dorée</b> perchée au-dessus d'un tremplin ou cachée dans un ravin ; <b>caisse fragile</b> posée sur ton engin au-dessus de son centre de gravité (le contour pointillé dans l'atelier) : construis-lui un berceau et roule en douceur ; <b>contraintes</b> de masse, de hauteur ou de pièces, vérifiées dès l'atelier ; <b>chrono</b> à battre.</p>
       <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
       <p style="grid-column:1/-1"><b>Obstacles</b> — la <b>bascule</b> pivote sous ton poids : ralentis au sommet. Les <b>tonneaux</b> dévalent les côtes : attends-les ou saute. Le <b>bac</b> traverse le ravin et l'<b>ascenseur</b> monte la falaise : monte dessus et lâche les gaz, il te porte. Les <b>barils rouges</b> explosent au contact. Dans les <b>chutes de pierres</b>, l'ombre au sol montre où ça tombe : change de vitesse !</p>
       <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Chaque pièce posée sur ton engin se paie en or ; retirée, elle est remboursée. Ton engin te suit d'un niveau à l'autre. Dans le bac à sable, tout est gratuit, avec un engin à part.</p>
@@ -484,17 +490,53 @@ const THEMES = {
 };
 
 const LEVELS = [
-  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, must: ['seesaw'], featGap: [45, 75], tip: 'Un buggy simple suffit. Sur la bascule, ralentis au sommet.' },
-  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, must: ['logs', 'seesaw'], featGap: [40, 65], tip: 'Des tonneaux dévalent la côte : attends qu\'ils passent, ou fonce entre eux.' },
-  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'rockfall'], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
-  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, must: ['barrels', 'logs', 'barrels'], featGap: [40, 70], cells: 150, tip: 'Barils rouges : ils explosent au contact. Saute-les ou passe vite. Le solaire aide ici.' },
-  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'seesaw', 'logs'], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
-  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['lift', 'ferry'], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
-  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, must: ['lift', 'barrels', 'seesaw'], featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
-  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
+  { id: 'prairie', name: 'Prairie tranquille', theme: 'prairie', len: 320, amp: 2.6, per: 34, slope: 13, curv: .05, seed: 11, feat: { bump: 3, ramp: 1 }, must: ['seesaw'], goals: [{ t: 'coins' }, { t: 'intact' }], featGap: [45, 75], tip: 'Un buggy simple suffit. Sur la bascule, ralentis au sommet.' },
+  { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, must: ['starRamp', 'logs', 'seesaw'], goals: [{ t: 'star' }, { t: 'coins' }], featGap: [40, 65], tip: 'Des tonneaux dévalent la côte : attends qu\'ils passent, ou fonce entre eux.' },
+  { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
+  { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, must: ['barrels', 'logs', 'barrels'], goals: [{ t: 'mass', max: 18 }, { t: 'coins' }], featGap: [40, 70], cells: 150, tip: 'Barils rouges : ils explosent au contact. Saute-les ou passe vite. Le solaire aide ici.' },
+  { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'starRamp', 'seesaw', 'logs'], goals: [{ t: 'cargo' }, { t: 'star' }], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
+  { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['lift', 'starGap', 'ferry'], goals: [{ t: 'star' }, { t: 'nofly' }], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
+  { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, must: ['lift', 'barrels', 'seesaw'], goals: [{ t: 'height', max: 3 }, { t: 'time', s: 120 }], featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
+  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'time', s: 150 }], featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
 ];
 const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8 }, featGap: [40, 70], endless: 1 };
 const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1 }, featGap: [35, 55], sandbox: 1 };
+/* Objectifs : 1re étoile = arriver ; les deux autres dépendent du niveau */
+function levelGoals(L) { return L.endless || L.sandbox ? [] : (L.goals || [{ t: 'coins' }, { t: 'intact' }]); }
+function designHeight(d) { if (!d.length) return 0; let lo = 1e9, hi = -1e9; for (const p of d) { const s = PARTS[p.id].size || 1; lo = Math.min(lo, p.gy); hi = Math.max(hi, p.gy + s - 1); } return hi - lo + 1; }
+function goalText(G) {
+  switch (G.t) {
+    case 'coins': return 'Ramasser 70 % des pièces';
+    case 'intact': return 'Arriver sans rien casser';
+    case 'time': return 'Arriver en moins de ' + Math.floor(G.s / 60) + ':' + String(G.s % 60).padStart(2, '0');
+    case 'star': return 'Attraper l\'étoile dorée';
+    case 'cargo': return 'Livrer la caisse fragile intacte';
+    case 'mass': return 'Engin de ' + G.max + ' kg maximum';
+    case 'height': return 'Engin de ' + G.max + ' cases de haut maximum';
+    case 'nofly': return 'Sans fusée, réacteur ni hélice';
+  }
+  return '';
+}
+// contraintes de construction, vérifiables dès l'atelier (null = se joue en course)
+function goalBuildCheck(G, d, S) {
+  if (G.t === 'mass') return S.mass <= G.max + 1e-6;
+  if (G.t === 'height') return designHeight(d) <= G.max;
+  if (G.t === 'nofly') return !d.some(p => p.id === 'rocket' || p.id === 'jet' || p.id === 'prop');
+  return null;
+}
+function goalNow(G, d, S) {
+  if (G.t === 'mass') return S.mass.toFixed(1) + ' kg';
+  if (G.t === 'height') return designHeight(d) + ' case' + (designHeight(d) > 1 ? 's' : '');
+  return '';
+}
+// case où la caisse est posée : au-dessus de la colonne du centre de gravité
+function cargoCell(d, A) {
+  if (!d.length || !A.cog) return null;
+  let cx = Math.floor(A.cog[0]), top = 1e9;
+  const col = x => { let t = 1e9; for (const p of d) { const s = PARTS[p.id].size || 1; if (x >= p.gx && x < p.gx + s) t = Math.min(t, p.gy); } return t; };
+  top = col(cx); if (top > 1e8) { const c = d.find(p => PARTS[p.id].cat === 'Pilote'); if (!c) return null; cx = c.gx; top = col(cx); }
+  return { gx: cx, gy: top - 1 };
+}
 const INF_THEMES = ['prairie', 'desert', 'canyon', 'snow', 'volcano', 'moon'];
 
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
@@ -1011,7 +1053,7 @@ class Terrain {
     this.nA = makeNoise(lvl.seed * 3 + 1); this.nB = makeNoise(lvl.seed * 7 + 2); this.nC = makeNoise(lvl.seed * 13 + 5);
     this.pts = []; this.coins = []; this.cells = []; this.decor = []; this.pits = []; this.signs = [];
     this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = []; this.anchors = [];
-    this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
+    this.star = null; this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
     this.body = world.createBody(); this.body.setUserData({ kind: 'ground' });
     for (let x = -60; x <= 18; x += 2) this.pts.push({ x, y: 0 });
     this.x = 18; this.y = 0; this.slope = 0; this.nfeat = 0; this.chainFrom = 0; this.finishX = null;
@@ -1091,6 +1133,7 @@ class Terrain {
     if (this.nfeat++ === 0 && f === 'gap') f = 'ramp';
     const M = L.must; // obstacles garantis, répartis le long du parcours
     if (M && !L.endless && this.mustDone < M.length && this.x >= (this.mustDone + .6) / (M.length + .4) * L.len) f = M[this.mustDone++];
+    let star = 0; if (f === 'starRamp') { f = 'ramp'; star = 1; } else if (f === 'starGap') { f = 'gap'; star = 1; }
     const y0 = this.y; this.slope = 0;
     const flat = (len, nd) => { const n = Math.max(1, Math.round(len)); for (let i = 0; i < n; i++) this.push(this.x + len / n, y0, nd); };
     if (f === 'bump') {
@@ -1106,6 +1149,7 @@ class Terrain {
       const land = 6 + H * 3;
       for (let i = 1; i <= 6; i++) this.push(this.x + land / 6, y0, 1);
       this.coinArc(lipX + 2, lipX + 4 + H * 3.2, lipY + 1.2, H * .9 + .6);
+      if (star) this.star = { x: lipX + 6.5, y: lipY + 4.6, got: 0 };
     } else if (f === 'gap' || f === 'bridge') {
       const bridge = f === 'bridge';
       flat(4);
@@ -1122,6 +1166,7 @@ class Terrain {
       this.anchors.push({ x: x0 + gw * .5, y: Math.max(edgeY, landY) + 5.2, px: x0 - 1.4, py: edgeY });
       if (bridge) this.spawnQ.push(() => this.makeBridge(x0, x0 + gw, edgeY));
       else this.coinArc(x0 + 1, x0 + gw - 1, edgeY + 1.8, 1.4 + gw * .12);
+      if (star) this.star = { x: x0 + gw * .5, y: edgeY - 1.6, got: 0 };
       const back = Math.max(0, (y0 - landY));
       for (let i = 1; i <= 8; i++) this.push(this.x + 1.2, landY + back * 0 + 0, 1);
     } else if (f === 'crates') {
@@ -1447,6 +1492,8 @@ function updateBuildInfo() {
   if (v.err.length) { m.textContent = v.err[0]; m.className = 'msg err'; }
   else if (v.warn.length) { m.textContent = v.warn[0]; m.className = 'msg'; }
   else { m.textContent = 'Prêt ! ' + (App.lvl.tip || 'Lance l\'essai.'); m.className = 'msg ok'; }
+  const gl = levelGoals(App.lvl), gb = $('#bGoals'); gb.hidden = !gl.length;
+  if (gl.length) gb.innerHTML = '<div><i>★</i>Atteindre l\'arrivée</div>' + gl.map(G => { const ok = goalBuildCheck(G, App.design, S), now = goalNow(G, App.design, S); return '<div class="' + (ok === null ? '' : ok ? 'ok' : 'ko') + '"><i>★</i>' + goalText(G) + (ok === null ? '' : ' — ' + now + (ok ? ' ✓' : ' ✗')) + '</div>'; }).join('');
   return v;
 }
 function layoutBuild() {
@@ -1492,6 +1539,11 @@ function drawBuild() {
     if (!A.conn.has(i) && A.ci >= 0) { c.strokeStyle = '#ff5a47'; c.lineWidth = 2; c.setLineDash([4, 3]); c.strokeRect(ox + p.gx * cs + 2, oy + p.gy * cs + 2, s * cs - 4, s * cs - 4); c.setLineDash([]); }
     if (d.dir !== undefined && p.id !== 'wing' && !d.wedge) arrow(c, ox + (p.gx + .5) * cs, oy + (p.gy + .5) * cs, p.dir, cs);
   });
+  // caisse fragile : où elle sera posée
+  if (levelGoals(App.lvl).some(G => G.t === 'cargo')) {
+    const cc = cargoCell(App.design, A);
+    if (cc) { const x = ox + cc.gx * cs + cs * .08, y = oy + cc.gy * cs + cs * .08, s2 = cs * .84; c.fillStyle = 'rgba(217,178,122,.28)'; c.fillRect(x, y, s2, s2); c.setLineDash([5, 4]); c.strokeStyle = '#ffd08a'; c.lineWidth = 2; c.strokeRect(x, y, s2, s2); c.setLineDash([]); c.fillStyle = '#ffd08a'; c.font = '700 ' + Math.max(10, cs * .26) + 'px Barlow Condensed, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CAISSE', x + s2 / 2, y + s2 / 2); }
+  }
   // roues motrices : engrenage orange au centre
   for (const L of A.links) {
     if (!L.motors.some(j => A.conn.has(j)) || !A.conn.has(L.w)) continue;
@@ -1892,8 +1944,24 @@ function newGame(lvl, design, mode) {
   const cp = ppos(veh.cockpit); g.cam.x = cp.x + 3; g.cam.y = cp.y + 1;
   world.on('begin-contact', c => onContact(g, c, 1));
   world.on('end-contact', c => onContact(g, c, -1));
-  world.on('post-solve', (c, imp) => onImpact(g, c, imp));
+  world.on('post-solve', (c, imp) => { onImpact(g, c, imp); cargoImpact(g, c, imp); });
+  // objectifs du niveau ; caisse fragile posée sur l'engin
+  g.goals = levelGoals(lvl); const A0 = analyze(design); g.designS = A0.S;
+  if (g.goals.some(G => G.t === 'cargo')) {
+    const cc = cargoCell(design, A0), K = veh.cockpit;
+    if (cc) {
+      const q = ppos(K), x = q.x + (cc.gx - K.gx) * CELL, y = q.y + (K.gy - cc.gy) * CELL + .02;
+      const b = world.createBody({ type: 'dynamic', position: V(x, y) }); b.createFixture({ shape: pl.Box(.21, .21), density: .6, friction: .9 }); b.setUserData({ kind: 'cargo' });
+      g.cargo = { b, broken: 0, lost: 0, q: 0 };
+    }
+  }
   return g;
+}
+function cargoImpact(g, c, imp) {
+  const C = g.cargo; if (!C || C.broken || g.grace > 0) return;
+  if (c.getFixtureA().getBody() !== C.b && c.getFixtureB().getBody() !== C.b) return;
+  let s = 0; for (const n of imp.normalImpulses) s += n;
+  if (s > .5) { C.broken = 1; C.q = 1; }
 }
 function contactPart(c) {
   const fa = c.getFixtureA(), fb = c.getFixtureB(), ua = fa.getUserData(), ub = fb.getUserData();
@@ -2100,6 +2168,10 @@ function physicsStep(g, h) {
     if (B.stress > B.str) { B.alive = 0; g.world.destroyJoint(B.j); sparks(g, B.x, B.y, 14, '#c98a4b'); if (g.mode === 'run') { Snd.noise(.3, .4, 500); toast('Le pont cède !'); } }
   }
   while (g.popQ.length) popPart(g, g.popQ.pop());
+  if (g.cargo) { const C = g.cargo;
+    if (C.q) { C.q = 0; const p = C.b.getPosition(); g.world.destroyBody(C.b); splinters(g, p.x, p.y, .44); if (g.mode === 'run') { Snd.noise(.25, .35, 700, 1.5); toast('Caisse cassée !'); } }
+    else if (!C.broken && !C.lost) { const p = C.b.getPosition(), q = ckP.chunk.body.getPosition(); if (Math.hypot(p.x - q.x, p.y - q.y) > 5) { C.lost = 1; if (g.mode === 'run') toast('Caisse perdue !'); } }
+  }
   while (g.smashQ.length) { const b = g.smashQ.pop(), p = b.getPosition(), u = b.getUserData(); g.world.destroyBody(b); g.ter.props.splice(g.ter.props.indexOf(b), 1); splinters(g, p.x, p.y, u.h); if (g.mode === 'run') Snd.noise(.25, .35, 700, 1.5); }
   // --- pilote assommé ?
   if (!g.over) {
@@ -2120,8 +2192,20 @@ function endRun(g, win, reason, kind) {
 function computeResult(g) {
   const L = g.lvl, dist = Math.max(0, Math.round(g.maxX)), win = g.over.win;
   const coinPct = g.coinsTotal ? g.coins / g.coinsTotal : 0;
-  const stars = L.endless || L.sandbox ? 0 : (win ? 1 : 0) + (win && coinPct >= .7 ? 1 : 0) + (win && g.veh.lost === 0 ? 1 : 0);
-  return { dist, win, coinPct, stars, time: g.t };
+  const goals = levelGoals(L).map(G => ({ G, ok: win && goalOk(g, G, coinPct) }));
+  const stars = L.endless || L.sandbox ? 0 : (win ? 1 : 0) + goals.filter(x => x.ok).length;
+  return { dist, win, coinPct, stars, goals, time: g.over.t ?? g.t };
+}
+function goalOk(g, G, coinPct) {
+  const b = goalBuildCheck(G, g.design, g.designS); if (b !== null) return b;
+  switch (G.t) {
+    case 'coins': return coinPct >= .7;
+    case 'intact': return g.veh.lost === 0;
+    case 'time': return (g.over ? g.over.t : g.t) <= G.s;
+    case 'star': return !!(g.ter.star && g.ter.star.got);
+    case 'cargo': { const C = g.cargo; if (!C || C.broken || C.lost) return false; const p = C.b.getPosition(), q = g.veh.cockpit.chunk.body.getPosition(); return Math.hypot(p.x - q.x, p.y - q.y) < 5; }
+  }
+  return false;
 }
 function bankRun(g) { if (!g || g.mode !== 'run' || g.banked) return 0; g.banked = 1; App.bank += g.coins; store.set('bank', App.bank); return g.coins; }
 function fmtN(n) { return Math.round(n).toLocaleString('fr-FR'); }
@@ -2140,14 +2224,14 @@ function showResult() {
   $('#rStars').innerHTML = (L.endless || L.sandbox) ? '' : [0, 1, 2].map(k => starSvg(R.stars > k)).join('');
   $('#rStats').innerHTML = [['Distance', R.dist + ' m'], ['Pièces', g.coins + (g.coinsTotal ? ' / ' + g.coinsTotal : '')], ['Casse', g.veh.lost ? g.veh.lost + ' pièce' + (g.veh.lost > 1 ? 's' : '') : 'aucune'], ['Saltos', g.flips]]
     .map(([k, v]) => '<div><i>' + k + '</i><b>' + v + '</b></div>').join('');
-  $('#rObjs').innerHTML = (L.endless || L.sandbox) ? (L.endless ? '<div>Record : ' + Math.round(store.get('bestInf', 0)) + ' m</div>' : '') : objectivesHtml(R.win, R.win && R.coinPct >= .7, R.win && g.veh.lost === 0);
+  $('#rObjs').innerHTML = (L.endless || L.sandbox) ? (L.endless ? '<div>Record : ' + Math.round(store.get('bestInf', 0)) + ' m</div>' : '') : objectivesHtml(R.win, R.goals);
   $('#rBank').innerHTML = '<span class="coin"></span><b>+' + fmtN(gain) + '</b> au trésor · total <b>' + fmtN(App.bank) + '</b>';
   const next = LEVELS[App.lvlIndex + 1];
   $('#rNext').hidden = !(R.win && next && !L.endless && !L.sandbox);
   $('#ovResult').classList.add('on');
 }
-function objectivesHtml(a, b, c) {
-  return [[a, 'Atteindre l\'arrivée'], [b, 'Ramasser 70 % des pièces'], [c, 'Arriver sans rien casser']].map(([ok, t]) => '<div>' + starSvg(ok) + t + '</div>').join('');
+function objectivesHtml(win, goals) {
+  return [[win, 'Atteindre l\'arrivée']].concat(goals.map(x => [x.ok, goalText(x.G)])).map(([ok, t]) => '<div>' + starSvg(ok) + t + '</div>').join('');
 }
 function fmtTime(t) { const m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ':' + String(s).padStart(2, '0'); }
 
@@ -2179,6 +2263,7 @@ function postStep(g, dt) {
   if (!g.over) {
     const near = (o, R) => { for (const P of v.parts) { if (!P.conn || !P.alive) continue; const q = ppos(P), r = R + (P.d.wheel ? P.d.r : .28); if ((q.x - o.x) ** 2 + (q.y - o.y) ** 2 < r * r) return true; } return false; };
     for (const c of g.ter.coins) { if (c.got || Math.abs(c.x - p.x) > 5) continue; if (near(c, .25)) { c.got = 1; g.coins++; if (g.mode === 'run') Snd.coin(); sparkle(g, c.x, c.y, '#ffd34a'); } }
+    const st = g.ter.star; if (st && !st.got && Math.abs(st.x - p.x) < 8 && near(st, .45)) { st.got = 1; if (g.mode === 'run') { Snd.win(); toast('Étoile dorée !'); } sparkle(g, st.x, st.y, '#ffd34a'); sparks(g, st.x, st.y, 16, '#fff3a0'); }
     for (const c of g.ter.cells) { if (c.got || Math.abs(c.x - p.x) > 5) continue; if (near(c, .3)) { c.got = 1; g.energy = Math.min(Math.max(g.cap, 1), g.energy + Math.max(30, g.cap * .5)); if (g.mode === 'run') { Snd.cell(); toast('Énergie +'); } sparkle(g, c.x, c.y, '#36d17c'); } }
   }
   // saltos
@@ -2309,6 +2394,8 @@ function render(g) {
   // objets à ramasser
   for (const k of ter.coins) { if (k.got || k.x < x0 || k.x > x1) continue; const sw = Math.abs(Math.cos(T * 3.2 + k.x)); c.save(); c.translate(k.x, k.y); c.scale(Math.max(.15, sw), 1); c.fillStyle = '#b67900'; c.beginPath(); c.arc(0, 0, .22, 0, TAU); c.fill(); c.fillStyle = '#ffc21a'; c.beginPath(); c.arc(0, 0, .18, 0, TAU); c.fill(); c.fillStyle = '#fff3a0'; c.beginPath(); c.arc(-.05, .05, .07, 0, TAU); c.fill(); c.restore(); }
   for (const k of ter.cells) { if (k.got || k.x < x0 || k.x > x1) continue; const pulse = 1 + Math.sin(T * 5) * .06; c.save(); c.translate(k.x, k.y + Math.sin(T * 2 + k.x) * .08); c.scale(pulse, pulse); c.fillStyle = 'rgba(54,209,124,.25)'; c.beginPath(); c.arc(0, 0, .5, 0, TAU); c.fill(); c.fillStyle = '#1a6b3f'; c.fillRect(-.2, -.3, .4, .6); c.fillStyle = '#36d17c'; c.fillRect(-.16, -.26, .32, .52); c.fillStyle = '#1a6b3f'; c.fillRect(-.08, .3, .16, .06); c.fillStyle = '#fff'; c.beginPath(); c.moveTo(.03, .2); c.lineTo(-.09, -.02); c.lineTo(.0, -.02); c.lineTo(-.04, -.2); c.lineTo(.09, .03); c.lineTo(0, .03); c.closePath(); c.fill(); c.restore(); }
+  const st = ter.star; if (st && !st.got && st.x > x0 - 2 && st.x < x1 + 2) goldStar(c, st.x, st.y, T);
+  if (g.cargo && !g.cargo.broken) { const b = g.cargo.b, p = b.getPosition(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); cargoBox(c); c.restore(); }
   // particules arrière
   drawParts(c, g, 'dust');
   // véhicule
@@ -2331,6 +2418,21 @@ function ridge(c, g, col, par, base, amp, per, k) {
 }
 const _nc = {}; function makeNoiseCached(k) { return _nc[k] || (_nc[k] = makeNoise(1000 + k * 77)); }
 function crate(c, h) { c.fillStyle = '#b97d3c'; c.fillRect(-h, -h, h * 2, h * 2); c.strokeStyle = '#6e4320'; c.lineWidth = .06; c.strokeRect(-h + .03, -h + .03, h * 2 - .06, h * 2 - .06); c.beginPath(); c.moveTo(-h, -h); c.lineTo(h, h); c.moveTo(h, -h); c.lineTo(-h, h); c.stroke(); }
+function goldStar(c, x, y, T) {
+  c.save(); c.translate(x, y + Math.sin(T * 2.4) * .08);
+  c.fillStyle = 'rgba(255,214,74,' + (.22 + .1 * Math.sin(T * 5)) + ')'; c.beginPath(); c.arc(0, 0, .75, 0, TAU); c.fill();
+  c.rotate(Math.sin(T * 1.5) * .25); c.scale(Math.max(.25, Math.abs(Math.cos(T * 1.8))), 1);
+  c.beginPath(); for (let i = 0; i < 10; i++) { const a = Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? .19 : .45; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.closePath();
+  c.fillStyle = '#ffc21a'; c.fill(); c.strokeStyle = '#8a5a00'; c.lineWidth = .05; c.stroke();
+  c.fillStyle = '#fff3a0'; c.beginPath(); c.arc(-.07, .1, .07, 0, TAU); c.fill();
+  c.restore();
+}
+function cargoBox(c) {
+  const h = .21; c.fillStyle = '#d9b27a'; c.fillRect(-h, -h, h * 2, h * 2);
+  c.strokeStyle = '#7a5428'; c.lineWidth = .035; c.strokeRect(-h + .02, -h + .02, h * 2 - .04, h * 2 - .04);
+  c.fillStyle = '#d7302a'; c.fillRect(-h + .03, -.035, h * 2 - .06, .07);
+  c.strokeStyle = '#d7302a'; c.lineWidth = .03; c.beginPath(); c.moveTo(-.06, .16); c.lineTo(.06, .16); c.lineTo(.04, .07); c.lineTo(-.04, .07); c.closePath(); c.moveTo(0, .07); c.lineTo(0, .05); c.stroke();
+}
 function stripes(c, x, y, w, h) { c.fillStyle = '#ffc21a'; c.fillRect(x, y, w, h); c.fillStyle = '#1b1d21'; for (let s = x; s < x + w; s += .5) { c.beginPath(); c.moveTo(s, y); c.lineTo(Math.min(x + w, s + .25), y); c.lineTo(Math.min(x + w, s + .25 - h), y + h); c.lineTo(Math.max(x, s - h), y + h); c.closePath(); c.fill(); } }
 function drawObstacles(c, g, x0, x1, T) {
   const ter = g.ter;
@@ -2496,7 +2598,12 @@ function hud(g) {
   $('#hCoins').textContent = g.coins + (g.coinsTotal ? ' / ' + g.coinsTotal : '');
   const e = g.cap ? g.energy / g.cap : 0, el = $('#hEn'); el.style.width = clamp(e, 0, 1) * 100 + '%'; el.style.background = g.charging ? '#5fb3ff' : e < .2 ? '#ff5a47' : e < .45 ? '#ffc21a' : '#36d17c';
   if (g.nitroMax) $('#kBoost').style.setProperty('--n', (g.nitro / g.nitroMax).toFixed(3));
-  $('#hTime').textContent = fmtTime(g.t);
+  const tg = (g.goals || []).find(G => G.t === 'time');
+  $('#hTime').textContent = fmtTime(g.t) + (tg ? ' / ' + fmtTime(tg.s) : ''); $('#hTime').style.color = tg && g.t > tg.s ? '#ff8a7a' : '';
+  let ob = '';
+  if (g.ter.star) ob += '<span class="' + (g.ter.star.got ? 'ok' : '') + '">★</span>';
+  if (g.cargo) ob += '<span class="' + (g.cargo.broken || g.cargo.lost ? 'ko' : 'ok') + '">▣ ' + (g.cargo.broken ? 'cassée' : g.cargo.lost ? 'perdue' : 'caisse') + '</span>';
+  const hb = $('#hObj'); if (hb._v !== ob) { hb._v = ob; hb.innerHTML = ob; hb.hidden = !ob; }
 }
 let toastTimer = 0;
 function toast(t, sub) {
@@ -2551,7 +2658,7 @@ function togglePause() {
   if (!G || G.mode !== 'run' || G.over) return;
   paused = !paused; $('#ovPause').classList.toggle('on', paused);
   if (paused) { Snd.engine(0, 0, 'e'); Snd.boost(0); for (const k in G.input) G.input[k] = 0; document.querySelectorAll('.down').forEach(el => el.classList.remove('down'));
-    const L = G.lvl; $('#pObjs').innerHTML = (L.endless || L.sandbox) ? '<div>' + (L.tip || 'Va le plus loin possible.') + '</div>' : objectivesHtml(false, false, false) + '<div style="color:var(--dim)">' + (L.tip || '') + '</div>'; }
+    const L = G.lvl; $('#pObjs').innerHTML = (L.endless || L.sandbox) ? '<div>' + (L.tip || 'Va le plus loin possible.') + '</div>' : objectivesHtml(false, levelGoals(L).map(G => ({ G, ok: false }))) + '<div style="color:var(--dim)">' + (L.tip || '') + '</div>'; }
   lastTs = 0;
 }
 
@@ -2584,7 +2691,7 @@ function quitGame() {
   setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
 }
 /* ---------- mises à jour : on compare la version en ligne à celle qui tourne ---------- */
-const APP_VERSION = '8', APP_DATE = '10 oct. 2026';
+const APP_VERSION = '9', APP_DATE = '10 oct. 2026';
 function checkVersion() {
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.version && j.version !== APP_VERSION) showUpdate(j.version); }).catch(() => {});
 }
