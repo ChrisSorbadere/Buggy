@@ -80,6 +80,9 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
 .card .meta{font-size:14px;color:var(--dim);font-weight:600;font-variant-numeric:tabular-nums}
 .card .st{display:flex;gap:2px;margin-top:2px}
 .card{position:relative}
+.cardSep{flex:0 0 auto;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:0 6px;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
+.cardSep b{font-family:var(--f-display);color:var(--danger);font-size:16px;letter-spacing:1px}.cardSep span{font-size:12px;color:var(--dim)}
+.card.defi{border-color:#5a1610;box-shadow:0 5px 0 #000,inset 0 0 0 2px #e2532f55}.card.defi .num{color:#ff7a5a}
 .card .lock{position:absolute;top:8px;right:8px;padding:2px 8px;border-radius:6px;background:#000c;font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--dim)}
 .card.locked{filter:grayscale(1) brightness(.55)}
 .star{width:20px;height:20px}
@@ -350,6 +353,7 @@ svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentCo
       <p style="grid-column:1/-1"><b>Objectifs</b> — <b>étoile dorée</b> perchée au-dessus d'un tremplin ou cachée dans un ravin ; <b>caisse fragile</b> posée sur ton engin au-dessus de son centre de gravité (le contour pointillé dans l'atelier) : construis-lui un berceau et roule en douceur ; <b>contraintes</b> de masse, de hauteur ou de pièces, vérifiées dès l'atelier ; <b>chrono</b> à battre.</p>
       <p style="grid-column:1/-1"><b>Mécanique</b> — la <b>charnière</b> et le <b>vérin</b> ne sont pas soudés à la pièce du côté de leur flèche : ils l'articulent ou la poussent (bouton VÉRIN). Le rond orange ou violet sur le plan montre la liaison ; s'il est rouge, les deux côtés sont soudés ailleurs et rien ne bouge. Le <b>découpleur</b> largue ce qui est du côté de sa flèche (bouton LARGUER), le <b>grappin</b> s'accroche aux anneaux au-dessus des ravins ou au sol et enroule son câble.</p>
       <p style="grid-column:1/-1"><b>Obstacles</b> — la <b>bascule</b> pivote sous ton poids : ralentis au sommet. Les <b>tonneaux</b> dévalent les côtes : attends-les ou saute. Le <b>bac</b> traverse le ravin et l'<b>ascenseur</b> monte la falaise : monte dessus et lâche les gaz, il te porte. Les <b>barils rouges</b> explosent au contact. Dans les <b>chutes de pierres</b>, l'ombre au sol montre où ça tombe : change de vitesse !</p>
+      <p style="grid-column:1/-1"><b>Terrains</b> — les <b>galeries</b> ont un plafond bas : construis trapu. Les <b>marches</b> se gravissent avec de grandes roues, une 4×4 ou un vérin. La <b>boue</b> freine et fait patiner : moteurs costauds et élan. Le <b>mur</b> se franchit au grappin, au vérin, au ressort ou en volant. Les <b>défis</b> se débloquent avec les étoiles et imposent une règle de construction.</p>
       <p style="grid-column:1/-1"><b>Trésor</b> — chaque pièce d'or ramassée (et chaque salto) s'ajoute à ton trésor, même si tu abandonnes. Chaque pièce posée sur ton engin se paie en or ; retirée, elle est remboursée. Ton engin te suit d'un niveau à l'autre. Dans le bac à sable, tout est gratuit, avec un engin à part.</p>
     </div>
     <div class="btns"><button class="btn pri" id="helpClose">Compris</button></div>
@@ -486,6 +490,9 @@ const THEMES = {
   canyon:  { sky: ['#ff8a5c', '#ffd9a3'], far: '#c3664a', mid: '#9c4730', near: '#7f3522', g1: '#b8552f', g2: '#5a2414', crust: '#d9773f', crust2: '#b25a2d', peb: '#7c3218', sun: '#fff0c0', fog: '#ffc79a', decor: ['spire', 'rock', 'deadtree', 'rock'] },
   snow:    { sky: ['#7fa9d8', '#e6f2ff'], far: '#c4d7ec', mid: '#8eaac6', near: '#6d8aa8', g1: '#6c7d8f', g2: '#323d48', crust: '#f6fbff', crust2: '#cfe2f3', peb: '#56636f', sun: '#ffffff', fog: '#eef6ff', decor: ['pine', 'pine', 'pine', 'rock', 'snowman'] },
   moon:    { sky: ['#03040a', '#141a2c'], far: '#2b3141', mid: '#3d4455', near: '#4c5366', g1: '#8b909a', g2: '#3f434b', crust: '#c3c8d0', crust2: '#9da2ab', peb: '#6b7079', sun: '#ffffff', fog: '#141a2c', stars: 1, earth: 1, decor: ['mrock', 'mrock', 'antenna', 'mrock'] },
+  mine:     { sky: ['#1f1a17', '#5b4836'], far: '#4a3c31', mid: '#3a2f27', near: '#2d241e', g1: '#6b5442', g2: '#251a12', crust: '#9a7b5c', crust2: '#735a42', peb: '#c99a4a', sun: '#c9965a', fog: '#4a3c31', nocloud: 1, decor: ['beam', 'cart', 'lantern', 'rock', 'beam'] },
+  marais:   { sky: ['#6b8a78', '#d2e0c2'], far: '#86a08a', mid: '#5b7560', near: '#40584a', g1: '#5a4a30', g2: '#261f14', crust: '#6f8a3a', crust2: '#4f6a2a', peb: '#3a3020', sun: '#f4f0c8', fog: '#cddcc0', decor: ['reed', 'reed', 'cypress', 'lily', 'deadtree'] },
+  chantier: { sky: ['#5ea8e6', '#e6f1fa'], far: '#a3b8ca', mid: '#7f909f', near: '#5d6b78', g1: '#8f7f6a', g2: '#463a2d', crust: '#c2b190', crust2: '#9a896c', peb: '#6a5a48', sun: '#fff4c8', fog: '#e0ecf5', decor: ['cone', 'cone', 'girder', 'fence', 'cone', 'girder', 'crane', 'cone'] },
   volcano: { sky: ['#1d0b10', '#7a2a1a'], far: '#3d1a1b', mid: '#2c1416', near: '#221012', g1: '#3b2a29', g2: '#140b0b', crust: '#5c3d33', crust2: '#3f2925', peb: '#ff5a1f', sun: '#ff9a4a', fog: '#5a1e14', lava: 1, decor: ['vrock', 'vent', 'vrock', 'deadtree'] },
 };
 
@@ -494,13 +501,25 @@ const LEVELS = [
   { id: 'collines', name: 'Collines vertes', theme: 'prairie', len: 450, amp: 5, per: 40, slope: 20, curv: .065, seed: 23, feat: { ramp: 3, crates: 2, bump: 2 }, must: ['starRamp', 'logs', 'seesaw'], goals: [{ t: 'star' }, { t: 'coins' }], featGap: [40, 65], tip: 'Des tonneaux dévalent la côte : attends qu\'ils passent, ou fonce entre eux.' },
   { id: 'canyon', name: 'Le pont du canyon', theme: 'canyon', len: 520, amp: 5, per: 46, slope: 21, curv: .07, seed: 37, feat: { bridge: 4, ramp: 1, rocks: 1 }, must: ['ferry', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [45, 70], tip: 'Attends le bac, monte dessus et lâche les gaz. Gare aux chutes de pierres.' },
   { id: 'dunes', name: 'Dunes du désert', theme: 'desert', len: 600, amp: 8, per: 58, slope: 24, curv: .075, seed: 41, feat: { ramp: 2, rocks: 2, bump: 2 }, must: ['barrels', 'logs', 'barrels'], goals: [{ t: 'mass', max: 18 }, { t: 'coins' }], featGap: [40, 70], cells: 150, tip: 'Barils rouges : ils explosent au contact. Saute-les ou passe vite. Le solaire aide ici.' },
+  { id: 'marais', name: 'Marais boueux', theme: 'marais', len: 560, amp: 3.5, per: 44, slope: 16, curv: .06, seed: 47, feat: { bump: 2, ramp: 1, crates: 1 }, must: ['mud', 'seesaw', 'mud', 'logs', 'mud'], goals: [{ t: 'coins' }, { t: 'time', s: 100 }], featGap: [40, 65], tip: 'La boue freine et fait patiner : 4×4, moteurs costauds et de l\'élan.' },
   { id: 'col', name: 'Col enneigé', theme: 'snow', len: 620, amp: 9, per: 52, slope: 25, curv: .08, fric: 0.42, seed: 53, feat: { ramp: 2, crates: 1, bump: 2 }, must: ['logs', 'starRamp', 'seesaw', 'logs'], goals: [{ t: 'cargo' }, { t: 'star' }], featGap: [40, 70], tip: 'La neige glisse et des boules dévalent les pentes. Roues larges et centre de gravité bas.' },
+  { id: 'mine', name: 'Galerie de la mine', theme: 'mine', len: 600, amp: 5, per: 40, slope: 20, curv: .07, seed: 59, feat: { bump: 2, crates: 1, rocks: 1 }, must: ['tunnel', 'steps', 'tunnel', 'logs', 'tunnel'], goals: [{ t: 'height', max: 4 }, { t: 'intact' }], featGap: [40, 65], tip: 'Galeries basses : un engin trapu passe mieux. Les marches aiment les grandes roues.' },
   { id: 'saut', name: 'Le grand saut', theme: 'canyon', len: 660, amp: 6, per: 48, slope: 22, curv: .08, seed: 61, feat: { gap: 4, bridge: 1, ramp: 1 }, must: ['lift', 'starGap', 'ferry'], goals: [{ t: 'star' }, { t: 'nofly' }], featGap: [50, 80], tip: 'Ravins, bac et ascenseur : vitesse, ailes, fusées… ou patience.' },
+  { id: 'chantier', name: 'Le chantier', theme: 'chantier', len: 640, amp: 4, per: 40, slope: 18, curv: .07, seed: 67, feat: { ramp: 2, crates: 2, bump: 1 }, must: ['steps', 'barrels', 'lift', 'starRamp', 'steps'], goals: [{ t: 'star' }, { t: 'time', s: 115 }], featGap: [40, 65], tip: 'Escaliers de béton : grandes roues, 4×4 ou vérin. Attention aux barils.' },
+  { id: 'bayou', name: 'Le bayou', theme: 'marais', len: 700, amp: 4, per: 46, slope: 18, curv: .065, seed: 73, mudK: .42, feat: { bridge: 2, bump: 1, ramp: 1 }, must: ['mud', 'ferry', 'mud', 'logs', 'mud', 'seesaw'], goals: [{ t: 'cargo' }, { t: 'intact' }], featGap: [40, 65], tip: 'Boue profonde et bac : prends ton temps, la caisse est fragile.' },
   { id: 'lune', name: 'Base lunaire', theme: 'moon', len: 700, amp: 7, per: 40, slope: 27, curv: .09, g: 3.7, air: 0, seed: 71, feat: { crater: 4, ramp: 1, gap: 1 }, must: ['lift', 'barrels', 'seesaw'], goals: [{ t: 'height', max: 3 }, { t: 'time', s: 120 }], featGap: [35, 60], tip: 'Pas d\'air sur la Lune : ailes, ballons et parachutes ne servent à rien. Les fusées, si.' },
-  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'time', s: 150 }], featGap: [40, 70], tip: 'Le grand final. Tout ce que tu as appris.' },
+  { id: 'puits', name: 'Le puits profond', theme: 'mine', len: 760, amp: 7, per: 44, slope: 24, curv: .085, seed: 79, clear: 2.5, feat: { bump: 1, gap: 1, rocks: 1 }, must: ['tunnel', 'lift', 'rockfall', 'tunnel', 'steps', 'lift', 'tunnel'], goals: [{ t: 'cargo' }, { t: 'time', s: 175 }], featGap: [40, 65], tip: 'Galeries, ascenseurs et éboulements : bas, solide et patient.' },
+  { id: 'volcan', name: 'Le volcan', theme: 'volcano', len: 820, amp: 11, per: 54, slope: 30, curv: .1, seed: 83, feat: { gap: 2, bridge: 2, ramp: 2, rocks: 2 }, must: ['rockfall', 'lift', 'barrels', 'logs', 'rockfall'], goals: [{ t: 'cargo' }, { t: 'time', s: 150 }], featGap: [40, 70], tip: 'Lave, bombes et ascenseur : du solide et du sang-froid.' },
+  { id: 'gratteciel', name: 'Le gratte-ciel', theme: 'chantier', len: 900, amp: 6, per: 46, slope: 24, curv: .09, seed: 89, feat: { ramp: 2, gap: 1, crates: 1 }, must: ['steps', 'barrels', 'wall', 'ferry', 'mud', 'lift', 'rockfall', 'steps', 'tunnel'], goals: [{ t: 'cargo' }, { t: 'nofly' }], featGap: [36, 60], tip: 'Le grand final. Le mur se franchit au grappin, au vérin, au ressort… ou en volant.' },
 ];
-const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8 }, featGap: [40, 70], endless: 1 };
-const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1 }, featGap: [35, 55], sandbox: 1 };
+const DEFIS = [
+  { id: 'd_mur', defi: 1, need: 8, name: 'Le mur', theme: 'chantier', len: 230, amp: 2, per: 40, slope: 12, curv: .05, seed: 101, feat: { bump: 1 }, must: ['wall', 'wall'], rules: [{ t: 'nofly' }], goals: [{ t: 'intact' }, { t: 'time', s: 70 }], featGap: [40, 50], tip: 'Défi : sans fusée, réacteur ni hélice. Grappin, vérin ou ressort !' },
+  { id: 'd_boue', defi: 1, need: 16, name: 'Course dans la boue', theme: 'marais', len: 300, amp: 2, per: 40, slope: 12, curv: .05, seed: 103, mudK: .5, feat: { bump: 1 }, must: ['mud', 'mud', 'mud', 'mud'], rules: [{ t: 'mass', max: 20 }], goals: [{ t: 'time', s: 45 }, { t: 'coins' }], featGap: [30, 40], tip: 'Défi : 20 kg maximum dans une boue très collante.' },
+  { id: 'd_livr', defi: 1, need: 24, name: 'Livraison express', theme: 'canyon', len: 420, amp: 3, per: 40, slope: 14, curv: .05, seed: 107, feat: { bump: 2, ramp: 1 }, must: ['seesaw', 'ferry', 'logs'], rules: [{ t: 'cargo' }], goals: [{ t: 'time', s: 90 }, { t: 'intact' }], featGap: [40, 55], tip: 'Défi : la caisse doit arriver entière, sinon c\'est perdu.' },
+  { id: 'd_ras', defi: 1, need: 32, name: 'Ras du sol', theme: 'mine', len: 360, amp: 2, per: 40, slope: 12, curv: .05, seed: 109, clear: 1.75, feat: { bump: 1 }, must: ['tunnel', 'tunnel', 'tunnel'], rules: [{ t: 'height', max: 3 }], goals: [{ t: 'intact' }, { t: 'time', s: 60 }], featGap: [30, 40], tip: 'Défi : 3 cases de haut au maximum, plafonds très bas.' },
+];
+const MODE_INF = { id: 'infini', name: 'Route infinie', theme: 'prairie', len: Infinity, amp: 4, per: 42, slope: 18, curv: .065, seed: 97, feat: { bump: 2, ramp: 3, crates: 1, bridge: 2, gap: 1, rocks: 1, crater: 1, seesaw: 1, logs: 1, ferry: .7, lift: .7, barrels: 1, rockfall: .8, tunnel: .8, steps: .7, mud: 1 }, featGap: [40, 70], endless: 1 };
+const MODE_SAND = { id: 'sandbox', name: 'Bac à sable', theme: 'prairie', len: 1500, amp: 3.5, per: 40, slope: 18, curv: .06, seed: 5, feat: { ramp: 3, bump: 2, crates: 2, bridge: 2, gap: 1, rocks: 1, seesaw: 1, logs: 1, ferry: 1, lift: 1, barrels: 1, rockfall: 1, tunnel: 1, steps: 1, mud: 1, wall: .5 }, featGap: [35, 55], sandbox: 1 };
 /* Objectifs : 1re étoile = arriver ; les deux autres dépendent du niveau */
 function levelGoals(L) { return L.endless || L.sandbox ? [] : (L.goals || [{ t: 'coins' }, { t: 'intact' }]); }
 function designHeight(d) { if (!d.length) return 0; let lo = 1e9, hi = -1e9; for (const p of d) { const s = PARTS[p.id].size || 1; lo = Math.min(lo, p.gy); hi = Math.max(hi, p.gy + s - 1); } return hi - lo + 1; }
@@ -514,6 +533,7 @@ function goalText(G) {
     case 'mass': return 'Engin de ' + G.max + ' kg maximum';
     case 'height': return 'Engin de ' + G.max + ' cases de haut maximum';
     case 'nofly': return 'Sans fusée, réacteur ni hélice';
+    case 'cargo!': return 'Caisse fragile obligatoire';
   }
   return '';
 }
@@ -537,7 +557,7 @@ function cargoCell(d, A) {
   top = col(cx); if (top > 1e8) { const c = d.find(p => PARTS[p.id].cat === 'Pilote'); if (!c) return null; cx = c.gx; top = col(cx); }
   return { gx: cx, gy: top - 1 };
 }
-const INF_THEMES = ['prairie', 'desert', 'canyon', 'snow', 'volcano', 'moon'];
+const INF_THEMES = ['prairie', 'desert', 'marais', 'canyon', 'mine', 'snow', 'chantier', 'volcano', 'moon'];
 
 /* Plans prêts à l'emploi — codes : C habitacle, w bois, s acier, k carbone, L lest, b pare-chocs,
    o roue S, O roue M, M monster (2×2, coin haut-gauche), h amorti dur, u amorti souple, e électrique,
@@ -1053,7 +1073,7 @@ class Terrain {
     this.nA = makeNoise(lvl.seed * 3 + 1); this.nB = makeNoise(lvl.seed * 7 + 2); this.nC = makeNoise(lvl.seed * 13 + 5);
     this.pts = []; this.coins = []; this.cells = []; this.decor = []; this.pits = []; this.signs = [];
     this.spawnQ = []; this.planks = []; this.props = []; this.bridgeJoints = []; this.anchors = [];
-    this.star = null; this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
+    this.star = null; this.tunnels = []; this.muds = []; this.seesaws = []; this.movers = []; this.rollers = []; this.falls = []; this.warns = []; this.mustDone = 0;
     this.body = world.createBody(); this.body.setUserData({ kind: 'ground' });
     for (let x = -60; x <= 18; x += 2) this.pts.push({ x, y: 0 });
     this.x = 18; this.y = 0; this.slope = 0; this.nfeat = 0; this.chainFrom = 0; this.finishX = null;
@@ -1069,6 +1089,7 @@ class Terrain {
   push(x, y, noDecor) {
     const last = this.pts[this.pts.length - 1];
     if (x - last.x < 0.06) x = last.x + 0.06;
+    if (!isFinite(y)) y = last.y;
     this.pts.push({ x, y, nd: noDecor ? 1 : 0 }); this.x = x; this.y = y;
   }
   heightAt(x) {
@@ -1222,6 +1243,34 @@ class Terrain {
     } else if (f === 'barrels') { // barils explosifs
       this.warns.push({ x: this.x - 12, t: 'boom' }); flat(15, 1); const n = 1 + Math.floor(r() * 1.6 + d * 1.5), xs = this.x - 10;
       this.spawnQ.push(() => { for (let k = 0; k < n; k++) this.addBarrel(xs + k * 3.2, y0 + .41); });
+    } else if (f === 'tunnel') { // galerie : plafond bas, on ne peut pas sauter
+      flat(5);
+      const len = Math.round(18 + r() * 10 + d * 10), clr = L.clear || (2.95 - d * .35), xs = this.x;
+      this.warns.push({ x: xs - 16, t: 'tunnel' });
+      for (let i = 0; i < len; i++) { const k = i % 7, bh = (k === 3 ? 1 : k === 2 || k === 4 ? .45 : 0) * (.1 + d * .16); this.push(this.x + 1, y0 + bh, 1); }
+      const xe = this.x; flat(3, 1);
+      this.spawnQ.push(() => this.makeTunnel(xs, xe, clr));
+    } else if (f === 'steps') { // marches à gravir
+      flat(5);
+      const n = 3 + (d > .45 ? 1 : 0), xs = this.x;
+      this.warns.push({ x: xs - 14, t: 'steps' });
+      for (let k = 0; k < n; k++) { const h = .24 + d * .3 + r() * .08, yb = this.y, xb = this.x; for (let j = 1; j <= 4; j++) { const t = j / 4; this.push(xb + .4 * t, yb + h * (1 - Math.pow(1 - t, 2)), 1); } for (let j = 0; j < 3; j++) this.push(this.x + 1.05, yb + h, 1); }
+      const top = this.y; this.anchors.push({ x: xs + n * 1.7, y: top + 4.2, px: xs + n * 3.4 + 1.5, py: top });
+      for (let i = 0; i < 6; i++) this.push(this.x + 1, top, 1);
+    } else if (f === 'wall') { // mur infranchissable en roulant : grappin, vérin, ressort ou vol
+      flat(8);
+      const h = 1.25 + d * .35, xw = this.x;
+      this.warns.push({ x: xw - 16, t: 'wall' });
+      this.push(xw + .06, y0 + h, 1);
+      for (let i = 0; i < 9; i++) this.push(this.x + 1, y0 + h, 1);
+      this.anchors.push({ x: xw + 1.5, y: y0 + h + 4.3, px: xw + 4.5, py: y0 + h });
+      this.coinArc(xw + 1, xw + 6, y0 + h + .8, .3);
+    } else if (f === 'mud') { // fondrière : la boue freine et fait patiner
+      flat(3);
+      const len = Math.round(13 + r() * 8 + d * 10), dep = .38, xs = this.x;
+      for (let i = 1; i <= len; i++) this.push(this.x + 1, y0 - dep * Math.pow(Math.max(0, Math.sin(Math.PI * i / len)), .45), 1);
+      this.muds.push({ x0: xs, x1: this.x, y: y0 - .04, k: L.mudK || (.28 + d * .14) });
+      flat(3);
     } else if (f === 'rockfall') { // chute de pierres : l'ombre au sol annonce l'impact
       const len = Math.round(28 + d * 14), xs = this.x;
       this.warns.push({ x: xs - 3, t: 'fall' });
@@ -1229,6 +1278,18 @@ class Terrain {
       this.falls.push({ x0: xs, x1: xs + len, next: .4, n: 0, max: 4 + Math.round(d * 4), marks: [], bomb: THEMES[this.themeAt(xs)].lava ? 1 : 0 });
     }
   }
+  makeTunnel(xs, xe, clr) {
+    const top = [], n = Math.round(xe - xs);
+    for (let i = 0; i <= n; i++) { const x = xs + (xe - xs) * i / n; top.push(V(x, this.heightAt(x) + clr - (i % 4 === 2 ? .12 : 0))); }
+    const cS = top[0].y, cE = top[top.length - 1].y, hill = [];
+    hill.push(V(xe, cE + 1.4));
+    for (let i = 1; i < 12; i++) { const t = 1 - i / 12, x = xs + (xe - xs) * t; hill.push(V(x, lerp(cS, cE, t) + 1.4 + Math.sin(Math.PI * t) * (2.5 + (xe - xs) * .05))); }
+    hill.push(V(xs, cS + 1.4));
+    const loop = top.concat(hill);
+    this.body.createFixture({ shape: pl.Chain(loop, true), friction: .8 });
+    this.tunnels.push({ xs, xe, clr, top, loop });
+  }
+  mudAt(x) { for (const M of this.muds) if (x > M.x0 && x < M.x1) return M; return null; }
   makeSeesaw(xc, py, Lh, a, floor) {
     const b = this.world.createBody({ type: 'dynamic', position: V(xc, py), angularDamping: 1.2 });
     b.createFixture({ shape: pl.Box(Lh, .13), density: 1.4, friction: .95 }); b.setUserData({ kind: 'seesaw' });
@@ -1413,13 +1474,26 @@ function starSvg(on) { return '<svg class="star' + (on ? ' on' : '') + '" viewBo
 function buildCards() {
   const box = $('#cards'); box.innerHTML = '';
   LEVELS.forEach((L, i) => {
-    const p = App.prog[L.id] || {}, unlocked = i === 0 || (App.prog[LEVELS[i - 1].id] || {}).done;
+    const p = App.prog[L.id] || {}, unlocked = i === 0 || p.done || (App.prog[LEVELS[i - 1].id] || {}).done;
     const b = document.createElement('button'); b.className = 'card' + (unlocked ? '' : ' locked');
     const cv = document.createElement('canvas'); b.appendChild(cv);
     const cb = document.createElement('div'); cb.className = 'cb';
     cb.innerHTML = '<span class="num">NIVEAU ' + (i + 1) + '</span><span class="nm">' + L.name + '</span><span class="meta">' + L.len + ' m' + (L.g ? ' · gravité ' + L.g : '') + '</span><span class="st">' + [0, 1, 2].map(k => starSvg((p.stars || 0) > k)).join('') + '</span>';
     b.appendChild(cb); if (!unlocked) b.insertAdjacentHTML('beforeend', '<span class="lock">Verrouillé</span>');
     b.onclick = () => { if (!unlocked) { flashMsgMenu(b); return; } Snd.init(); Snd.click(); openLevel(L, i); };
+    box.appendChild(b);
+    requestAnimationFrame(() => drawLevelThumb(cv, L));
+  });
+  const ts = totalStars();
+  const sep = document.createElement('div'); sep.className = 'cardSep'; sep.innerHTML = '<b>DÉFIS</b><span>débloqués avec les étoiles</span>'; box.appendChild(sep);
+  DEFIS.forEach((L, i) => {
+    const p = App.prog[L.id] || {}, unlocked = ts >= L.need;
+    const b = document.createElement('button'); b.className = 'card defi' + (unlocked ? '' : ' locked');
+    const cv = document.createElement('canvas'); b.appendChild(cv);
+    const cb = document.createElement('div'); cb.className = 'cb';
+    cb.innerHTML = '<span class="num">DÉFI ' + (i + 1) + '</span><span class="nm">' + L.name + '</span><span class="meta">' + goalText(L.rules[0]) + '</span><span class="st">' + [0, 1, 2].map(k => starSvg((p.stars || 0) > k)).join('') + '</span>';
+    b.appendChild(cb); if (!unlocked) b.insertAdjacentHTML('beforeend', '<span class="lock">' + L.need + ' ★</span>');
+    b.onclick = () => { if (!unlocked) { flashMsgMenu(b); return; } Snd.init(); Snd.click(); openLevel(L, -1); };
     box.appendChild(b);
     requestAnimationFrame(() => drawLevelThumb(cv, L));
   });
@@ -1446,7 +1520,7 @@ function openLevel(L, idx) {
   const sb = cleanDesign(store.get('design.sandbox', null));
   App.design = L.sandbox ? (sb.length ? sb : presetDesign(PRESETS[0])) : cleanDesign(store.get('garage', []));
   App.undo = []; App.tool = null; closePop();
-  $('#bLvl').textContent = (L.endless || L.sandbox) ? L.name : 'Niv. ' + (idx + 1) + ' · ' + L.name;
+  $('#bLvl').textContent = (L.endless || L.sandbox) ? L.name : L.defi ? 'Défi · ' + L.name : 'Niv. ' + (idx + 1) + ' · ' + L.name;
   buildTray(); updateBuildInfo(); show('scrBuild');
 }
 function buildTray() {
@@ -1481,6 +1555,7 @@ function setMsg(t, kind, sticky) { const m = $('#bMsg'); m.textContent = t; m.cl
 function budgetOf() { return Infinity; }
 function updateBuildInfo() {
   const v = validate(App.design, budgetOf()), S = v.A.S, B = budgetOf();
+  for (const R of App.lvl.rules || []) if (goalBuildCheck(R, App.design, S) === false) { v.err.unshift('Défi : ' + goalText(R).toLowerCase() + ' (' + goalNow(R, App.design, S) + ').'); v.ok = false; }
   const bb = $('#bBudget');
   bb.textContent = paying() ? 'Engin : ' + fmtN(S.cost) + ' pièces d\'or' : 'Bac à sable : tout est gratuit';
   bb.classList.remove('over');
@@ -1493,7 +1568,7 @@ function updateBuildInfo() {
   else if (v.warn.length) { m.textContent = v.warn[0]; m.className = 'msg'; }
   else { m.textContent = 'Prêt ! ' + (App.lvl.tip || 'Lance l\'essai.'); m.className = 'msg ok'; }
   const gl = levelGoals(App.lvl), gb = $('#bGoals'); gb.hidden = !gl.length;
-  if (gl.length) gb.innerHTML = '<div><i>★</i>Atteindre l\'arrivée</div>' + gl.map(G => { const ok = goalBuildCheck(G, App.design, S), now = goalNow(G, App.design, S); return '<div class="' + (ok === null ? '' : ok ? 'ok' : 'ko') + '"><i>★</i>' + goalText(G) + (ok === null ? '' : ' — ' + now + (ok ? ' ✓' : ' ✗')) + '</div>'; }).join('');
+  if (gl.length) gb.innerHTML = (App.lvl.rules || []).map(R => { const ok = goalBuildCheck(R, App.design, S); return '<div class="' + (ok === false ? 'ko' : 'ok') + '"><i>⚑</i>' + (R.t === 'cargo' ? 'Obligatoire : livrer la caisse' : 'Obligatoire : ' + goalText(R).toLowerCase()) + '</div>'; }).join('') + '<div><i>★</i>Atteindre l\'arrivée</div>' + gl.map(G => { const ok = goalBuildCheck(G, App.design, S), now = goalNow(G, App.design, S); return '<div class="' + (ok === null ? '' : ok ? 'ok' : 'ko') + '"><i>★</i>' + goalText(G) + (ok === null ? '' : ' — ' + now + (ok ? ' ✓' : ' ✗')) + '</div>'; }).join('');
   return v;
 }
 function layoutBuild() {
@@ -1947,7 +2022,8 @@ function newGame(lvl, design, mode) {
   world.on('post-solve', (c, imp) => { onImpact(g, c, imp); cargoImpact(g, c, imp); });
   // objectifs du niveau ; caisse fragile posée sur l'engin
   g.goals = levelGoals(lvl); const A0 = analyze(design); g.designS = A0.S;
-  if (g.goals.some(G => G.t === 'cargo')) {
+  g.cargoRule = (lvl.rules || []).some(R => R.t === 'cargo');
+  if (g.cargoRule || g.goals.some(G => G.t === 'cargo')) {
     const cc = cargoCell(design, A0), K = veh.cockpit;
     if (cc) {
       const q = ppos(K), x = q.x + (cc.gx - K.gx) * CELL, y = q.y + (K.gy - cc.gy) * CELL + .02;
@@ -2016,12 +2092,19 @@ function physicsStep(g, h) {
   const nOn = ctl && inp.boost && g.nitro > 0 && can && live.nitro > 0 && g.thr > .05;
   g.nitroOn = nOn; if (nOn) g.nitro = Math.max(0, g.nitro - h);
   const fK = nOn ? 2 : 1, vK = nOn ? 1.35 : 1;
+  let mudW = 0;
+  for (const w of v.wheels) { w.mud = null; if (w.J.alive && w.P.conn && w.P.contacts) { const q = w.P.body.getPosition(), M = g.ter.mudAt(q.x); if (M && q.y < M.y + w.r + .1) { w.mud = M; mudW++; } } }
   for (const w of v.wheels) {
     if (!w.J.alive) continue; const j = w.J.j;
+    if (w.mud) { // la boue freine la roue et la fait patiner
+      const b = w.P.body, vx = b.getLinearVelocity().x, share = v.mass * grav / Math.max(2, v.wheels.length);
+      b.applyForce(V(-Math.sign(vx) * Math.min(1, Math.abs(vx) / .6) * w.mud.k * share - vx * .35 * share / grav, 0), b.getWorldCenter(), true);
+      if (Math.abs(b.getAngularVelocity() * w.r) > 2.5 && Math.random() < .3) { const q = b.getPosition(); addP(g, { x: q.x - Math.sign(vx || 1) * w.r * .6, y: w.mud.y + .05, vx: -Math.sign(b.getAngularVelocity() * -1 || 1) * (1 + Math.random() * 2.5), vy: 1.5 + Math.random() * 2.5, r: .06 + Math.random() * .07, life: .7, max: .7, col: g.ter.themeAt(q.x) === 'marais' ? '#4a3f22' : '#5a4228', g: 9, type: 'spark' }); }
+    }
     if (can && w.driven && Math.abs(g.thr) > .01) {
       const back = g.thr < 0;
       j.setMotorSpeed(-Math.sign(g.thr) * w.vm * vK * (back ? .55 : 1) / w.r);
-      j.setMaxMotorTorque(Math.abs(g.thr) * w.F * fK * w.r * (back ? 1.2 : 1));
+      j.setMaxMotorTorque(Math.abs(g.thr) * w.F * fK * w.r * (back ? 1.2 : 1) * (w.mud ? .6 : 1));
     } else if (g.thr < -.05 && w.P.conn) { j.setMotorSpeed(0); j.setMaxMotorTorque(-g.thr * .35 * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
     else { j.setMotorSpeed(0); j.setMaxMotorTorque((g.onMover && Math.abs(g.thr) < .05 ? .6 : .02) * v.mass * grav / Math.max(2, v.wheels.length) * w.r); }
     if (w.susp) { // butées progressives : la suspension durcit en fin de course
@@ -2169,8 +2252,8 @@ function physicsStep(g, h) {
   }
   while (g.popQ.length) popPart(g, g.popQ.pop());
   if (g.cargo) { const C = g.cargo;
-    if (C.q) { C.q = 0; const p = C.b.getPosition(); g.world.destroyBody(C.b); splinters(g, p.x, p.y, .44); if (g.mode === 'run') { Snd.noise(.25, .35, 700, 1.5); toast('Caisse cassée !'); } }
-    else if (!C.broken && !C.lost) { const p = C.b.getPosition(), q = ckP.chunk.body.getPosition(); if (Math.hypot(p.x - q.x, p.y - q.y) > 5) { C.lost = 1; if (g.mode === 'run') toast('Caisse perdue !'); } }
+    if (C.q) { C.q = 0; const p = C.b.getPosition(); g.world.destroyBody(C.b); splinters(g, p.x, p.y, .44); if (g.mode === 'run') { Snd.noise(.25, .35, 700, 1.5); toast('Caisse cassée !'); } if (g.cargoRule && !g.over) endRun(g, false, 'La caisse est cassée…', 'cargo'); }
+    else if (!C.broken && !C.lost) { const p = C.b.getPosition(), q = ckP.chunk.body.getPosition(); if (Math.hypot(p.x - q.x, p.y - q.y) > 5) { C.lost = 1; if (g.mode === 'run') toast('Caisse perdue !'); if (g.cargoRule && !g.over) endRun(g, false, 'La caisse est tombée…', 'cargo'); } }
   }
   while (g.smashQ.length) { const b = g.smashQ.pop(), p = b.getPosition(), u = b.getUserData(); g.world.destroyBody(b); g.ter.props.splice(g.ter.props.indexOf(b), 1); splinters(g, p.x, p.y, u.h); if (g.mode === 'run') Snd.noise(.25, .35, 700, 1.5); }
   // --- pilote assommé ?
@@ -2226,7 +2309,7 @@ function showResult() {
     .map(([k, v]) => '<div><i>' + k + '</i><b>' + v + '</b></div>').join('');
   $('#rObjs').innerHTML = (L.endless || L.sandbox) ? (L.endless ? '<div>Record : ' + Math.round(store.get('bestInf', 0)) + ' m</div>' : '') : objectivesHtml(R.win, R.goals);
   $('#rBank').innerHTML = '<span class="coin"></span><b>+' + fmtN(gain) + '</b> au trésor · total <b>' + fmtN(App.bank) + '</b>';
-  const next = LEVELS[App.lvlIndex + 1];
+  const next = App.lvlIndex >= 0 ? LEVELS[App.lvlIndex + 1] : null;
   $('#rNext').hidden = !(R.win && next && !L.endless && !L.sandbox);
   $('#ovResult').classList.add('on');
 }
@@ -2347,7 +2430,7 @@ function render(g) {
   if (th.stars) { c.fillStyle = '#fff'; for (let i = 0; i < 70; i++) { const x = ((hash(i) * W * 1.5 - g.cam.x * S * .02) % W + W) % W; c.globalAlpha = .4 + hash(i + 3) * .6; c.fillRect(x, hash(i + 7) * H * .7, 1.4, 1.4); } c.globalAlpha = 1; }
   if (th.earth) { c.fillStyle = '#3b7dd8'; c.beginPath(); c.arc(W * .78, H * .2, H * .07, 0, TAU); c.fill(); c.fillStyle = '#5fbf6a'; c.beginPath(); c.arc(W * .77, H * .19, H * .03, 0, TAU); c.fill(); }
   else { c.fillStyle = th.sun; c.globalAlpha = .9; c.beginPath(); c.arc(W * .8, H * .2, H * .065, 0, TAU); c.fill(); c.globalAlpha = .18; c.beginPath(); c.arc(W * .8, H * .2, H * .12, 0, TAU); c.fill(); c.globalAlpha = 1; }
-  if (!th.stars && !th.lava) { c.fillStyle = 'rgba(255,255,255,.85)'; for (let i = 0; i < 6; i++) { const x = (((hash(i + 20) * W * 2 - g.cam.x * S * .06 - T * 6) % (W + 260)) + W + 260) % (W + 260) - 130, y = H * (.08 + hash(i + 31) * .22), s = 18 + hash(i + 5) * 26; cloud(c, x, y, s); } }
+  if (!th.stars && !th.lava && !th.nocloud) { c.fillStyle = 'rgba(255,255,255,.85)'; for (let i = 0; i < 6; i++) { const x = (((hash(i + 20) * W * 2 - g.cam.x * S * .06 - T * 6) % (W + 260)) + W + 260) % (W + 260) - 130, y = H * (.08 + hash(i + 31) * .22), s = 18 + hash(i + 5) * 26; cloud(c, x, y, s); } }
   if (th.lava) { c.fillStyle = 'rgba(255,90,30,.18)'; c.fillRect(0, H * .55, W, H * .45); }
   // reliefs lointains (parallaxe)
   ridge(c, g, th.far, .12, H * .5, H * .16, 220, 1);
@@ -2386,6 +2469,7 @@ function render(g) {
   c.strokeStyle = th.crust; c.lineWidth = .26; c.beginPath(); for (let i = i0; i <= i1; i++) c[i === i0 ? 'moveTo' : 'lineTo'](P[i].x, P[i].y + .02); c.stroke();
   // ponts, caisses, rochers
   for (const b of ter.planks) { const p = b.getPosition(); if (p.x < x0 - 2 || p.x > x1 + 2) continue; const u = b.getUserData(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); c.fillStyle = '#a8703a'; c.fillRect(-u.w / 2, -.1, u.w - .04, .2); c.fillStyle = '#6e4320'; c.fillRect(-u.w / 2, -.1, u.w - .04, .05); c.restore(); }
+  drawTunnels(c, g, x0, x1, T, th);
   drawObstacles(c, g, x0, x1, T);
   for (const b of ter.props) { const p = b.getPosition(); if (p.x < x0 - 2 || p.x > x1 + 2) continue; const u = b.getUserData(); c.save(); c.translate(p.x, p.y); c.rotate(b.getAngle()); if (u.kind === 'crate') crate(c, u.h); else if (u.kind === 'log') roller(c, u); else if (u.kind === 'barrel') barrel(c, u, T); else rock(c, u.r, u.seed, u.bomb, T); c.restore(); }
   // panneaux et arrivée
@@ -2401,6 +2485,7 @@ function render(g) {
   // véhicule
   drawVehicle(c, g, T);
   drawParts(c, g, null);
+  drawMud(c, g, x0, x1, T);
   // ---- textes en coordonnées écran
   c.setTransform(dpr, 0, 0, dpr, 0, 0);
   const toS = (x, y) => [(x - g.cam.x) * S + W / 2 + sx, H / 2 - (y - g.cam.y) * S + sy];
@@ -2418,6 +2503,42 @@ function ridge(c, g, col, par, base, amp, per, k) {
 }
 const _nc = {}; function makeNoiseCached(k) { return _nc[k] || (_nc[k] = makeNoise(1000 + k * 77)); }
 function crate(c, h) { c.fillStyle = '#b97d3c'; c.fillRect(-h, -h, h * 2, h * 2); c.strokeStyle = '#6e4320'; c.lineWidth = .06; c.strokeRect(-h + .03, -h + .03, h * 2 - .06, h * 2 - .06); c.beginPath(); c.moveTo(-h, -h); c.lineTo(h, h); c.moveTo(h, -h); c.lineTo(-h, h); c.stroke(); }
+function drawTunnels(c, g, x0, x1, T, th0) {
+  const ter = g.ter;
+  for (const Tn of ter.tunnels) {
+    if (Tn.xe < x0 - 4 || Tn.xs > x1 + 4) continue;
+    const th = THEMES[ter.themeAt(Tn.xs)], mine = ter.themeAt(Tn.xs) === 'mine';
+    // intérieur sombre
+    c.fillStyle = 'rgba(10,8,6,.5)'; c.beginPath(); c.moveTo(Tn.xs, ter.heightAt(Tn.xs));
+    for (const p of Tn.top) c.lineTo(p.x, p.y); c.lineTo(Tn.xe, ter.heightAt(Tn.xe));
+    for (let x = Tn.xe; x >= Tn.xs; x -= 1) c.lineTo(x, ter.heightAt(x)); c.closePath(); c.fill();
+    // masse rocheuse
+    c.beginPath(); Tn.loop.forEach((p, i) => c[i ? 'lineTo' : 'moveTo'](p.x, p.y)); c.closePath();
+    const gr = c.createLinearGradient(0, Tn.top[0].y + 5, 0, Tn.top[0].y); gr.addColorStop(0, th.g1); gr.addColorStop(1, th.g2); c.fillStyle = gr; c.fill();
+    c.strokeStyle = th.crust2; c.lineWidth = .14; c.stroke();
+    c.fillStyle = th.peb; c.globalAlpha = .35; for (let x = Math.ceil(Tn.xs); x < Tn.xe; x += 1.3) { const h = hash(x * 3.1); c.beginPath(); c.ellipse(x + h, Tn.top[0].y + .8 + h * 2.2, .14, .09, h * 3, 0, TAU); c.fill(); } c.globalAlpha = 1;
+    // poutres d'entrée et de sortie, lanternes
+    for (const [x, cy] of [[Tn.xs, Tn.top[0].y], [Tn.xe, Tn.top[Tn.top.length - 1].y]]) {
+      const gy = ter.heightAt(x); c.fillStyle = mine ? '#6e4a2a' : '#8a8f96';
+      c.fillRect(x - .22, gy, .22, cy - gy); c.fillRect(x - .5, cy - .05, .8, .26);
+      c.fillStyle = mine ? '#4a3018' : '#5d6268'; c.fillRect(x - .22, gy, .07, cy - gy);
+    }
+    if (mine) for (let x = Tn.xs + 5; x < Tn.xe - 2; x += 7) { const p = Tn.top[Math.min(Tn.top.length - 1, Math.round(x - Tn.xs))]; c.strokeStyle = '#2b2f36'; c.lineWidth = .04; c.beginPath(); c.moveTo(x, p.y); c.lineTo(x, p.y - .35); c.stroke(); c.fillStyle = 'rgba(255,200,90,' + (.18 + .05 * Math.sin(T * 7 + x)) + ')'; c.beginPath(); c.arc(x, p.y - .45, .9, 0, TAU); c.fill(); c.fillStyle = '#ffd36a'; c.beginPath(); c.arc(x, p.y - .45, .1, 0, TAU); c.fill(); }
+  }
+}
+function drawMud(c, g, x0, x1, T) {
+  const ter = g.ter;
+  for (const M of ter.muds) {
+    if (M.x1 < x0 || M.x0 > x1) continue;
+    const sw = ter.themeAt(M.x0) === 'marais';
+    c.beginPath(); c.moveTo(M.x0, M.y);
+    for (let x = M.x0; x <= M.x1; x += .5) c.lineTo(x, M.y + Math.sin(T * 1.6 + x * 1.3) * .025);
+    c.lineTo(M.x1, M.y); for (let x = M.x1; x >= M.x0; x -= .5) c.lineTo(x, ter.heightAt(x) - .05); c.closePath();
+    c.fillStyle = sw ? 'rgba(74,72,38,.9)' : 'rgba(92,64,38,.9)'; c.fill();
+    c.fillStyle = sw ? 'rgba(140,150,80,.5)' : 'rgba(150,110,70,.5)'; c.fillRect(M.x0 + .2, M.y - .04, M.x1 - M.x0 - .4, .05);
+    for (let k = 0; k < 4; k++) { const x = M.x0 + 1 + hash(k + M.x0) * (M.x1 - M.x0 - 2), ph = (T * .7 + hash(k * 7 + M.x0)) % 1; c.strokeStyle = 'rgba(30,25,15,' + (.5 - ph * .5) + ')'; c.lineWidth = .03; c.beginPath(); c.ellipse(x, M.y - .01, .08 + ph * .25, .03 + ph * .05, 0, 0, TAU); c.stroke(); }
+  }
+}
 function goldStar(c, x, y, T) {
   c.save(); c.translate(x, y + Math.sin(T * 2.4) * .08);
   c.fillStyle = 'rgba(255,214,74,' + (.22 + .1 * Math.sin(T * 5)) + ')'; c.beginPath(); c.arc(0, 0, .75, 0, TAU); c.fill();
@@ -2476,6 +2597,9 @@ function drawObstacles(c, g, x0, x1, T) {
     else if (W.t === 'logs') { c.moveTo(w - .3, y + 1.15); c.lineTo(w + .3, y + 1.45); c.stroke(); c.beginPath(); c.arc(w - .02, y + 1.38, .09, 0, TAU); c.fill(); }
     else if (W.t === 'ferry') { c.fillRect(w - .25, y + 1.22, .5, .07); c.moveTo(w, y + 1.29); c.lineTo(w, y + 1.55); c.stroke(); }
     else if (W.t === 'lift') { c.moveTo(w - .14, y + 1.35); c.lineTo(w, y + 1.58); c.lineTo(w + .14, y + 1.35); c.closePath(); c.fill(); c.fillRect(w - .2, y + 1.17, .4, .07); }
+    else if (W.t === 'tunnel') { c.arc(w, y + 1.18, .26, 0, Math.PI); c.lineTo(w + .26, y + 1.18); c.fill(); c.fillStyle = W.t === 'boom' ? '#ff5a47' : '#ffc21a'; c.beginPath(); c.arc(w, y + 1.18, .14, 0, Math.PI); c.fill(); }
+    else if (W.t === 'steps') { c.moveTo(w - .3, y + 1.15); c.lineTo(w - .3, y + 1.27); c.lineTo(w - .1, y + 1.27); c.lineTo(w - .1, y + 1.39); c.lineTo(w + .1, y + 1.39); c.lineTo(w + .1, y + 1.51); c.lineTo(w + .3, y + 1.51); c.lineTo(w + .3, y + 1.15); c.closePath(); c.fill(); }
+    else if (W.t === 'wall') { c.fillRect(w + .02, y + 1.15, .2, .45); c.moveTo(w - .25, y + 1.45); c.lineTo(w - .12, y + 1.62); c.lineTo(w + .01, y + 1.45); c.closePath(); c.fill(); c.fillRect(w - .15, y + 1.18, .06, .28); }
     else { c.fillRect(w - .04, y + 1.32, .08, .26); c.fillRect(w - .04, y + 1.17, .08, .08); }
   }
   for (const F of ter.falls) for (const m of F.marks) {
@@ -2523,6 +2647,15 @@ function drawDecor(c, d, y, T) {
     case 'mrock': c.fillStyle = '#6b7079'; c.beginPath(); c.ellipse(0, .1, .55, .3, 0, 0, TAU); c.fill(); break;
     case 'antenna': c.strokeStyle = '#c9d2da'; c.lineWidth = .06; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, 1.6); c.stroke(); c.fillStyle = Math.sin(T * 4 + d.x) > 0 ? '#ff5a47' : '#5a1e14'; c.beginPath(); c.arc(0, 1.65, .08, 0, TAU); c.fill(); break;
     case 'vrock': c.fillStyle = '#2a1a1a'; c.beginPath(); c.moveTo(-.6, 0); c.lineTo(-.2, .9); c.lineTo(.3, .7); c.lineTo(.6, 0); c.fill(); break;
+    case 'beam': c.fillStyle = '#6e4a2a'; c.fillRect(-.6, 0, .14, 1.6); c.fillRect(.46, 0, .14, 1.6); c.fillRect(-.75, 1.5, 1.5, .16); c.fillStyle = '#4a3018'; c.fillRect(-.6, 0, .05, 1.6); break;
+    case 'cart': c.fillStyle = '#5d6268'; c.beginPath(); c.moveTo(-.55, .25); c.lineTo(.55, .25); c.lineTo(.65, .75); c.lineTo(-.65, .75); c.closePath(); c.fill(); c.fillStyle = '#c99a4a'; c.beginPath(); c.arc(-.2, .75, .18, Math.PI, 0); c.arc(.2, .78, .16, Math.PI, 0); c.fill(); c.fillStyle = '#2b2f36'; c.beginPath(); c.arc(-.35, .15, .14, 0, TAU); c.arc(.35, .15, .14, 0, TAU); c.fill(); c.fillRect(-.9, 0, 1.8, .04); break;
+    case 'lantern': c.fillStyle = '#3a2f27'; c.fillRect(-.04, 0, .08, 1.3); c.fillStyle = 'rgba(255,200,90,' + (.2 + .06 * Math.sin(T * 6 + d.x)) + ')'; c.beginPath(); c.arc(0, 1.3, .55, 0, TAU); c.fill(); c.fillStyle = '#ffd36a'; c.fillRect(-.08, 1.2, .16, .2); break;
+    case 'reed': c.strokeStyle = '#5b7a3a'; c.lineWidth = .04; for (let i = -2; i <= 2; i++) { c.beginPath(); c.moveTo(i * .07, 0); c.quadraticCurveTo(i * .1, .5, i * .14 + Math.sin(T + d.x) * .04, .9 + Math.abs(i) * -.08); c.stroke(); } c.fillStyle = '#5a3a1e'; c.fillRect(-.03, .7, .06, .2); break;
+    case 'cypress': c.fillStyle = '#3a2c1c'; c.beginPath(); c.moveTo(-.3, 0); c.lineTo(-.1, .5); c.lineTo(-.08, 1.8); c.lineTo(.08, 1.8); c.lineTo(.1, .5); c.lineTo(.3, 0); c.fill(); c.fillStyle = '#4c6a3c'; c.beginPath(); c.ellipse(0, 2.1, .55, .45, 0, 0, TAU); c.ellipse(-.35, 1.8, .35, .25, 0, 0, TAU); c.ellipse(.35, 1.85, .35, .25, 0, 0, TAU); c.fill(); c.strokeStyle = '#8a9a6a'; c.lineWidth = .03; c.beginPath(); c.moveTo(-.4, 1.7); c.lineTo(-.42, 1.2); c.moveTo(.3, 1.75); c.lineTo(.33, 1.35); c.stroke(); break;
+    case 'lily': c.fillStyle = '#4f7a3a'; c.beginPath(); c.ellipse(-.2, .05, .22, .07, 0, 0, TAU); c.ellipse(.2, .06, .18, .06, 0, 0, TAU); c.fill(); c.fillStyle = '#f0d0e0'; c.beginPath(); c.arc(-.2, .12, .06, 0, TAU); c.fill(); break;
+    case 'cone': c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(-.18, 0); c.lineTo(0, .55); c.lineTo(.18, 0); c.fill(); c.fillStyle = '#fff'; c.fillRect(-.1, .2, .2, .07); c.fillStyle = '#2b2f36'; c.fillRect(-.25, 0, .5, .05); break;
+    case 'crane': c.strokeStyle = '#e0a020'; c.lineWidth = .08; c.beginPath(); c.moveTo(-.15, 0); c.lineTo(-.15, 4); c.moveTo(.15, 0); c.lineTo(.15, 4); for (let y = 0; y < 4; y += .5) { c.moveTo(-.15, y); c.lineTo(.15, y + .5); } c.moveTo(-1, 4); c.lineTo(2.6, 4); c.moveTo(-1, 4.3); c.lineTo(2.6, 4); c.moveTo(0, 4.6); c.lineTo(-1, 4); c.moveTo(0, 4.6); c.lineTo(2.6, 4); c.stroke(); c.strokeStyle = '#2b2f36'; c.lineWidth = .03; c.beginPath(); c.moveTo(2, 4); c.lineTo(2, 2.6 + Math.sin(T * .5 + d.x) * .2); c.stroke(); c.fillStyle = '#5d6268'; c.fillRect(-.9, 3.7, .4, .3); break;
+    case 'girder': c.fillStyle = '#c0392b'; for (let i = 0; i < 3; i++) { c.fillRect(-.7 + i * .05, .02 + i * .16, 1.4, .04); c.fillRect(-.7 + i * .05, .14 + i * .16, 1.4, .03); c.fillRect(-.7 + i * .05, .05 + i * .16, 1.4, .09); } c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(-.7, .05, 1.5, .03); break;
     case 'vent': c.fillStyle = '#2a1a1a'; c.fillRect(-.3, 0, .6, .4); c.fillStyle = 'rgba(255,120,40,' + (.4 + Math.sin(T * 3 + d.x) * .3) + ')'; c.beginPath(); c.arc(0, .45, .2, 0, TAU); c.fill(); break;
   }
   c.restore();
@@ -2691,7 +2824,7 @@ function quitGame() {
   setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
 }
 /* ---------- mises à jour : on compare la version en ligne à celle qui tourne ---------- */
-const APP_VERSION = '9', APP_DATE = '10 oct. 2026';
+const APP_VERSION = '10', APP_DATE = '10 oct. 2026';
 function checkVersion() {
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.version && j.version !== APP_VERSION) showUpdate(j.version); }).catch(() => {});
 }
