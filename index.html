@@ -475,7 +475,7 @@ const PARTS = {
   prop:    { n: 'Hélice', cat: 'Propulsion', cost: 18, dens: 4, str: 1500, dir: 0, thrust: 80, drain: 3.2, d: 'VOL : poussée douce vers le moyeu. Orientable.' },
   wing:    { n: 'Aile', cat: 'Aéro', cost: 12, dens: 2.5, str: 1200, dir: 0, d: 'Portance selon la vitesse et l\'angle. Bord d\'attaque vers l\'avant.' },
   spoiler: { n: 'Aileron', cat: 'Aéro', cost: 15, dens: 2, str: 1300, down: 1, d: 'Plaque l\'engin au sol à grande vitesse : plus d\'adhérence.' },
-  balloon: { n: 'Ballon', cat: 'Aéro', cost: 10, dens: 0.4, str: 700, lift: 26, d: 'Allège le véhicule. Éclate au contact du sol.' },
+  balloon: { n: 'Ballon', cat: 'Aéro', cost: 10, dens: 0.4, str: 700, lift: 45, d: 'Allège le véhicule. Éclate au contact du sol.' },
   chute:   { n: 'Parachute', cat: 'Aéro', cost: 9, dens: 2, str: 1800, dir: 0, d: 'S\'ouvre avec ACTION. Freine et stabilise.' },
   spring:  { n: 'Ressort', cat: 'Spécial', cost: 16, dens: 6, str: 2400, dir: 2, d: 'ACTION : propulse le véhicule à l\'opposé du plateau.' },
   gyro:    { n: 'Gyroscope', cat: 'Spécial', cost: 45, dens: 8, str: 2200, gyro: 1, d: 'Stabilise l\'engin : freine les rotations et le remet à plat en l\'air.' },
@@ -2921,7 +2921,7 @@ function quitGame() {
   setTimeout(() => { $('#byeBank').textContent = fmtN(App.bank); $('#ovBye').classList.add('on'); }, 250);
 }
 /* ---------- mises à jour : on compare la version en ligne à celle qui tourne ---------- */
-const APP_VERSION = '12', APP_DATE = '10 oct. 2026';
+const APP_VERSION = '13', APP_DATE = '11 oct. 2026';
 function checkVersion() {
   fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.version && j.version !== APP_VERSION) showUpdate(j.version); }).catch(() => {});
 }
